@@ -1926,7 +1926,7 @@ function saveGalleryItem(){
   if(!name||!file){ toast('Preencha o nome e selecione uma imagem.'); return; }
   const r=new FileReader();
   r.onload=e=>{
-    S.chron.gallery.push({name,cat,src:e.target.result,addedBy:S.user?S.user.name:'?'});
+    S.chron.gallery.push({id:Date.now(),name,cat,src:e.target.result,addedBy:S.user?S.user.name:'?'});
     if(S.user) addNotif('🖼️',`Nova imagem em <strong>${S.chron.name}</strong>: ${name}`,S.chron.id,'gallery');
     closeOv('ov-gallery'); setVal('gal-name',''); $id('gal-file').value=''; $id('gal-preview').style.display='none';
     fbSaveChronicle(S.chron); renderGallery(); toast('Imagem adicionada!');
@@ -2409,30 +2409,6 @@ function cleanForFb(obj) {
 }
 
 // Salva imagens grandes separadamente e substitui por referência
-function extractImages(data, chronId) {
-  const imgs = {};
-  ['npcs','locations','characters'].forEach(type => {
-    if(!data[type]) return;
-    data[type] = data[type].map((item, i) => {
-      if(item.photo && item.photo.length > 30000 && item.photo.startsWith('data:')) {
-        imgs[`${type}/${i}`] = item.photo;
-        return {...item, photo: `__ref__${type}_${i}`};
-      }
-      return item;
-    });
-  });
-  if(data.gallery) {
-    data.gallery = data.gallery.map((g, i) => {
-      if(g.src && g.src.length > 30000 && g.src.startsWith('data:')) {
-        imgs[`gallery/${i}`] = g.src;
-        return {...g, src: `__ref__gallery_${i}`};
-      }
-      return g;
-    });
-  }
-  return imgs;
-}
-
 async function fbSaveChronicle(c) {
   if(!window._db) return;
   try {
@@ -2453,28 +2429,66 @@ async function fbSaveChronicle(c) {
   }
 }
 
+// Salva imagens grandes separadamente usando ID único do item
+function extractImages(data, chronId) {
+  const imgs = {};
+
+  ['npcs','locations','characters'].forEach(type => {
+    if(!data[type]) return;
+    data[type] = data[type].map((item) => {
+      const itemId = item.id || item.name || Math.random().toString(36).slice(2);
+      const key = `${type}_${String(itemId).replace(/[^a-zA-Z0-9]/g,'_')}`;
+      if(item.photo && item.photo.length > 30000 && item.photo.startsWith('data:')) {
+        imgs[key] = item.photo;
+        return {...item, photo: `__ref__${key}`};
+      }
+      return item;
+    });
+  });
+
+  if(data.gallery) {
+    data.gallery = data.gallery.map((g) => {
+      const itemId = g.id || g.name || Math.random().toString(36).slice(2);
+      const key = `gallery_${String(itemId).replace(/[^a-zA-Z0-9]/g,'_')}`;
+      if(g.src && g.src.length > 30000 && g.src.startsWith('data:')) {
+        imgs[key] = g.src;
+        return {...g, src: `__ref__${key}`};
+      }
+      return g;
+    });
+  }
+
+  return imgs;
+}
+
 async function restoreImages(chron) {
   try {
     const snap = await window._fbGet(window._fbRef(window._db, `images/${chron.id}`));
     if(!snap.exists()) return chron;
     const imgs = snap.val();
 
+    // Restaura NPCs, locais, personagens
     ['npcs','locations','characters'].forEach(type => {
       if(!chron[type]) return;
       chron[type] = chron[type].map((item, i) => {
-        const ref = `${type}/${i}`;
-        if(item.photo && item.photo.startsWith('__ref__') && imgs[ref]) {
-          return {...item, photo: imgs[ref]};
+        if(item.photo && item.photo.startsWith('__ref__')) {
+          const key = item.photo.replace('__ref__','');
+          // Tenta chave nova (com ID) e chave antiga (com índice)
+          const val = imgs[key] || imgs[`${type}/${i}`] || imgs[`${type}_${i}`];
+          if(val) return {...item, photo: val};
         }
         return item;
       });
     });
 
+    // Restaura galeria
     if(chron.gallery) {
       chron.gallery = chron.gallery.map((g, i) => {
-        const ref = `gallery/${i}`;
-        if(g.src && g.src.startsWith('__ref__') && imgs[ref]) {
-          return {...g, src: imgs[ref]};
+        if(g.src && g.src.startsWith('__ref__')) {
+          const key = g.src.replace('__ref__','');
+          // Tenta chave nova e chaves antigas
+          const val = imgs[key] || imgs[`gallery/${i}`] || imgs[`gallery_${i}`];
+          if(val) return {...g, src: val};
         }
         return g;
       });
