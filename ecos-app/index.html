@@ -1666,9 +1666,15 @@ function readPhotoWithCrop(fileId, callback) {
 function openCropEditor(src, callback) {
   _cropState = { src, callback, offsetX: 0, offsetY: 0, scale: 1, dragging: false };
   const ov = $id('ov-crop');
-  const canvas = $id('crop-canvas');
   ov.classList.add('open');
-  requestAnimationFrame(() => drawCrop(canvas, src, 0, 0));
+  // Reset zoom slider
+  const slider = $id('crop-zoom');
+  if(slider) slider.value = 1;
+  // Draw after modal is visible
+  setTimeout(() => {
+    const canvas = $id('crop-canvas');
+    if(canvas) drawCrop(canvas, src, 0, 0);
+  }, 50);
 }
 
 function drawCrop(canvas, src, ox, oy) {
@@ -2747,41 +2753,57 @@ async function fbSaveNotifications() {
 function fbListen() {
   if(!window._db) return;
 
-  // Escuta TODA a pasta de crônicas em tempo real
-  window._fbOnValue(window._fbRef(window._db, 'chronicles'), snap => {
+  window._fbOnValue(window._fbRef(window._db, 'chronicles'), async snap => {
     if(!snap.exists()) return;
     const data = snap.val();
 
-    Object.keys(data).forEach(id => {
+    for(const id of Object.keys(data)) {
       const idx = S.chronicles.findIndex(c => c.id === id);
-      const incoming = data[id];
+      let incoming = {...data[id]};
+
       if(idx >= 0) {
-        const nodePos = S.chronicles[idx]._nodePos; // preserva posição local dos nós
-        // Firebase tem prioridade total
-        S.chronicles[idx] = { ...S.chronicles[idx], ...incoming };
-        if(nodePos) S.chronicles[idx]._nodePos = nodePos;
-        // Atualiza referência da crônica atual
-        if(S.chron && S.chron.id === id) {
-          S.chron = S.chronicles[idx];
+        const local = S.chronicles[idx];
+        const pos = local._nodePos;
+
+        // Preserva imagens locais — não substitui por refs do Firebase
+        ['npcs','locations','characters'].forEach(type => {
+          if(!incoming[type] || !local[type]) return;
+          incoming[type] = incoming[type].map((item, i) => {
+            const loc = local[type][i];
+            if(item.photo && item.photo.startsWith('__img__') && loc && loc.photo && !loc.photo.startsWith('__img__')) {
+              return {...item, photo: loc.photo};
+            }
+            return item;
+          });
+        });
+        if(incoming.gallery && local.gallery) {
+          incoming.gallery = incoming.gallery.map((g, i) => {
+            const loc = local.gallery[i];
+            if(g.src && g.src.startsWith('__img__') && loc && loc.src && !loc.src.startsWith('__img__')) {
+              return {...g, src: loc.src};
+            }
+            return g;
+          });
         }
+
+        // Tenta cache para refs restantes
+        incoming = await loadImagesForChron(incoming);
+        S.chronicles[idx] = {...local, ...incoming};
+        if(pos) S.chronicles[idx]._nodePos = pos;
+        if(S.chron && S.chron.id === id) S.chron = S.chronicles[idx];
       } else {
+        incoming = await loadImagesForChron(incoming);
         S.chronicles.push(incoming);
       }
-    });
+    }
 
     renderHome();
     if(S.user) renderBell();
-
-    // Re-renderiza a aba atual se uma crônica estiver aberta
-    if(S.chron) {
-      const tab = activeTab();
-      if(tab && renders[tab]) renders[tab]();
-    }
+    if(S.chron) { const t = activeTab(); if(t && renders[t]) renders[t](); }
   });
 
-  // Escuta notificações em tempo real
   window._fbOnValue(window._fbRef(window._db, 'app/notifications'), snap => {
-    S.notifications = snap.exists() ? (snap.val() || []) : [];
+    S.notifications = snap.exists() ? (snap.val()||[]) : [];
     if(S.user) { renderBell(); renderNotifPanel(); }
   });
 }
@@ -2813,12 +2835,14 @@ function setupPhotoInput(fileId, previewId, imgId) {
   if(!el) return;
   el.addEventListener('change', function(){
     if(!this.files[0]) return;
-    readPhotoWithCrop(fileId, (result) => {
-      if(!result) return;
-      $id(imgId).src = result;
-      $id(previewId).style.display = 'block';
-      // Store result for later save
-      el._croppedResult = result;
+    const file = this.files[0];
+    compressImage(file, 1200, 1200, 0.9).then(src => {
+      openCropEditor(src, (result) => {
+        if(!result) { el.value=''; return; }
+        el._croppedResult = result;
+        $id(imgId).src = result;
+        $id(previewId).style.display = 'block';
+      });
     });
   });
 }
