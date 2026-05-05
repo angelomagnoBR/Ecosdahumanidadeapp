@@ -1678,34 +1678,42 @@ function openCropEditor(src, callback) {
 }
 
 function drawCrop(canvas, src, ox, oy) {
-  const size = Math.min(canvas.offsetWidth || 320, 320);
+  const size = Math.min(canvas.offsetWidth || 280, 280);
   canvas.width = size; canvas.height = size;
   const ctx = canvas.getContext('2d');
   const img = new Image();
   img.onload = () => {
+    // Limpa canvas
     ctx.clearRect(0, 0, size, size);
-    // Fit image filling the square
+
+    // Calcula escala e posição
     const scale = _cropState.scale * Math.max(size/img.width, size/img.height);
     const w = img.width * scale, h = img.height * scale;
-    // Clamp offsets
     const maxOx = Math.max(0, (w-size)/2);
     const maxOy = Math.max(0, (h-size)/2);
     _cropState.offsetX = Math.max(-maxOx, Math.min(maxOx, ox));
     _cropState.offsetY = Math.max(-maxOy, Math.min(maxOy, oy));
     const dx = (size-w)/2 + _cropState.offsetX;
     const dy = (size-h)/2 + _cropState.offsetY;
+
+    // 1. Desenha imagem completa
     ctx.drawImage(img, dx, dy, w, h);
-    // Overlay circle guide
+
+    // 2. Escurece fora do círculo (sem destination-out)
     ctx.save();
-    ctx.globalAlpha = 0.35;
-    ctx.fillStyle = '#000';
-    ctx.fillRect(0,0,size,size);
-    ctx.globalAlpha = 1;
-    ctx.globalCompositeOperation = 'destination-out';
     ctx.beginPath();
-    ctx.arc(size/2, size/2, size/2-4, 0, Math.PI*2);
-    ctx.fill();
+    ctx.rect(0, 0, size, size);
+    ctx.arc(size/2, size/2, size/2 - 3, 0, Math.PI*2, true); // true = sentido antihorário = "furo"
+    ctx.fillStyle = 'rgba(0,0,0,0.65)';
+    ctx.fill('evenodd');
     ctx.restore();
+
+    // 3. Borda do círculo
+    ctx.beginPath();
+    ctx.arc(size/2, size/2, size/2 - 3, 0, Math.PI*2);
+    ctx.strokeStyle = 'rgba(201,168,76,0.8)';
+    ctx.lineWidth = 2;
+    ctx.stroke();
   };
   img.src = src;
 }
