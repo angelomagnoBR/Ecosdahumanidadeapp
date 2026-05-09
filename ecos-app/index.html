@@ -728,7 +728,7 @@ footer{text-align:center;padding:1.1rem;font-family:'Share Tech Mono',monospace;
   <div id="panel-map" class="panel" style="padding:0;position:fixed;top:57px;left:0;right:0;bottom:0;z-index:10;"></div>
 </div>
 
-<footer>ECOS DA HUMANIDADE &nbsp;·&nbsp; <span style="color:var(--gold);opacity:0.8;">V1.0</span> &nbsp;·&nbsp; ARQUIVO DAS CRÔNICAS</footer>
+<footer>ECOS DA HUMANIDADE &nbsp;·&nbsp; <span style="color:var(--gold);opacity:0.8;">V1.1</span> &nbsp;·&nbsp; ARQUIVO DAS CRÔNICAS</footer>
 </div><!-- .app -->
 
 <!-- ==================== OVERLAYS ==================== -->
@@ -912,8 +912,9 @@ footer{text-align:center;padding:1.1rem;font-family:'Share Tech Mono',monospace;
 <div class="ov" id="ov-timeline">
   <div class="modal">
     <div class="modal-h" id="ov-tl-title">⊕ Novo Evento</div>
-    <div class="field"><label>Período / Data</label><input id="tl-date" type="text" placeholder="Ex: Dia 01, Ano 2077, Século XIII"></div>
-    <div class="field"><label>Evento</label><input id="tl-event" type="text" placeholder="Nome curto do evento"></div>
+    <div class="field"><label>Ano / Período</label><input id="tl-date" type="text" placeholder="Ex: 1923, Século XIII, 2024"></div>
+    <div class="field"><label>Personagem (opcional)</label><select id="tl-char"><option value="">Nenhum</option></select></div>
+    <div class="field"><label>Título</label><input id="tl-event" type="text" placeholder="Nome curto do evento"></div>
     <div class="field"><label>Descrição</label><textarea id="tl-desc" placeholder="Detalhes do que aconteceu..."></textarea></div>
     <div class="modal-acts">
       <button class="btn-cancel" onclick="closeOv('ov-timeline')">Cancelar</button>
@@ -1817,58 +1818,37 @@ function delLoc(i){ if(!confirm('Remover este local?'))return; S.chron.locations
 
 // ---- TIMELINE ----
 function renderTimeline(){
-  const el=$id('panel-timeline'), c=S.chron;
-  let html='<div class="toolbar">';
-  html+=`<span class="toolbar-title">${c.timeline.length} evento${c.timeline.length!==1?'s':''} na linha do tempo</span>`;
-  if(isNarrator()) html+=`<button class="btn-add" onclick="openAddTl()">+ Novo Evento</button>`;
-  html+='</div>';
-  if(!c.timeline.length){ html+=`<div class="empty"><div class="empty-ico">⏳</div>Linha do tempo vazia.</div>`; el.innerHTML=html; return; }
-  html+='<div class="tl-wrap">';
-  c.timeline.forEach((t,i)=>{
-    html+=`<div class="tl-item">
-      <div class="tl-date">${t.date}</div>
-      <div class="tl-event">${t.event}</div>
-      <div class="tl-desc">${t.desc}</div>
-      ${isNarrator()?`<div class="card-actions" style="margin-top:0.4rem;"><button class="btn-sm btn-edit" onclick="openEditTl(${i})">Editar</button><button class="btn-sm btn-del" onclick="delTl(${i})">Remover</button></div>`:''}
-    </div>`;
+  const el=$id('panel-timeline'),c=S.chron;
+  if(!c.timeline)c.timeline=[];
+  let html='<div class="tl-hint">&#8592; Arraste para navegar &#8594;</div>';
+  if(isLoggedIn())html+='<div style="display:flex;justify-content:flex-end;margin-bottom:0.5rem;"><button class="btn-add" onclick="openAddTl()">+ Novo Evento</button></div>';
+  if(!c.timeline.length){html+='<div class="empty"><div class="empty-ico">&#9203;</div>Nenhum evento ainda.</div>';el.innerHTML=html;return;}
+  const byYear={};
+  c.timeline.forEach((t,i)=>{const yr=t.date||'?';if(!byYear[yr])byYear[yr]=[];byYear[yr].push({...t,_idx:i});});
+  const years=Object.keys(byYear).sort((a,b)=>(parseInt(a)||0)-(parseInt(b)||0));
+  html+='<div class="tl-outer" id="tl-outer"><div class="tl-track"><div class="tl-line"></div>';
+  years.forEach((yr,yi)=>{
+    const evts=byYear[yr],isAbove=yi%2===0;
+    const balloons=evts.map(t=>{
+      const ch=(c.characters||[]).find(x=>x.name===t.charName);
+      const av=ch&&ch.photo?'<img src="'+ch.photo+'" style="width:100%;height:100%;object-fit:cover;border-radius:50%;">':'<span>'+(t.charName||'?')[0].toUpperCase()+'</span>';
+      const canEdit=isNarrator()||(S.user&&t.author===S.user.name);
+      return '<div class="tl-balloon">'+(t.charName?'<div class="tl-balloon-hdr"><div class="tl-ball-avatar">'+av+'</div><div><div class="tl-ball-name">'+t.charName+'</div><div class="tl-ball-char">'+(ch?ch.concept||'':'')+'</div></div></div>':'')+'<div class="tl-ball-title">'+t.event+'</div>'+(t.desc?'<div class="tl-ball-desc">'+t.desc+'</div>':'')+(canEdit?'<div class="tl-ball-actions"><button class="btn-sm btn-edit" onclick="event.stopPropagation();openEditTl('+t._idx+')">Editar</button><button class="btn-sm btn-del" onclick="event.stopPropagation();delTl('+t._idx+')">&#215;</button></div>':'')+'</div>';
+    }).join('');
+    html+='<div class="tl-year" onclick="toggleTlYear(this)">'+(isAbove?'<div class="tl-balloons above">'+balloons+'</div><div class="tl-connector up"></div>':'')+'<div class="tl-year-dot"></div><div class="tl-year-label">'+yr+'</div>'+(!isAbove?'<div class="tl-connector down"></div><div class="tl-balloons below">'+balloons+'</div>':'')+'</div>';
   });
-  html+='</div>'; el.innerHTML=html;
+  html+='<div class="tl-add-year" onclick="openAddTl()"><div class="tl-add-dot">+</div><div class="tl-add-label">Novo ano</div></div></div></div>';
+  el.innerHTML=html;
+  initTlDrag();
 }
+function toggleTlYear(el){document.querySelectorAll('.tl-year').forEach(y=>{if(y!==el)y.classList.remove('active');});el.classList.toggle('active');}
+function initTlDrag(){const outer=document.getElementById('tl-outer');if(!outer||outer._d)return;outer._d=true;let down=false,sx,sl;outer.addEventListener('mousedown',e=>{if(e.target.closest('.tl-balloon,.tl-add-year,.btn-sm'))return;down=true;sx=e.pageX-outer.offsetLeft;sl=outer.scrollLeft;});window.addEventListener('mouseup',()=>{down=false;});outer.addEventListener('mousemove',e=>{if(!down)return;e.preventDefault();outer.scrollLeft=sl-(e.pageX-outer.offsetLeft-sx);});outer.addEventListener('touchstart',e=>{sx=e.touches[0].pageX;sl=outer.scrollLeft;},{passive:true});outer.addEventListener('touchmove',e=>{outer.scrollLeft=sl-(e.touches[0].pageX-sx);},{passive:true});}
+function populateTlCharSel(){const sel=$id('tl-char');if(!sel)return;sel.innerHTML='<option value="">Nenhum</option>';(S.chron.characters||[]).forEach(ch=>{const o=document.createElement('option');o.value=ch.name;o.textContent=ch.name;sel.appendChild(o);});}
+function openAddTl(){S.editIdx=null;$id('ov-tl-title').textContent='&#8853; Novo Evento';['tl-date','tl-event','tl-desc'].forEach(id=>setVal(id,''));populateTlCharSel();openOv('ov-timeline');}
+function openEditTl(i){S.editIdx=i;const t=S.chron.timeline[i];$id('ov-tl-title').textContent='&#9998; Editar';setVal('tl-date',t.date);setVal('tl-event',t.event);setVal('tl-desc',t.desc||'');populateTlCharSel();const sel=$id('tl-char');if(sel)sel.value=t.charName||'';openOv('ov-timeline');}
+function saveTl(){const date=val('tl-date'),event=val('tl-event'),desc=val('tl-desc');const sel=$id('tl-char');const charName=sel?sel.value:'';if(!date||!event){toast('Ano e título obrigatórios.');return;}const obj={date,event,desc,charName,author:S.user?S.user.name:''};if(S.editIdx===null)S.chron.timeline.push(obj);else S.chron.timeline[S.editIdx]=obj;fbSaveChronicle(S.chron);closeOv('ov-timeline');renderTimeline();toast(S.editIdx===null?'Evento adicionado!':'Evento atualizado!');}
+function delTl(i){if(!confirm('Remover este evento?'))return;S.chron.timeline.splice(i,1);fbSaveChronicle(S.chron);renderTimeline();toast('Evento removido.');}
 
-function openAddTl(){ S.editIdx=null; $id('ov-tl-title').textContent='⊕ Novo Evento'; ['tl-date','tl-event','tl-desc'].forEach(id=>setVal(id,'')); openOv('ov-timeline'); }
-function openEditTl(i){ S.editIdx=i; const t=S.chron.timeline[i]; $id('ov-tl-title').textContent='✎ Editar Evento'; setVal('tl-date',t.date); setVal('tl-event',t.event); setVal('tl-desc',t.desc); openOv('ov-timeline'); }
-function saveTl(){
-  const date=val('tl-date'),event=val('tl-event'),desc=val('tl-desc');
-  if(!event){ toast('Nome do evento obrigatório.'); return; }
-  const obj={date,event,desc};
-  if(S.editIdx===null) S.chron.timeline.push(obj); else S.chron.timeline[S.editIdx]=obj;
-  fbSaveChronicle(S.chron); closeOv('ov-timeline'); renderTimeline(); toast(S.editIdx===null?'Evento adicionado!':'Evento atualizado!');
-}
-function delTl(i){ if(!confirm('Remover este evento?'))return; S.chron.timeline.splice(i,1); fbSaveChronicle(S.chron); renderTimeline(); toast('Evento removido.'); }
-
-// ---- CHARACTERS ----
-function renderCharacters(){
-  const el=$id('panel-characters'), c=S.chron;
-  const canAdd = isNarrator() || isLoggedIn();
-  let html='<div class="toolbar">';
-  html+=`<span class="toolbar-title">${c.characters.length} personagem${c.characters.length!==1?'s':''}</span>`;
-  if(canAdd) html+=`<button class="btn-add" onclick="openAddChar()">+ Novo Personagem</button>`;
-  html+='</div>';
-  if(!c.characters.length){ html+=`<div class="empty"><div class="empty-ico">⚔️</div>Nenhum personagem registrado.</div>`; el.innerHTML=html; return; }
-  html+='<div class="chars-grid">';
-  c.characters.forEach((ch,i)=>{
-    const canEdit = isNarrator() || (S.user&&ch.player===S.user.name);
-    html+=`<div class="char-card">
-      ${ch.photo?`<img src="${ch.photo}" class="char-card-photo" onclick="openImgLightbox('${ch.photo}','${ch.name}')" style="cursor:pointer;">`:''}
-      <div class="char-name">${ch.name}</div>
-      <div class="char-player">Jogado por ${ch.player}</div>
-      <div class="char-concept">${ch.concept}</div>
-      ${ch.desc?`<div class="char-concept" style="margin-top:0.4rem;color:#666;">${ch.desc}</div>`:''}
-      ${canEdit?`<div class="card-actions" style="margin-top:0.6rem;"><button class="btn-sm btn-edit" onclick="openEditChar(${i})">Editar</button>${isNarrator()?`<button class="btn-sm btn-del" onclick="delChar(${i})">Remover</button>`:''}</div>`:''}
-    </div>`;
-  });
-  html+='</div>'; el.innerHTML=html;
-}
 
 function populateCharPlayerSel(){
   const sel=$id('char-player-sel'); sel.innerHTML='';
