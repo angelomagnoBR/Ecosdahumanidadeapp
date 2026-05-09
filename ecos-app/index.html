@@ -195,24 +195,24 @@ nav{display:flex;align-items:center;justify-content:space-between;padding:0.9rem
 .loc-secret-content{font-size:0.84rem;color:#999;line-height:1.55;margin-top:0.5rem;padding-top:0.5rem;border-top:1px solid rgba(201,168,76,0.1);}
 
 /* TIMELINE */
-.tl-outer{width:100%;overflow-x:auto;cursor:grab;padding:10px 0 16px;}
+.tl-outer{width:100%;overflow-x:auto;overflow-y:visible;cursor:grab;padding:10px 0 24px;}
 .tl-outer:active{cursor:grabbing;}
 .tl-outer::-webkit-scrollbar{height:3px;}
 .tl-outer::-webkit-scrollbar-thumb{background:rgba(139,0,0,0.4);border-radius:2px;}
-.tl-track{display:flex;align-items:center;position:relative;min-width:max-content;padding:160px 60px 80px;}
-.tl-line{position:absolute;left:0;right:0;top:180px;height:2px;background:linear-gradient(90deg,transparent,var(--vampire-red) 8%,var(--vampire-crimson) 50%,var(--vampire-red) 92%,transparent);}
-.tl-year{position:relative;display:flex;flex-direction:column;align-items:center;min-width:200px;cursor:pointer;}
-.tl-year-dot{width:14px;height:14px;background:var(--bg);border:2px solid var(--vampire-crimson);border-radius:50%;position:relative;z-index:2;transition:all 0.2s;flex-shrink:0;}
-.tl-year:hover .tl-year-dot,.tl-year.active .tl-year-dot{background:var(--vampire-crimson);box-shadow:0 0 10px rgba(196,30,58,0.5);transform:scale(1.3);}
-.tl-year-label{font-family:'Share Tech Mono',monospace;font-size:0.65rem;letter-spacing:0.2em;color:var(--text-dim);margin-top:8px;transition:color 0.2s;}
+.tl-track{display:flex;align-items:flex-start;position:relative;min-width:max-content;padding:0 48px;}
+.tl-line{position:absolute;left:0;right:0;top:120px;height:2px;background:linear-gradient(90deg,transparent,var(--vampire-red) 8%,var(--vampire-crimson) 50%,var(--vampire-red) 92%,transparent);}
+.tl-year{position:relative;display:flex;flex-direction:column;align-items:center;min-width:200px;cursor:pointer;padding-top:20px;padding-bottom:20px;height:280px;}
+.tl-year-dot{width:14px;height:14px;background:var(--bg);border:2px solid var(--vampire-crimson);border-radius:50%;position:absolute;top:113px;left:50%;transform:translateX(-50%);z-index:2;transition:all 0.2s;}
+.tl-year:hover .tl-year-dot,.tl-year.active .tl-year-dot{background:var(--vampire-crimson);box-shadow:0 0 10px rgba(196,30,58,0.5);transform:translateX(-50%) scale(1.3);}
+.tl-year-label{position:absolute;top:132px;font-family:'Share Tech Mono',monospace;font-size:0.65rem;letter-spacing:0.2em;color:var(--text-dim);transition:color 0.2s;white-space:nowrap;}
 .tl-year:hover .tl-year-label,.tl-year.active .tl-year-label{color:var(--vampire-crimson);}
-.tl-balloons{position:absolute;left:50%;transform:translateX(-50%);display:flex;flex-direction:column;gap:8px;width:180px;opacity:0;pointer-events:none;transition:opacity 0.25s;}
-.tl-balloons.above{bottom:195px;}
-.tl-balloons.below{top:210px;}
+.tl-balloons{position:absolute;left:50%;transform:translateX(-50%);display:flex;flex-direction:column;gap:8px;width:180px;opacity:0;pointer-events:none;transition:opacity 0.25s;z-index:10;}
+.tl-balloons.above{bottom:162px;}
+.tl-balloons.below{top:162px;}
 .tl-year.active .tl-balloons{opacity:1;pointer-events:all;}
-.tl-connector{width:1px;background:rgba(196,30,58,0.3);position:absolute;left:50%;}
-.tl-connector.up{top:0;bottom:194px;}
-.tl-connector.down{top:194px;height:36px;}
+.tl-connector{position:absolute;left:calc(50% - 0.5px);width:1px;background:rgba(196,30,58,0.45);}
+.tl-connector.up{top:20px;height:93px;}
+.tl-connector.down{top:127px;height:35px;}
 .tl-balloon{background:#0d0005;border:1px solid rgba(139,0,0,0.3);border-radius:4px;padding:9px;}
 .tl-balloon-hdr{display:flex;align-items:center;gap:7px;margin-bottom:5px;}
 .tl-ball-avatar{width:32px;height:32px;border-radius:50%;overflow:hidden;border:1.5px solid rgba(196,30,58,0.35);flex-shrink:0;background:#1a0010;display:flex;align-items:center;justify-content:center;font-family:'Cinzel',serif;font-size:0.65rem;color:#c87070;}
@@ -742,7 +742,7 @@ footer{text-align:center;padding:1.1rem;font-family:'Share Tech Mono',monospace;
   <div id="panel-sessions" class="panel"></div>
   <div id="panel-npcs"     class="panel"></div>
   <div id="panel-locations" class="panel"></div>
-  <div id="panel-timeline" class="panel"></div>
+  <div id="panel-timeline" class="panel" style="overflow:visible;padding-top:0;"></div>
   <div id="panel-characters" class="panel"></div>
   <div id="panel-gallery"  class="panel"></div>
   <div id="panel-rumors"   class="panel"></div>
@@ -754,7 +754,7 @@ footer{text-align:center;padding:1.1rem;font-family:'Share Tech Mono',monospace;
   <div id="panel-map" class="panel" style="padding:0;position:fixed;top:57px;left:0;right:0;bottom:0;z-index:10;"></div>
 </div>
 
-<footer>ECOS DA HUMANIDADE &nbsp;·&nbsp; <span style="color:var(--gold);opacity:0.8;">V1.1</span> &nbsp;·&nbsp; ARQUIVO DAS CRÔNICAS</footer>
+<footer>ECOS DA HUMANIDADE &nbsp;·&nbsp; <span style="color:var(--gold);opacity:0.8;">V1.3</span> &nbsp;·&nbsp; ARQUIVO DAS CRÔNICAS</footer>
 </div><!-- .app -->
 
 <!-- ==================== OVERLAYS ==================== -->
@@ -938,7 +938,7 @@ footer{text-align:center;padding:1.1rem;font-family:'Share Tech Mono',monospace;
 <div class="ov" id="ov-timeline">
   <div class="modal">
     <div class="modal-h" id="ov-tl-title">⊕ Novo Evento</div>
-    <div class="field"><label>Ano / Período</label><input id="tl-date" type="text" placeholder="Ex: 1923, Século XIII, 2024"></div>
+    <div class="field"><label>Data</label><input id="tl-date" type="date" style="color-scheme:dark;"></div>
     <div class="field"><label>Personagem (opcional)</label><select id="tl-char"><option value="">Nenhum</option></select></div>
     <div class="field"><label>Título</label><input id="tl-event" type="text" placeholder="Nome curto do evento"></div>
     <div class="field"><label>Descrição</label><textarea id="tl-desc" placeholder="Detalhes do que aconteceu..."></textarea></div>
@@ -1846,7 +1846,7 @@ function delLoc(i){ if(!confirm('Remover este local?'))return; S.chron.locations
 function renderTimeline(){
   const el=$id('panel-timeline'),c=S.chron;
   if(!c.timeline)c.timeline=[];
-  let html='<div class="tl-hint">&#8592; Arraste para navegar &#8594;</div>';
+  let html='<div class="tl-hint">&#8592; Arraste para navegar · Clique no ano para ver eventos &#8594;</div>';
   if(isLoggedIn())html+='<div style="display:flex;justify-content:flex-end;margin-bottom:0.5rem;"><button class="btn-add" onclick="openAddTl()">+ Novo Evento</button></div>';
   if(!c.timeline.length){html+='<div class="empty"><div class="empty-ico">&#9203;</div>Nenhum evento ainda.</div>';el.innerHTML=html;return;}
   const byYear={};
@@ -1871,8 +1871,8 @@ function toggleTlYear(el){document.querySelectorAll('.tl-year').forEach(y=>{if(y
 function initTlDrag(){const outer=document.getElementById('tl-outer');if(!outer||outer._d)return;outer._d=true;let down=false,sx,sl;outer.addEventListener('mousedown',e=>{if(e.target.closest('.tl-balloon,.tl-add-year,.btn-sm'))return;down=true;sx=e.pageX-outer.offsetLeft;sl=outer.scrollLeft;});window.addEventListener('mouseup',()=>{down=false;});outer.addEventListener('mousemove',e=>{if(!down)return;e.preventDefault();outer.scrollLeft=sl-(e.pageX-outer.offsetLeft-sx);});outer.addEventListener('touchstart',e=>{sx=e.touches[0].pageX;sl=outer.scrollLeft;},{passive:true});outer.addEventListener('touchmove',e=>{outer.scrollLeft=sl-(e.touches[0].pageX-sx);},{passive:true});}
 function populateTlCharSel(){const sel=$id('tl-char');if(!sel)return;sel.innerHTML='<option value="">Nenhum</option>';(S.chron.characters||[]).forEach(ch=>{const o=document.createElement('option');o.value=ch.name;o.textContent=ch.name;sel.appendChild(o);});}
 function openAddTl(){S.editIdx=null;$id('ov-tl-title').textContent='&#8853; Novo Evento';['tl-date','tl-event','tl-desc'].forEach(id=>setVal(id,''));populateTlCharSel();openOv('ov-timeline');}
-function openEditTl(i){S.editIdx=i;const t=S.chron.timeline[i];$id('ov-tl-title').textContent='&#9998; Editar';setVal('tl-date',t.date);setVal('tl-event',t.event);setVal('tl-desc',t.desc||'');populateTlCharSel();const sel=$id('tl-char');if(sel)sel.value=t.charName||'';openOv('ov-timeline');}
-function saveTl(){const date=val('tl-date'),event=val('tl-event'),desc=val('tl-desc');const sel=$id('tl-char');const charName=sel?sel.value:'';if(!date||!event){toast('Ano e título obrigatórios.');return;}const obj={date,event,desc,charName,author:S.user?S.user.name:''};if(S.editIdx===null)S.chron.timeline.push(obj);else S.chron.timeline[S.editIdx]=obj;fbSaveChronicle(S.chron);closeOv('ov-timeline');renderTimeline();toast(S.editIdx===null?'Evento adicionado!':'Evento atualizado!');}
+function openEditTl(i){S.editIdx=i;const t=S.chron.timeline[i];$id('ov-tl-title').textContent='&#9998; Editar';setVal('tl-date',t._rawDate||'');setVal('tl-event',t.event);setVal('tl-desc',t.desc||'');populateTlCharSel();const sel=$id('tl-char');if(sel)sel.value=t.charName||'';openOv('ov-timeline');}
+function saveTl(){const date=val('tl-date'),event=val('tl-event'),desc=val('tl-desc');const sel=$id('tl-char');const charName=sel?sel.value:'';if(!date||!event){toast('Ano e título obrigatórios.');return;}const dateFormatted=date?new Date(date+'T12:00:00').toLocaleDateString('pt-BR',{day:'2-digit',month:'2-digit',year:'numeric'}):date; const obj={date:dateFormatted,_rawDate:date,event,desc,charName,author:S.user?S.user.name:''};if(S.editIdx===null)S.chron.timeline.push(obj);else S.chron.timeline[S.editIdx]=obj;fbSaveChronicle(S.chron);closeOv('ov-timeline');renderTimeline();toast(S.editIdx===null?'Evento adicionado!':'Evento atualizado!');}
 function delTl(i){if(!confirm('Remover este evento?'))return;S.chron.timeline.splice(i,1);fbSaveChronicle(S.chron);renderTimeline();toast('Evento removido.');}
 
 
