@@ -772,7 +772,7 @@ footer{text-align:center;padding:1.1rem;font-family:'Share Tech Mono',monospace;
   <div id="panel-map" class="panel" style="padding:0;position:fixed;top:57px;left:0;right:0;bottom:0;z-index:10;"></div>
 </div>
 
-<footer>ECOS DA HUMANIDADE &nbsp;·&nbsp; <span style="color:var(--gold);opacity:0.8;">V1.9</span> &nbsp;·&nbsp; ARQUIVO DAS CRÔNICAS</footer>
+<footer>ECOS DA HUMANIDADE &nbsp;·&nbsp; <span style="color:var(--gold);opacity:0.8;">V2.0</span> &nbsp;·&nbsp; ARQUIVO DAS CRÔNICAS</footer>
 </div><!-- .app -->
 
 <!-- ==================== OVERLAYS ==================== -->
@@ -1821,30 +1821,38 @@ function delNpc(i){ if(!confirm('Remover este NPC?'))return; S.chron.npcs.splice
 function renderLocations(){
   const el=$id('panel-locations'), c=S.chron;
   let html='<div class="toolbar">';
-  html+=`<span class="toolbar-title">${c.locations.length} local${c.locations.length!==1?'is':''} registrado${c.locations.length!==1?'s':''}</span>`;
-  if(isNarrator()) html+=`<button class="btn-add" onclick="openAddLoc()">+ Novo Local</button>`;
+  if(isLoggedIn()) html+='<span class="toolbar-title">Locais ('+((c.locations||[]).length)+')</span>';
+  if(isNarrator()) html+='<button class="btn-add" onclick="openAddLoc()">+ Novo Local</button>';
   html+='</div>';
-  if(!c.locations.length){ html+=`<div class="empty"><div class="empty-ico">🗺️</div>Nenhum local registrado.</div>`; el.innerHTML=html; return; }
+  if(!(c.locations||[]).length){
+    html+='<div class="empty"><div class="empty-ico">🗺️</div>Nenhum local registrado.</div>';
+    el.innerHTML=html; return;
+  }
   html+='<div class="locs-list">';
-  c.locations.forEach((l,i)=>{
-    html+=`<div class="loc-card">
-      ${l.photo?`<img src="${l.photo}" class="loc-card-photo" onclick="openImgLightbox('${l.photo}','${l.name}')" style="cursor:pointer;">`:''}
-      <div class="loc-top">
-        <div class="loc-icon">${l.icon||'📍'}</div>
-        <div style="flex:1">
-          <div class="loc-name">${l.name}</div>
-          <div class="loc-desc">${l.desc}</div>
-          ${isNarrator()&&l.secret?`<div class="loc-secret-banner">🔒 SEGREDO DO NARRADOR ${l.secretRevealed?'— REVELADO':''}</div><div class="loc-secret-content">${l.secret}</div>`:''}
-          ${!isNarrator()&&l.secret&&l.secretRevealed?`<div class="loc-secret-banner">📖 INFORMAÇÃO REVELADA</div><div class="loc-secret-content">${l.secret}</div>`:''}
-          <div class="card-actions">
-            ${isLoggedIn()?`<button class="btn-sm btn-edit" onclick="openEditLoc(${i})">Editar</button>${isNarrator()&&l.secret?`<button class="btn-sm btn-reveal" onclick="toggleRevealLoc(${i})">${l.secretRevealed?'Ocultar':'Revelar'}</button>`:''}${isNarrator()?`<button class="btn-sm btn-del" onclick="delLoc(${i})">Remover</button>`:''}
-          </div>
-        </div>
-      </div>
-    </div>`;
+  (c.locations||[]).forEach((l,i)=>{
+    html+='<div class="loc-card">';
+    if(l.photo) html+='<img src="'+l.photo+'" class="loc-card-photo" onclick="openImgLightbox(\''+l.photo+'\',\''+l.name+'\')" style="cursor:pointer;">';
+    html+='<div class="loc-top"><div class="loc-icon">'+(l.icon||'📍')+'</div><div style="flex:1">';
+    html+='<div class="loc-name">'+l.name+'</div>';
+    html+='<div class="loc-desc">'+l.desc+'</div>';
+    if(isNarrator()&&l.secret){
+      html+='<div class="loc-secret-banner">🔒 SEGREDO DO NARRADOR '+(l.secretRevealed?'— REVELADO':'')+'</div>';
+      html+='<div class="loc-secret-content">'+l.secret+'</div>';
+    }
+    if(!isNarrator()&&l.secret&&l.secretRevealed){
+      html+='<div class="loc-secret-banner">📖 INFORMAÇÃO REVELADA</div>';
+      html+='<div class="loc-secret-content">'+l.secret+'</div>';
+    }
+    html+='<div class="card-actions">';
+    if(isLoggedIn()) html+='<button class="btn-sm btn-edit" onclick="openEditLoc('+i+')">Editar</button>';
+    if(isNarrator()&&l.secret) html+='<button class="btn-sm btn-reveal" onclick="toggleRevealLoc('+i+')">'+(l.secretRevealed?'Ocultar':'Revelar')+'</button>';
+    if(isNarrator()) html+='<button class="btn-sm btn-del" onclick="delLoc('+i+')">Remover</button>';
+    html+='</div></div></div></div>';
   });
-  html+='</div>'; el.innerHTML=html;
+  html+='</div>';
+  el.innerHTML=html;
 }
+
 
 function openAddLoc(){ S.editIdx=null; $id('ov-loc-title').textContent='⊕ Novo Local'; ['loc-name','loc-icon','loc-desc','loc-secret'].forEach(id=>setVal(id,'')); $id('loc-reveal-field').style.display='none'; clearPhotoInput('loc-photo-file','loc-photo-preview','loc-photo-img'); openOv('ov-location'); }
 function openEditLoc(i){ S.editIdx=i; const l=S.chron.locations[i]; $id('ov-loc-title').textContent='✎ Editar Local'; setVal('loc-name',l.name); setVal('loc-icon',l.icon); setVal('loc-desc',l.desc); setVal('loc-secret',l.secret||''); $id('loc-reveal-field').style.display='block'; $id('loc-revealed').value=l.secretRevealed?'true':'false'; if(l.photo){$id('loc-photo-img').src=l.photo;$id('loc-photo-preview').style.display='block';}else{clearPhotoInput('loc-photo-file','loc-photo-preview','loc-photo-img');} openOv('ov-location'); }
@@ -1976,18 +1984,6 @@ function initTlDrag(){
 }
 
 function populateTlCharSel(){const sel=$id('tl-char');if(!sel)return;sel.innerHTML='<option value="">Nenhum</option>';(S.chron.characters||[]).forEach(ch=>{const o=document.createElement('option');o.value=ch.name;o.textContent=ch.name;sel.appendChild(o);});}
-function openAddTl(){S.editIdx=null;$id('ov-tl-title').textContent='&#8853; Novo Evento';[\'tl-event\',\'tl-desc\'].forEach(id=>setVal(id,\'\'));setVal(\'tl-date\',\'\');populateTlCharSel();openOv(\'ov-timeline\');}
-function openEditTl(i){S.editIdx=i;const t=S.chron.timeline[i];$id('ov-tl-title').textContent=\'&#9998; Editar\';setVal(\'tl-date\',t._rawDate||\'\');setVal(\'tl-event\',t.event);setVal(\'tl-desc\',t.desc||\'\'||t.desc||\'\');populateTlCharSel();const sel=$id(\'tl-char\');if(sel)sel.value=t.charName||\'\';openOv(\'ov-timeline\');}
-function populateTlCharSel(){
-  const sel=$id('tl-char');
-  if(!sel) return;
-  sel.innerHTML='<option value="">Nenhum</option>';
-  (S.chron.characters||[]).forEach(ch=>{
-    const o=document.createElement('option');
-    o.value=ch.name; o.textContent=ch.name; sel.appendChild(o);
-  });
-}
-
 function openAddTl(){
   S.editIdx=null;
   $id('ov-tl-title').textContent='⊕ Novo Evento';
