@@ -195,40 +195,57 @@ nav{display:flex;align-items:center;justify-content:space-between;padding:0.9rem
 .loc-secret-content{font-size:0.84rem;color:#999;line-height:1.55;margin-top:0.5rem;padding-top:0.5rem;border-top:1px solid rgba(201,168,76,0.1);}
 
 /* TIMELINE */
-.tl-outer{width:100%;overflow-x:auto;overflow-y:visible;padding:8px 0 20px;cursor:grab;}
-.tl-outer:active{cursor:grabbing;}
-.tl-outer::-webkit-scrollbar{height:3px;}
-.tl-outer::-webkit-scrollbar-thumb{background:rgba(139,0,0,0.4);border-radius:2px;}
-.tl-track{position:relative;display:inline-flex;align-items:center;padding:200px 60px 100px;min-width:100%;}
-.tl-line{position:absolute;left:0;right:0;top:50%;height:2px;background:linear-gradient(90deg,transparent,#8b0000 5%,#c41e3a 50%,#8b0000 95%,transparent);}
-.tl-year{position:relative;display:flex;flex-direction:column;align-items:center;flex-shrink:0;min-width:180px;cursor:pointer;}
-.tl-year-dot{width:14px;height:14px;border-radius:50%;border:2px solid #c41e3a;background:var(--bg);position:relative;z-index:3;flex-shrink:0;transition:all 0.2s;}
-.tl-year:hover .tl-year-dot,.tl-year.active .tl-year-dot{background:#c41e3a;box-shadow:0 0 12px rgba(196,30,58,0.6);transform:scale(1.3);}
-.tl-year-label{margin-top:10px;font-family:'Share Tech Mono',monospace;font-size:0.6rem;letter-spacing:0.15em;color:var(--text-dim);white-space:nowrap;transition:color 0.2s;}
+/* TIMELINE */
+.tl-hint{text-align:center;font-family:'Share Tech Mono',monospace;font-size:0.6rem;color:rgba(201,168,76,0.4);padding:4px 0 10px;letter-spacing:0.12em;}
+.tl-scroll{width:100%;overflow-x:auto;overflow-y:visible;padding:0 0 20px;cursor:grab;}
+.tl-scroll:active{cursor:grabbing;}
+.tl-scroll::-webkit-scrollbar{height:3px;}
+.tl-scroll::-webkit-scrollbar-thumb{background:rgba(201,168,76,0.2);border-radius:2px;}
+.tl-root{position:relative;display:flex;flex-direction:column;min-width:max-content;padding:0 40px;}
+/* LINE */
+.tl-axis{position:relative;height:2px;background:linear-gradient(90deg,transparent,rgba(139,0,0,0.6) 5%,#c41e3a 30%,#c41e3a 70%,rgba(139,0,0,0.6) 95%,transparent);margin:0;flex-shrink:0;}
+/* YEARS ROW — sits on the line */
+.tl-years-row{display:flex;align-items:center;position:relative;height:0;}
+.tl-year{position:relative;display:flex;flex-direction:column;align-items:center;min-width:160px;flex-shrink:0;cursor:pointer;}
+/* dot sits on the axis */
+.tl-year-dot{width:12px;height:12px;border-radius:50%;border:2px solid #c41e3a;background:#080808;position:relative;z-index:4;transition:all 0.22s;margin-top:-7px;}
+.tl-year:hover .tl-year-dot,.tl-year.active .tl-year-dot{background:#c41e3a;box-shadow:0 0 14px rgba(196,30,58,0.7);transform:scale(1.4);}
+/* label below dot */
+.tl-year-label{font-family:'Share Tech Mono',monospace;font-size:0.58rem;letter-spacing:0.12em;color:#555;margin-top:7px;white-space:nowrap;transition:color 0.2s;background:#080808;padding:2px 6px;border-radius:2px;}
 .tl-year:hover .tl-year-label,.tl-year.active .tl-year-label{color:#c41e3a;}
-.tl-stem{width:1px;background:rgba(196,30,58,0.5);flex-shrink:0;opacity:0;transition:opacity 0.2s;}
-.tl-stem.up{height:80px;order:-1;}
-.tl-stem.down{height:60px;}
-.tl-year.active .tl-stem{opacity:1;}
-.tl-balloons-above{display:flex;flex-direction:row;flex-wrap:wrap;gap:8px;justify-content:center;order:-2;padding-bottom:8px;opacity:0;pointer-events:none;transition:opacity 0.2s;max-width:400px;}
-.tl-balloons-below{display:flex;flex-direction:column;gap:8px;padding-top:8px;opacity:0;pointer-events:none;transition:opacity 0.2s;min-width:180px;}
-.tl-year.active .tl-balloons-above,.tl-year.active .tl-balloons-below{opacity:1;pointer-events:all;}
-.tl-balloon{background:#0a0008;border:1px solid rgba(139,0,0,0.35);border-radius:4px;padding:10px;min-width:175px;max-width:200px;}
-.tl-balloon:hover{border-color:rgba(196,30,58,0.5);}
-.tl-balloon-hdr{display:flex;align-items:center;gap:8px;margin-bottom:6px;}
-.tl-ball-avatar{width:32px;height:32px;border-radius:50%;overflow:hidden;border:1.5px solid rgba(196,30,58,0.4);flex-shrink:0;background:#1a0010;display:flex;align-items:center;justify-content:center;font-family:'Cinzel',serif;font-size:0.65rem;color:#c87070;}
+/* BALLOONS above — separate row above axis */
+.tl-row-above{display:flex;align-items:flex-end;min-height:220px;position:relative;padding-bottom:16px;}
+.tl-col-above{display:flex;flex-direction:column;align-items:center;min-width:160px;flex-shrink:0;position:relative;}
+.tl-col-above .tl-stem{width:1px;height:16px;background:rgba(196,30,58,0.45);opacity:0;transition:opacity 0.22s;margin-top:auto;}
+/* BALLOONS below — separate row below axis */
+.tl-row-below{display:flex;align-items:flex-start;min-height:20px;padding-top:0;}
+.tl-col-below{display:flex;flex-direction:column;align-items:center;min-width:160px;flex-shrink:0;position:relative;}
+.tl-col-below .tl-stem{width:1px;height:16px;background:rgba(196,30,58,0.45);opacity:0;transition:opacity 0.22s;}
+/* show stems when year active */
+.tl-year.active ~ .tl-row-above .tl-col-above .tl-stem{opacity:1;}
+
+.tl-balloons-above{display:flex;flex-direction:column;gap:6px;align-items:center;opacity:0;pointer-events:none;transition:opacity 0.22s;}
+.tl-balloons-below{display:flex;flex-direction:column;gap:6px;align-items:center;opacity:0;pointer-events:none;transition:opacity 0.22s;padding-top:16px;}
+.tl-balloon{background:linear-gradient(135deg,#0d0008,#120010);border:1px solid rgba(139,0,0,0.4);border-radius:5px;padding:10px 11px;width:170px;box-shadow:0 4px 20px rgba(0,0,0,0.5);transition:border-color 0.2s;}
+.tl-balloon:hover{border-color:rgba(196,30,58,0.6);}
+.tl-balloon-hdr{display:flex;align-items:center;gap:8px;margin-bottom:6px;padding-bottom:6px;border-bottom:1px solid rgba(255,255,255,0.04);}
+.tl-ball-avatar{width:34px;height:34px;border-radius:50%;overflow:hidden;border:1.5px solid rgba(196,30,58,0.45);flex-shrink:0;background:#1a0010;display:flex;align-items:center;justify-content:center;font-family:'Cinzel',serif;font-size:0.68rem;color:#c87070;}
 .tl-ball-avatar img{width:100%;height:100%;object-fit:cover;}
-.tl-ball-name{font-family:'Cinzel',serif;font-size:0.78rem;color:#ddd;line-height:1.2;}
-.tl-ball-char{font-family:'Share Tech Mono',monospace;font-size:0.52rem;color:var(--text-dim);}
-.tl-ball-title{font-family:'Cinzel',serif;font-size:0.8rem;color:#ccc;margin-bottom:3px;}
-.tl-ball-desc{font-size:0.78rem;color:#777;line-height:1.5;}
-.tl-ball-actions{display:flex;gap:4px;margin-top:6px;}
-.tl-add-year{display:flex;flex-direction:column;align-items:center;min-width:80px;flex-shrink:0;opacity:0.3;cursor:pointer;transition:opacity 0.2s;}
-.tl-add-year:hover{opacity:0.7;}
-.tl-add-dot{width:28px;height:28px;border-radius:50%;border:1.5px dashed rgba(255,255,255,0.25);display:flex;align-items:center;justify-content:center;font-size:1.1rem;color:rgba(255,255,255,0.25);transition:all 0.2s;}
+.tl-ball-name{font-family:'Cinzel',serif;font-size:0.8rem;color:#e0c0c0;line-height:1.2;}
+.tl-ball-char{font-family:'Share Tech Mono',monospace;font-size:0.52rem;color:#555;letter-spacing:0.06em;}
+.tl-ball-title{font-family:'Cinzel',serif;font-size:0.82rem;color:#ccc;margin-bottom:4px;font-weight:600;}
+.tl-ball-desc{font-size:0.78rem;color:#666;line-height:1.55;}
+.tl-ball-actions{display:flex;gap:4px;margin-top:7px;padding-top:6px;border-top:1px solid rgba(255,255,255,0.04);}
+.tl-add-year{display:flex;flex-direction:column;align-items:center;min-width:80px;flex-shrink:0;opacity:0.28;cursor:pointer;transition:opacity 0.2s;padding-top:6px;}
+.tl-add-year:hover{opacity:0.65;}
+.tl-add-dot{width:28px;height:28px;border-radius:50%;border:1.5px dashed rgba(201,168,76,0.3);display:flex;align-items:center;justify-content:center;font-size:1.1rem;color:rgba(201,168,76,0.35);transition:all 0.2s;margin-top:-7px;}
 .tl-add-year:hover .tl-add-dot{border-color:var(--gold);color:var(--gold);}
-.tl-add-label{font-family:'Share Tech Mono',monospace;font-size:0.55rem;color:var(--text-dim);margin-top:6px;}
-.tl-hint{text-align:center;font-family:'Share Tech Mono',monospace;font-size:0.58rem;color:var(--text-dim);opacity:0.45;padding:4px 0 6px;letter-spacing:0.1em;}
+.tl-add-label{font-family:'Share Tech Mono',monospace;font-size:0.52rem;color:var(--text-dim);margin-top:8px;}
+@media(max-width:600px){
+  .tl-year{min-width:130px;}
+  .tl-col-above,.tl-col-below{min-width:130px;}
+  .tl-balloon{width:150px;}
+}
 
 /* CHARACTERS */
 .chars-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:0.9rem;}
@@ -755,7 +772,7 @@ footer{text-align:center;padding:1.1rem;font-family:'Share Tech Mono',monospace;
   <div id="panel-map" class="panel" style="padding:0;position:fixed;top:57px;left:0;right:0;bottom:0;z-index:10;"></div>
 </div>
 
-<footer>ECOS DA HUMANIDADE &nbsp;·&nbsp; <span style="color:var(--gold);opacity:0.8;">V1.7</span> &nbsp;·&nbsp; ARQUIVO DAS CRÔNICAS</footer>
+<footer>ECOS DA HUMANIDADE &nbsp;·&nbsp; <span style="color:var(--gold);opacity:0.8;">V1.9</span> &nbsp;·&nbsp; ARQUIVO DAS CRÔNICAS</footer>
 </div><!-- .app -->
 
 <!-- ==================== OVERLAYS ==================== -->
@@ -1820,7 +1837,7 @@ function renderLocations(){
           ${isNarrator()&&l.secret?`<div class="loc-secret-banner">🔒 SEGREDO DO NARRADOR ${l.secretRevealed?'— REVELADO':''}</div><div class="loc-secret-content">${l.secret}</div>`:''}
           ${!isNarrator()&&l.secret&&l.secretRevealed?`<div class="loc-secret-banner">📖 INFORMAÇÃO REVELADA</div><div class="loc-secret-content">${l.secret}</div>`:''}
           <div class="card-actions">
-            ${isNarrator()?`<button class="btn-sm btn-edit" onclick="openEditLoc(${i})">Editar</button>${l.secret?`<button class="btn-sm btn-reveal" onclick="toggleRevealLoc(${i})">${l.secretRevealed?'Ocultar':'Revelar'}</button>`:''}<button class="btn-sm btn-del" onclick="delLoc(${i})">Remover</button>`:''}
+            ${isLoggedIn()?`<button class="btn-sm btn-edit" onclick="openEditLoc(${i})">Editar</button>${isNarrator()&&l.secret?`<button class="btn-sm btn-reveal" onclick="toggleRevealLoc(${i})">${l.secretRevealed?'Ocultar':'Revelar'}</button>`:''}${isNarrator()?`<button class="btn-sm btn-del" onclick="delLoc(${i})">Remover</button>`:''}
           </div>
         </div>
       </div>
@@ -1847,47 +1864,151 @@ function delLoc(i){ if(!confirm('Remover este local?'))return; S.chron.locations
 function renderTimeline(){
   const el=$id('panel-timeline'),c=S.chron;
   if(!c.timeline)c.timeline=[];
-  let html='<div class="tl-hint">&#8592; Arraste para navegar · Clique no ano para ver eventos &#8594;</div>';
-  if(isLoggedIn())html+='<div style="display:flex;justify-content:flex-end;margin-bottom:0.5rem;"><button class="btn-add" onclick="openAddTl()">+ Novo Evento</button></div>';
-  if(!c.timeline.length){html+='<div class="empty"><div class="empty-ico">&#9203;</div>Nenhum evento ainda.</div>';el.innerHTML=html;return;}
-  const byYear={};
-  c.timeline.forEach((t,i)=>{const yr=t.date||'?';if(!byYear[yr])byYear[yr]=[];byYear[yr].push({...t,_idx:i});});
-  const years=Object.keys(byYear).sort((a,b)=>(parseInt(a)||0)-(parseInt(b)||0));
-  html+='<div class="tl-outer" id="tl-outer"><div class="tl-track"><div class="tl-line"></div>';
-  years.forEach((yr,yi)=>{
-    const evts=byYear[yr],isAbove=yi%2===0;
-    const balloons=evts.map(t=>{
-      const ch=(c.characters||[]).find(x=>x.name===t.charName);
-      const av=ch&&ch.photo?'<img src="'+ch.photo+'" style="width:100%;height:100%;object-fit:cover;border-radius:50%;">':'<span>'+(t.charName||'?')[0].toUpperCase()+'</span>';
-      const canEdit=isNarrator()||(S.user&&t.author===S.user.name);
-      return '<div class="tl-balloon">'+(t.charName?'<div class="tl-balloon-hdr"><div class="tl-ball-avatar">'+av+'</div><div><div class="tl-ball-name">'+t.charName+'</div><div class="tl-ball-char">'+(ch?ch.concept||'':'')+'</div></div></div>':'')+'<div class="tl-ball-title">'+t.event+'</div>'+(t.desc?'<div class="tl-ball-desc">'+t.desc+'</div>':'')+(canEdit?'<div class="tl-ball-actions"><button class="btn-sm btn-edit" onclick="event.stopPropagation();openEditTl('+t._idx+')">Editar</button><button class="btn-sm btn-del" onclick="event.stopPropagation();delTl('+t._idx+')">&#215;</button></div>':'')+'</div>';
-    }).join('');
-    const hasBalloons=balloons.length>0;
-    const stemUp=hasBalloons&&isAbove?'<div class="tl-stem up"></div>':'';
-    const stemDown=hasBalloons&&!isAbove?'<div class="tl-stem down"></div>':'';
-    const balAbove=hasBalloons&&isAbove?'<div class="tl-balloons-above">'+balloons+'</div>':'';
-    const balBelow=hasBalloons&&!isAbove?'<div class="tl-balloons-below">'+balloons+'</div>':'';
-    html+='<div class="tl-year" onclick="toggleTlYear(this)">'+balAbove+stemUp+'<div class="tl-year-dot"></div><div class="tl-year-label">'+yr+'</div>'+stemDown+balBelow+'</div>';
+
+  let html='<div class="tl-hint">&#8592; Arraste para navegar &nbsp;&#183;&nbsp; Clique no ano para ver eventos &#8594;</div>';
+  if(isLoggedIn()) html+='<div style="display:flex;justify-content:flex-end;margin-bottom:0.6rem;"><button class="btn-add" onclick="openAddTl()">+ Novo Evento</button></div>';
+
+  if(!c.timeline.length){
+    html+='<div class="empty"><div class="empty-ico">&#9203;</div>Nenhum evento ainda.</div>';
+    el.innerHTML=html; return;
+  }
+
+  // Group by date, sort chronologically
+  const byDate={};
+  c.timeline.forEach((t,i)=>{
+    const k=t.date||'?';
+    if(!byDate[k]) byDate[k]=[];
+    byDate[k].push({...t,_idx:i});
   });
-  html+='<div class="tl-add-year" onclick="openAddTl()"><div class="tl-add-dot">+</div><div class="tl-add-label">Novo ano</div></div></div></div>';
+  const dates=Object.keys(byDate).sort((a,b)=>{
+    const pa=a.split('/'), pb=b.split('/');
+    if(pa.length===3&&pb.length===3){
+      const da=new Date(pa[2],pa[1]-1,pa[0]), db=new Date(pb[2],pb[1]-1,pb[0]);
+      return da-db;
+    }
+    return a.localeCompare(b);
+  });
+
+  function balloonHTML(t){
+    const ch=(c.characters||[]).find(x=>x.name===t.charName);
+    const av=ch&&ch.photo
+      ?'<img src="'+ch.photo+'" style="width:100%;height:100%;object-fit:cover;border-radius:50%;">'
+      :'<span>'+(t.charName?t.charName[0].toUpperCase():'?')+'</span>';
+    const canEdit=isNarrator()||(S.user&&t.author===S.user.name);
+    return '<div class="tl-balloon">'
+      +(t.charName?'<div class="tl-balloon-hdr"><div class="tl-ball-avatar">'+av+'</div><div><div class="tl-ball-name">'+t.charName+'</div><div class="tl-ball-char">'+(ch?ch.concept||'':'')+'</div></div></div>':'')
+      +'<div class="tl-ball-title">'+t.event+'</div>'
+      +(t.desc?'<div class="tl-ball-desc">'+t.desc+'</div>':'')
+      +(canEdit?'<div class="tl-ball-actions"><button class="btn-sm btn-edit" onclick="event.stopPropagation();openEditTl('+t._idx+')">Editar</button><button class="btn-sm btn-del" onclick="event.stopPropagation();delTl('+t._idx+')">&#215;</button></div>':'')
+      +'</div>';
+  }
+
+  html+='<div class="tl-scroll" id="tl-scroll"><div class="tl-root">';
+
+  // ROW ABOVE: alternating dates get balloons above
+  html+='<div class="tl-row-above">';
+  dates.forEach((d,i)=>{
+    const evts=byDate[d];
+    const isAbove=i%2===0;
+    const balls=evts.map(t=>balloonHTML(t)).join('');
+    html+='<div class="tl-col-above" data-date="'+d+'">';
+    if(isAbove&&balls){
+      html+='<div class="tl-balloons-above" id="bal-above-'+i+'">'+balls+'</div>';
+      html+='<div class="tl-stem" id="stem-a-'+i+'"></div>';
+    }
+    html+='</div>';
+  });
+  html+='<div style="min-width:80px;"></div></div>';
+
+  // AXIS with year dots
+  html+='<div class="tl-axis"><div class="tl-years-row">';
+  dates.forEach((d,i)=>{
+    html+='<div class="tl-year" id="tl-year-'+i+'" onclick="toggleTlYear('+i+','+dates.length+')"><div class="tl-year-dot"></div><div class="tl-year-label">'+d+'</div></div>';
+  });
+  html+='<div class="tl-add-year" onclick="openAddTl()"><div class="tl-add-dot">+</div><div class="tl-add-label">Novo</div></div>';
+  html+='</div></div>';
+
+  // ROW BELOW
+  html+='<div class="tl-row-below">';
+  dates.forEach((d,i)=>{
+    const evts=byDate[d];
+    const isAbove=i%2===0;
+    const balls=evts.map(t=>balloonHTML(t)).join('');
+    html+='<div class="tl-col-below" data-date="'+d+'">';
+    if(!isAbove&&balls){
+      html+='<div class="tl-stem" id="stem-b-'+i+'"></div>';
+      html+='<div class="tl-balloons-below" id="bal-below-'+i+'">'+balls+'</div>';
+    }
+    html+='</div>';
+  });
+  html+='<div style="min-width:80px;"></div></div>';
+
+  html+='</div></div>';
   el.innerHTML=html;
   initTlDrag();
 }
-function toggleTlYear(el){document.querySelectorAll('.tl-year').forEach(y=>{if(y!==el)y.classList.remove('active');});el.classList.toggle('active');}
-function initTlDrag(){const outer=document.getElementById('tl-outer');if(!outer||outer._d)return;outer._d=true;let down=false,sx,sl;outer.addEventListener('mousedown',e=>{if(e.target.closest('.tl-balloon,.tl-add-year,.btn-sm'))return;down=true;sx=e.pageX-outer.offsetLeft;sl=outer.scrollLeft;});window.addEventListener('mouseup',()=>{down=false;});outer.addEventListener('mousemove',e=>{if(!down)return;e.preventDefault();outer.scrollLeft=sl-(e.pageX-outer.offsetLeft-sx);});outer.addEventListener('touchstart',e=>{sx=e.touches[0].pageX;sl=outer.scrollLeft;},{passive:true});outer.addEventListener('touchmove',e=>{outer.scrollLeft=sl-(e.touches[0].pageX-sx);},{passive:true});}
-function populateTlCharSel(){const sel=$id('tl-char');if(!sel)return;sel.innerHTML='<option value="">Nenhum</option>';(S.chron.characters||[]).forEach(ch=>{const o=document.createElement('option');o.value=ch.name;o.textContent=ch.name;sel.appendChild(o);});}
-function openAddTl(){S.editIdx=null;$id('ov-tl-title').textContent='&#8853; Novo Evento';['tl-date','tl-event','tl-desc'].forEach(id=>setVal(id,''));populateTlCharSel();openOv('ov-timeline');}
-function openEditTl(i){S.editIdx=i;const t=S.chron.timeline[i];$id('ov-tl-title').textContent='&#9998; Editar';setVal('tl-date',t._rawDate||'');setVal('tl-event',t.event);setVal('tl-desc',t.desc||'');populateTlCharSel();const sel=$id('tl-char');if(sel)sel.value=t.charName||'';openOv('ov-timeline');}
-function saveTl(){const date=val('tl-date'),event=val('tl-event'),desc=val('tl-desc');const sel=$id('tl-char');const charName=sel?sel.value:'';if(!date||!event){toast('Ano e título obrigatórios.');return;}const dateFormatted=date?new Date(date+'T12:00:00').toLocaleDateString('pt-BR',{day:'2-digit',month:'2-digit',year:'numeric'}):date; const obj={date:dateFormatted,_rawDate:date,event,desc,charName,author:S.user?S.user.name:''};if(S.editIdx===null)S.chron.timeline.push(obj);else S.chron.timeline[S.editIdx]=obj;fbSaveChronicle(S.chron);closeOv('ov-timeline');renderTimeline();toast(S.editIdx===null?'Evento adicionado!':'Evento atualizado!');}
-function delTl(i){if(!confirm('Remover este evento?'))return;S.chron.timeline.splice(i,1);fbSaveChronicle(S.chron);renderTimeline();toast('Evento removido.');}
 
-
-function populateCharPlayerSel(){
-  const sel=$id('char-player-sel'); sel.innerHTML='';
-  const members=S.members.filter(m=>m.role==='player'&&m.chronicles.includes(S.chron.id));
-  members.forEach(m=>{ const o=document.createElement('option'); o.value=m.name; o.textContent=m.name; sel.appendChild(o); });
-  if(S.user&&S.user.role==='player') sel.value=S.user.name;
+function toggleTlYear(idx,total){
+  for(let i=0;i<total;i++){
+    const yr=$id('tl-year-'+i);
+    const ba=$id('bal-above-'+i);
+    const bb=$id('bal-below-'+i);
+    const sa=$id('stem-a-'+i);
+    const sb=$id('stem-b-'+i);
+    const active=i===idx&&!(yr&&yr.classList.contains('active'));
+    if(yr) yr.classList.toggle('active',active);
+    if(ba) ba.style.opacity=active?'1':'0', ba.style.pointerEvents=active?'all':'none';
+    if(bb) bb.style.opacity=active?'1':'0', bb.style.pointerEvents=active?'all':'none';
+    if(sa) sa.style.opacity=active?'1':'0';
+    if(sb) sb.style.opacity=active?'1':'0';
+  }
 }
+
+function initTlDrag(){
+  const sc=document.getElementById('tl-scroll');
+  if(!sc||sc._d)return; sc._d=true;
+  let down=false,sx=0,sl=0;
+  sc.addEventListener('mousedown',e=>{if(e.target.closest('.tl-balloon,.tl-add-year,.btn-sm,.tl-year'))return;down=true;sx=e.pageX;sl=sc.scrollLeft;});
+  window.addEventListener('mouseup',()=>down=false);
+  sc.addEventListener('mousemove',e=>{if(!down)return;e.preventDefault();sc.scrollLeft=sl-(e.pageX-sx);});
+  sc.addEventListener('touchstart',e=>{sx=e.touches[0].pageX;sl=sc.scrollLeft;},{passive:true});
+  sc.addEventListener('touchmove',e=>{sc.scrollLeft=sl-(e.touches[0].pageX-sx);},{passive:true});
+}
+
+function populateTlCharSel(){const sel=$id('tl-char');if(!sel)return;sel.innerHTML='<option value="">Nenhum</option>';(S.chron.characters||[]).forEach(ch=>{const o=document.createElement('option');o.value=ch.name;o.textContent=ch.name;sel.appendChild(o);});}
+function openAddTl(){S.editIdx=null;$id('ov-tl-title').textContent='&#8853; Novo Evento';[\'tl-event\',\'tl-desc\'].forEach(id=>setVal(id,\'\'));setVal(\'tl-date\',\'\');populateTlCharSel();openOv(\'ov-timeline\');}
+function openEditTl(i){S.editIdx=i;const t=S.chron.timeline[i];$id('ov-tl-title').textContent=\'&#9998; Editar\';setVal(\'tl-date\',t._rawDate||\'\');setVal(\'tl-event\',t.event);setVal(\'tl-desc\',t.desc||\'\'||t.desc||\'\');populateTlCharSel();const sel=$id(\'tl-char\');if(sel)sel.value=t.charName||\'\';openOv(\'ov-timeline\');}
+function saveTl(){const date=val(\'tl-date\'),event=val(\'tl-event\'),desc=val(\'tl-desc\');const sel=$id(\'tl-char\');const charName=sel?sel.value:\'\';if(!date||!event){toast(\'Data e título obrigatórios.\');return;}const dateFormatted=date?new Date(date+\'T12:00:00\').toLocaleDateString(\'pt-BR\',{day:\'2-digit\',month:\'2-digit\',year:\'numeric\'}):date;const obj={date:dateFormatted,_rawDate:date,event,desc,charName,author:S.user?S.user.name:\'\'};if(S.editIdx===null)S.chron.timeline.push(obj);else S.chron.timeline[S.editIdx]=obj;fbSaveChronicle(S.chron);closeOv(\'ov-timeline\');renderTimeline();toast(S.editIdx===null?\'Evento adicionado!\':\'Evento atualizado!\');}
+
+
+// ---- CHARACTERS ----
+function renderCharacters(){
+  const el=$id('panel-characters'), c=S.chron;
+  const isPlayerOwn = ch => S.user && ch.player === S.user.name;
+  let html='<div class="toolbar">';
+  if(isNarrator()) html+='<span class="toolbar-title">Personagens ('+((c.characters||[]).length)+')</span><button class="btn-add" onclick="openAddChar()">+ Novo</button>';
+  else html+='<span class="toolbar-title">Personagens</span>';
+  html+='</div>';
+  if(!(c.characters||[]).length){
+    html+='<div class="empty"><div class="empty-ico">⚔️</div>Nenhum personagem registrado ainda.</div>';
+    el.innerHTML=html; return;
+  }
+  html+='<div class="chars-grid">';
+  (c.characters||[]).forEach((ch,i)=>{
+    const canEdit=isNarrator()||isPlayerOwn(ch);
+    html+='<div class="char-card">';
+    if(ch.photo) html+='<img src="'+ch.photo+'" class="char-card-photo" onclick="openImgLightbox(\''+ch.photo+'\',\''+ch.name+'\')" style="cursor:pointer;">';
+    html+='<div class="char-name">'+ch.name+'</div>';
+    html+='<div class="char-player">Jogado por '+ch.player+'</div>';
+    if(ch.concept) html+='<div class="char-concept">'+ch.concept+'</div>';
+    if(ch.desc) html+='<div class="char-concept" style="margin-top:0.4rem;color:#666;">'+ch.desc+'</div>';
+    if(canEdit) html+='<div class="card-actions" style="margin-top:0.6rem;"><button class="btn-sm btn-edit" onclick="openEditChar('+i+')">Editar</button>'+(isNarrator()?'<button class="btn-sm btn-del" onclick="delChar('+i+')">Remover</button>':'')+'</div>';
+    html+='</div>';
+  });
+  html+='</div>';
+  el.innerHTML=html;
+}
+
 function openAddChar(){ S.editIdx=null; $id('ov-char-title').textContent='⊕ Novo Personagem'; ['char-name','char-concept','char-desc'].forEach(id=>setVal(id,'')); populateCharPlayerSel(); clearPhotoInput('char-photo-file','char-photo-preview','char-photo-img'); openOv('ov-char'); }
 function openEditChar(i){ S.editIdx=i; const ch=S.chron.characters[i]; $id('ov-char-title').textContent='✎ Editar Personagem'; setVal('char-name',ch.name); setVal('char-concept',ch.concept); setVal('char-desc',ch.desc); populateCharPlayerSel(); $id('char-player-sel').value=ch.player; if(ch.photo){$id('char-photo-img').src=ch.photo;$id('char-photo-preview').style.display='block';}else{clearPhotoInput('char-photo-file','char-photo-preview','char-photo-img');} openOv('ov-char'); }
 async function saveChar(){
