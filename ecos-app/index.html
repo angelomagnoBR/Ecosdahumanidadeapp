@@ -2148,7 +2148,7 @@ function renderLocations(){
 }
 
 
-function openAddLoc(){ S.editIdx=null; $id('ov-loc-title').textContent='⊕ Novo Local'; ['loc-name','loc-icon','loc-desc','loc-secret'].forEach(id=>setVal(id,'')); $id('loc-reveal-field').style.display='none'; clearPhotoInput('loc-photo-file','loc-photo-preview','loc-photo-img'); openOv('ov-location'); }
+function openAddLoc(){ S.editIdx=null; $id('ov-loc-title').textContent='⊕ Novo Local'; ['loc-name','loc-icon','loc-desc','loc-secret'].forEach(id=>setVal(id,'')); $id('loc-reveal-field').style.display='none'; const sb=document.querySelector('#ov-location .secret-box'); if(sb) sb.style.display=isNarrator()?'':'none'; clearPhotoInput('loc-photo-file','loc-photo-preview','loc-photo-img'); openOv('ov-location'); }
 function openEditLoc(i){ S.editIdx=i; const l=S.chron.locations[i]; $id('ov-loc-title').textContent='✎ Editar Local'; setVal('loc-name',l.name); setVal('loc-icon',l.icon); setVal('loc-desc',l.desc); setVal('loc-secret',l.secret||''); $id('loc-reveal-field').style.display='block'; $id('loc-revealed').value=l.secretRevealed?'true':'false'; if(l.photo){$id('loc-photo-img').src=l.photo;$id('loc-photo-preview').style.display='block';}else{clearPhotoInput('loc-photo-file','loc-photo-preview','loc-photo-img');} openOv('ov-location'); }
 async function saveLoc(){
   const name=val('loc-name'); if(!name){ toast('Nome obrigatório.'); return; }
