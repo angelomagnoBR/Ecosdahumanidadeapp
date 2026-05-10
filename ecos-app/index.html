@@ -749,7 +749,7 @@ footer{text-align:center;padding:1.1rem;font-family:'Share Tech Mono',monospace;
   <div id="panel-map" class="panel" style="padding:0;position:fixed;top:57px;left:0;right:0;bottom:0;z-index:10;"></div>
 </div>
 
-<footer>ECOS DA HUMANIDADE &nbsp;·&nbsp; <span style="color:var(--gold);opacity:0.8;">V2.1</span> &nbsp;·&nbsp; ARQUIVO DAS CRÔNICAS</footer>
+<footer>ECOS DA HUMANIDADE &nbsp;·&nbsp; <span style="color:var(--gold);opacity:0.8;">V2.2</span> &nbsp;·&nbsp; ARQUIVO DAS CRÔNICAS</footer>
 </div><!-- .app -->
 
 <!-- ==================== OVERLAYS ==================== -->
@@ -1402,7 +1402,7 @@ function saveSummary() {
 // ================================================================
 // ORÁCULO — Assistente IA da Campanha
 // ================================================================
-const GEMINI_KEY = 'AIzaSyAKXG2Zapnqz0436Qa_czVdHji1nwgJWS8';
+// Using Anthropic API (free via Claude.ai)
 let _oracleHistory = [];
 
 function buildCampaignContext() {
@@ -1516,83 +1516,57 @@ async function oracleAsk() {
   const question = input.value.trim();
   if(!question) return;
 
-  // Add user message
-  msgs.innerHTML += `
-    <div class="oracle-msg user">
-      <div class="oracle-avatar">👤</div>
-      <div class="oracle-bubble">${question}</div>
-    </div>`;
+  msgs.innerHTML += '<div class="oracle-msg user"><div class="oracle-avatar">👤</div><div class="oracle-bubble">'+question+'</div></div>';
   input.value = '';
   input.style.height = 'auto';
   btn.disabled = true;
 
-  // Add typing indicator
-  msgs.innerHTML += `
-    <div class="oracle-msg ai" id="oracle-typing">
-      <div class="oracle-avatar">🔮</div>
-      <div class="oracle-bubble"><div class="oracle-typing"><span></span><span></span><span></span></div></div>
-    </div>`;
+  msgs.innerHTML += '<div class="oracle-msg ai" id="oracle-typing"><div class="oracle-avatar">🔮</div><div class="oracle-bubble"><div class="oracle-typing"><span></span><span></span><span></span></div></div></div>';
   msgs.scrollTop = msgs.scrollHeight;
 
-  // Build history for context
-  _oracleHistory.push({role:'user', parts:[{text:question}]});
+  _oracleHistory.push({role:'user', content: question});
 
   try {
     const systemCtx = buildCampaignContext();
     
-    // Build contents with system context as first user message
-    const contents = [
-      {role:'user', parts:[{text: systemCtx + '\n\nEntendido? Responda apenas "Sim, estou pronto." brevemente.'}]},
-      {role:'model', parts:[{text:'Sim, estou pronto.'}]},
-      ..._oracleHistory
-    ];
+    const messages = _oracleHistory.map(m => ({
+      role: m.role,
+      content: m.content
+    }));
 
-    const body = {
-      contents: contents,
-      generationConfig: {
-        temperature: 0.75,
-        maxOutputTokens: 800,
-      }
-    };
+    const res = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-20250514',
+        max_tokens: 1000,
+        system: systemCtx,
+        messages: messages
+      })
+    });
 
-    const res = await fetch(
-      'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=' + GEMINI_KEY,
-      {method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify(body)}
-    );
-
-    if(!res.ok) {
-      const err = await res.json();
-      console.error('Gemini error:', err);
-      throw new Error(err?.error?.message || 'API error ' + res.status);
-    }
-    
     const data = await res.json();
-    const answer = data?.candidates?.[0]?.content?.parts?.[0]?.text || 'O Oráculo não conseguiu responder. Tente novamente.';
+    const answer = data?.content?.[0]?.text || 'O Oráculo não conseguiu responder. Tente novamente.';
     
-    _oracleHistory.push({role:'model', parts:[{text:answer}]});
-    
-    // Remove typing, add answer
+    _oracleHistory.push({role:'assistant', content: answer});
+
     const typing = $id('oracle-typing');
     if(typing) typing.remove();
-    
-    msgs.innerHTML += `
-      <div class="oracle-msg ai">
-        <div class="oracle-avatar">🔮</div>
-        <div class="oracle-bubble">${answer.split('\n').join('<br>')}</div>
-      </div>`;
+
+    msgs.innerHTML += '<div class="oracle-msg ai"><div class="oracle-avatar">🔮</div><div class="oracle-bubble">'+answer.split('\n').join('<br>')+'</div></div>';
 
   } catch(e) {
     const typing = $id('oracle-typing');
     if(typing) typing.remove();
-    const errMsg = e.message || 'Erro desconhecido';
-    msgs.innerHTML += '<div class="oracle-msg ai"><div class="oracle-avatar">🔮</div><div class="oracle-bubble" style="color:#c44;">Erro: ' + errMsg + '</div></div>';
+    msgs.innerHTML += '<div class="oracle-msg ai"><div class="oracle-avatar">🔮</div><div class="oracle-bubble" style="color:#c44;">Erro ao consultar o Oráculo: '+( e.message||'verifique sua conexão.')+'</div></div>';
     console.error('Oracle error:', e);
-    _oracleHistory.pop(); // remove failed question
+    _oracleHistory.pop();
   }
 
   btn.disabled = false;
   msgs.scrollTop = msgs.scrollHeight;
 }
+
 
 function renderHome() {
   const g=$id('grid-chron'); g.innerHTML='';
