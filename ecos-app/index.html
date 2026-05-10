@@ -1561,10 +1561,10 @@ async function oracleAsk() {
         'Authorization': 'Bearer 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'
       },
       body: JSON.stringify({
-        model: 'llama-3.1-8b-instant',
+        model: 'llama3-70b-8192',
         messages: messages,
         temperature: 0.75,
-        max_tokens: 800
+        max_tokens: 500
       })
     });
 
