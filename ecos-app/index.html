@@ -324,6 +324,14 @@ nav{display:flex;align-items:center;justify-content:space-between;padding:0.9rem
 .char-card-photo{width:100%;height:140px;object-fit:cover;object-position:center top;border-radius:2px;margin-bottom:0.7rem;display:block;cursor:pointer;}
 .loc-card-photo{width:100%;height:140px;object-fit:cover;object-position:center;border-radius:2px;margin-bottom:0.6rem;display:block;cursor:pointer;}
 
+/* ORACLE LOG */
+.oracle-log-wrap{display:flex;flex-direction:column;gap:0.6rem;}
+.oracle-log-item{background:var(--surface);border:1px solid var(--border);border-radius:3px;padding:0.8rem 1rem;display:flex;gap:0.8rem;align-items:flex-start;}
+.oracle-log-item:hover{border-color:rgba(201,168,76,0.2);}
+.oracle-log-user{font-family:'Cinzel',serif;font-size:0.72rem;color:var(--gold);flex-shrink:0;min-width:80px;}
+.oracle-log-q{font-size:0.88rem;color:#ccc;flex:1;line-height:1.5;}
+.oracle-log-date{font-family:'Share Tech Mono',monospace;font-size:0.55rem;color:var(--text-dim);flex-shrink:0;}
+
 /* ORACLE */
 .oracle-wrap{display:flex;flex-direction:column;height:calc(100vh - 140px);min-height:400px;}
 .oracle-messages{flex:1;overflow-y:auto;display:flex;flex-direction:column;gap:0.8rem;padding:1rem 0;scroll-behavior:smooth;}
@@ -749,7 +757,7 @@ footer{text-align:center;padding:1.1rem;font-family:'Share Tech Mono',monospace;
   <div id="panel-map" class="panel" style="padding:0;position:fixed;top:57px;left:0;right:0;bottom:0;z-index:10;"></div>
 </div>
 
-<footer>ECOS DA HUMANIDADE &nbsp;·&nbsp; <span style="color:var(--gold);opacity:0.8;">V2.3</span> &nbsp;·&nbsp; ARQUIVO DAS CRÔNICAS</footer>
+<footer>ECOS DA HUMANIDADE &nbsp;·&nbsp; <span style="color:var(--gold);opacity:0.8;">V2.4</span> &nbsp;·&nbsp; ARQUIVO DAS CRÔNICAS</footer>
 </div><!-- .app -->
 
 <!-- ==================== OVERLAYS ==================== -->
@@ -1508,9 +1516,11 @@ function renderOracle() {
     'Quem são nossos aliados?',
   ];
 
+  const logBtn = isNarrator() ? '<button class="btn-add" style="margin-left:0.5rem;" onclick="toggleOracleLog()">📋 Ver Log</button>' : '';
   el.innerHTML = `
     <div class="oracle-wrap" id="oracle-wrap">
-      <div class="oracle-header">🔮 ORÁCULO DA CAMPANHA · FESTIM DAS SOMBRAS</div>
+      <div class="oracle-header" style="display:flex;align-items:center;justify-content:center;gap:0.5rem;">🔮 ORÁCULO DA CAMPANHA · FESTIM DAS SOMBRAS${logBtn?'<span>'+logBtn+'</span>':''}</div>
+      <div id="oracle-log-panel" style="display:none;"></div>
       <div class="oracle-messages" id="oracle-msgs">
         <div class="oracle-msg ai">
           <div class="oracle-avatar">🔮</div>
@@ -1535,6 +1545,61 @@ function oracleSuggest(text) {
   if(input) { input.value = text; input.focus(); }
 }
 
+
+function toggleOracleLog() {
+  const panel = $id('oracle-log-panel');
+  const msgs = $id('oracle-msgs');
+  const inputWrap = document.querySelector('.oracle-input-wrap');
+  if(!panel) return;
+  const showing = panel.style.display !== 'none';
+  if(showing) {
+    panel.style.display = 'none';
+    if(msgs) msgs.style.display = '';
+    if(inputWrap) inputWrap.style.display = '';
+  } else {
+    panel.style.display = 'block';
+    if(msgs) msgs.style.display = 'none';
+    if(inputWrap) inputWrap.style.display = 'none';
+    renderOracleLog();
+  }
+}
+
+function renderOracleLog() {
+  const panel = $id('oracle-log-panel');
+  if(!panel) return;
+  const log = (S.chron && S.chron.oracleLog) ? [...S.chron.oracleLog].reverse() : [];
+  
+  let html = '<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:0.8rem;">';
+  html += '<span style="font-family:Cinzel,serif;font-size:0.8rem;color:var(--gold);">📋 Log do Oráculo ('+log.length+' perguntas)</span>';
+  if(log.length) html += '<button class="btn-sm btn-del" onclick="clearOracleLog()">Limpar Log</button>';
+  html += '</div>';
+
+  if(!log.length) {
+    html += '<div class="empty"><div class="empty-ico">📋</div>Nenhuma pergunta registrada ainda.</div>';
+  } else {
+    html += '<div class="oracle-log-wrap">';
+    log.forEach(function(l) {
+      html += '<div class="oracle-log-item">';
+      html += '<div class="oracle-log-user">'+l.user+'</div>';
+      html += '<div class="oracle-log-q">'+l.question+'</div>';
+      html += '<div class="oracle-log-date">'+l.date+'</div>';
+      html += '</div>';
+    });
+    html += '</div>';
+  }
+  panel.innerHTML = html;
+}
+
+function clearOracleLog() {
+  if(!confirm('Limpar todo o log do Oráculo?')) return;
+  S.chron.oracleLog = [];
+  if(window._db) {
+    window._fbSet(window._fbRef(window._db, 'chronicles/'+S.chron.id+'/oracleLog'), []).catch(console.error);
+  }
+  renderOracleLog();
+  toast('Log limpo.');
+}
+
 async function oracleAsk() {
   const input = $id('oracle-input');
   const btn = $id('oracle-send');
@@ -1549,6 +1614,22 @@ async function oracleAsk() {
   msgs.scrollTop = msgs.scrollHeight;
 
   _oracleHistory.push({role:'user', content: question});
+  // Log to Firebase
+  if(S.user && S.chron) {
+    const log = {
+      user: S.user.name,
+      question: question,
+      ts: Date.now(),
+      date: new Date().toLocaleString('pt-BR')
+    };
+    if(!S.chron.oracleLog) S.chron.oracleLog = [];
+    S.chron.oracleLog.push(log);
+    // Save just the log separately to avoid saving whole chronicle
+    if(window._db) {
+      const logRef = window._fbRef(window._db, 'chronicles/' + S.chron.id + '/oracleLog');
+      window._fbSet(logRef, S.chron.oracleLog).catch(console.error);
+    }
+  }
 
   try {
     const ctx = buildCampaignContext();
