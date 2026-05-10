@@ -1978,7 +1978,52 @@ function initTlDrag(){
 function populateTlCharSel(){const sel=$id('tl-char');if(!sel)return;sel.innerHTML='<option value="">Nenhum</option>';(S.chron.characters||[]).forEach(ch=>{const o=document.createElement('option');o.value=ch.name;o.textContent=ch.name;sel.appendChild(o);});}
 function openAddTl(){S.editIdx=null;$id('ov-tl-title').textContent='&#8853; Novo Evento';[\'tl-event\',\'tl-desc\'].forEach(id=>setVal(id,\'\'));setVal(\'tl-date\',\'\');populateTlCharSel();openOv(\'ov-timeline\');}
 function openEditTl(i){S.editIdx=i;const t=S.chron.timeline[i];$id('ov-tl-title').textContent=\'&#9998; Editar\';setVal(\'tl-date\',t._rawDate||\'\');setVal(\'tl-event\',t.event);setVal(\'tl-desc\',t.desc||\'\'||t.desc||\'\');populateTlCharSel();const sel=$id(\'tl-char\');if(sel)sel.value=t.charName||\'\';openOv(\'ov-timeline\');}
-function saveTl(){const date=val(\'tl-date\'),event=val(\'tl-event\'),desc=val(\'tl-desc\');const sel=$id(\'tl-char\');const charName=sel?sel.value:\'\';if(!date||!event){toast(\'Data e título obrigatórios.\');return;}const dateFormatted=date?new Date(date+\'T12:00:00\').toLocaleDateString(\'pt-BR\',{day:\'2-digit\',month:\'2-digit\',year:\'numeric\'}):date;const obj={date:dateFormatted,_rawDate:date,event,desc,charName,author:S.user?S.user.name:\'\'};if(S.editIdx===null)S.chron.timeline.push(obj);else S.chron.timeline[S.editIdx]=obj;fbSaveChronicle(S.chron);closeOv(\'ov-timeline\');renderTimeline();toast(S.editIdx===null?\'Evento adicionado!\':\'Evento atualizado!\');}
+function populateTlCharSel(){
+  const sel=$id('tl-char');
+  if(!sel) return;
+  sel.innerHTML='<option value="">Nenhum</option>';
+  (S.chron.characters||[]).forEach(ch=>{
+    const o=document.createElement('option');
+    o.value=ch.name; o.textContent=ch.name; sel.appendChild(o);
+  });
+}
+
+function openAddTl(){
+  S.editIdx=null;
+  $id('ov-tl-title').textContent='⊕ Novo Evento';
+  setVal('tl-event',''); setVal('tl-desc',''); setVal('tl-date','');
+  populateTlCharSel();
+  openOv('ov-timeline');
+}
+
+function openEditTl(i){
+  S.editIdx=i;
+  const t=S.chron.timeline[i];
+  $id('ov-tl-title').textContent='✎ Editar';
+  setVal('tl-date', t._rawDate||'');
+  setVal('tl-event', t.event||'');
+  setVal('tl-desc', t.desc||'');
+  populateTlCharSel();
+  const sel=$id('tl-char');
+  if(sel) sel.value=t.charName||'';
+  openOv('ov-timeline');
+}
+
+function saveTl(){
+  const date=val('tl-date'), event=val('tl-event'), desc=val('tl-desc');
+  const sel=$id('tl-char');
+  const charName=sel?sel.value:'';
+  if(!date||!event){ toast('Data e título obrigatórios.'); return; }
+  const dt=new Date(date+'T12:00:00');
+  const dateFormatted=dt.toLocaleDateString('pt-BR',{day:'2-digit',month:'2-digit',year:'numeric'});
+  const obj={date:dateFormatted,_rawDate:date,event,desc,charName,author:S.user?S.user.name:''};
+  if(S.editIdx===null) S.chron.timeline.push(obj);
+  else S.chron.timeline[S.editIdx]=obj;
+  fbSaveChronicle(S.chron);
+  closeOv('ov-timeline');
+  renderTimeline();
+  toast(S.editIdx===null?'Evento adicionado!':'Evento atualizado!');
+}
 
 
 // ---- CHARACTERS ----
