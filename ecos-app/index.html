@@ -365,6 +365,20 @@ nav{display:flex;align-items:center;justify-content:space-between;padding:0.9rem
 .char-card-photo{width:100%;height:140px;object-fit:cover;object-position:center top;border-radius:2px;margin-bottom:0.7rem;display:block;cursor:pointer;}
 .loc-card-photo{width:100%;height:140px;object-fit:cover;object-position:center;border-radius:2px;margin-bottom:0.6rem;display:block;cursor:pointer;}
 
+/* KNOWLEDGE BASE */
+.kb-wrap{display:flex;flex-direction:column;gap:1rem;}
+.kb-entry{background:var(--surface);border:1px solid var(--border);border-radius:3px;padding:1rem;}
+.kb-entry-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:0.5rem;}
+.kb-entry-title{font-family:'Cinzel',serif;font-size:0.88rem;color:#d5d5d5;}
+.kb-entry-meta{font-family:'Share Tech Mono',monospace;font-size:0.55rem;color:var(--text-dim);}
+.kb-entry-preview{font-size:0.8rem;color:#666;line-height:1.5;overflow:hidden;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;}
+.kb-upload-area{border:1.5px dashed rgba(201,168,76,0.25);border-radius:4px;padding:1.5rem;text-align:center;cursor:pointer;transition:all 0.2s;}
+.kb-upload-area:hover{border-color:rgba(201,168,76,0.5);background:rgba(201,168,76,0.03);}
+.kb-upload-icon{font-size:1.8rem;margin-bottom:0.5rem;opacity:0.5;}
+.kb-upload-label{font-family:'Share Tech Mono',monospace;font-size:0.65rem;color:var(--text-dim);letter-spacing:0.1em;}
+.kb-progress{height:3px;background:rgba(201,168,76,0.2);border-radius:2px;margin-top:0.5rem;overflow:hidden;}
+.kb-progress-bar{height:100%;background:var(--gold);border-radius:2px;transition:width 0.3s;}
+
 /* ORACLE LOG */
 .oracle-log-wrap{display:flex;flex-direction:column;gap:0.6rem;}
 .oracle-log-item{background:var(--surface);border:1px solid var(--border);border-radius:3px;padding:0.8rem 1rem;display:flex;gap:0.8rem;align-items:flex-start;}
@@ -768,6 +782,7 @@ footer{text-align:center;padding:1.1rem;font-family:'Share Tech Mono',monospace;
           <button class="drop-item" onclick="goTab('notes')">📝 <span>Anotações</span></button>
           <button class="drop-item" onclick="goTab('group')">👥 <span>Grupo</span></button>
           <button class="drop-item" onclick="goTab('oracle')">🔮 <span>Oráculo</span></button>
+          <button class="drop-item" id="drop-knowledge" style="display:none" onclick="goTab('knowledge')">📚 <span>Conhecimento</span></button>
           <button class="drop-item" onclick="goTab('connections')">🕸️ <span>Conexões</span></button>
           <button class="drop-item" id="drop-map" style="display:none" onclick="goTab('map')">🗺 <span>Mapa</span></button>
         </div>
@@ -794,11 +809,12 @@ footer{text-align:center;padding:1.1rem;font-family:'Share Tech Mono',monospace;
   <div id="panel-notes"    class="panel"></div>
   <div id="panel-group"    class="panel"></div>
   <div id="panel-oracle"   class="panel"></div>
+  <div id="panel-knowledge" class="panel"></div>
   <div id="panel-connections" class="panel"></div>
   <div id="panel-map" class="panel" style="padding:0;position:fixed;top:57px;left:0;right:0;bottom:0;z-index:10;"></div>
 </div>
 
-<footer>ECOS DA HUMANIDADE &nbsp;·&nbsp; <span style="color:var(--gold);opacity:0.8;">V2.4</span> &nbsp;·&nbsp; ARQUIVO DAS CRÔNICAS</footer>
+<footer>ECOS DA HUMANIDADE &nbsp;·&nbsp; <span style="color:var(--gold);opacity:0.8;">V2.5</span> &nbsp;·&nbsp; ARQUIVO DAS CRÔNICAS</footer>
 </div><!-- .app -->
 
 <!-- ==================== OVERLAYS ==================== -->
@@ -1713,6 +1729,186 @@ async function oracleAsk() {
 
 
 
+
+// ================================================================
+// KNOWLEDGE BASE — Base de Conhecimento do Oráculo
+// ================================================================
+
+function renderKnowledge() {
+  const el = $id('panel-knowledge');
+  if(!isNarrator()) {
+    el.innerHTML = '<div class="empty"><div class="empty-ico">🔒</div>Apenas o Narrador pode gerenciar o conhecimento do Oráculo.</div>';
+    return;
+  }
+  if(!S.chron.knowledge) S.chron.knowledge = [];
+  const kb = S.chron.knowledge;
+
+  let html = '<div class="toolbar"><span class="toolbar-title">📚 Base de Conhecimento (' + kb.length + ')</span></div>';
+  html += '<p style="font-size:0.82rem;color:#666;line-height:1.6;margin-bottom:1rem;">Adicione textos, regras, lore e PDFs que o Oráculo usará para responder com precisão. Quanto mais material, melhor as respostas.</p>';
+
+  // Upload area
+  html += '<div class="kb-upload-area" onclick="document.getElementById(\"kb-file-input\").click()">';
+  html += '<div class="kb-upload-icon">📄</div>';
+  html += '<div class="kb-upload-label">CLIQUE PARA SUBIR UM PDF</div>';
+  html += '<div style="font-size:0.7rem;color:#555;margin-top:0.3rem;">O texto será extraído automaticamente</div>';
+  html += '</div>';
+  html += '<input type="file" id="kb-file-input" accept=".pdf,.txt" style="display:none" onchange="handleKbUpload(this)">';
+  html += '<div id="kb-upload-progress" style="display:none;margin-top:0.5rem;"><div class="kb-progress"><div class="kb-progress-bar" id="kb-progress-bar" style="width:0%"></div></div><div id="kb-progress-label" style="font-family:Share Tech Mono,monospace;font-size:0.6rem;color:#666;margin-top:4px;text-align:center;"></div></div>';
+
+  // Text input
+  html += '<div style="margin-top:1rem;"><button class="btn-add" onclick="openAddKnowledge()">+ Adicionar Texto</button></div>';
+
+  // Entries list
+  if(kb.length) {
+    html += '<div style="margin-top:1rem;" class="kb-wrap">';
+    kb.forEach(function(k, i) {
+      const preview = k.text ? k.text.substring(0, 120) + '...' : '';
+      html += '<div class="kb-entry">';
+      html += '<div class="kb-entry-header">';
+      html += '<div><div class="kb-entry-title">' + k.title + '</div>';
+      html += '<div class="kb-entry-meta">' + (k.type||'texto') + ' · ' + (k.date||'') + ' · ' + Math.round((k.text||'').length/1000) + 'K chars</div></div>';
+      html += '<button class="btn-sm btn-del" onclick="delKnowledge(' + i + ')">Remover</button>';
+      html += '</div>';
+      html += '<div class="kb-entry-preview">' + preview + '</div>';
+      html += '</div>';
+    });
+    html += '</div>';
+  } else {
+    html += '<div class="empty" style="margin-top:1rem;"><div class="empty-ico">📚</div>Nenhum material adicionado ainda.<br><small style="opacity:0.6;font-size:0.75rem;">Suba o PDF do Vampiro V5, notas da campanha, lore da cidade...</small></div>';
+  }
+
+  el.innerHTML = html;
+}
+
+async function handleKbUpload(input) {
+  const file = input.files[0];
+  if(!file) return;
+  
+  const progress = $id('kb-upload-progress');
+  const bar = $id('kb-progress-bar');
+  const label = $id('kb-progress-label');
+  progress.style.display = 'block';
+  
+  try {
+    let text = '';
+    
+    if(file.type === 'application/pdf') {
+      label.textContent = 'Extraindo texto do PDF...';
+      bar.style.width = '30%';
+      
+      // Extract text from PDF using FileReader + basic extraction
+      text = await extractPdfText(file);
+      bar.style.width = '80%';
+    } else {
+      // Plain text file
+      text = await new Promise(function(resolve) {
+        const r = new FileReader();
+        r.onload = function(e) { resolve(e.target.result); };
+        r.readAsText(file, 'UTF-8');
+      });
+    }
+    
+    bar.style.width = '100%';
+    label.textContent = 'Salvando...';
+    
+    if(!text || text.trim().length < 10) {
+      toast('Não foi possível extrair texto do arquivo.');
+      progress.style.display = 'none';
+      return;
+    }
+    
+    // Limit to 50000 chars to avoid overwhelming the context
+    const truncated = text.length > 50000;
+    const finalText = text.substring(0, 50000);
+    
+    if(!S.chron.knowledge) S.chron.knowledge = [];
+    S.chron.knowledge.push({
+      title: file.name.replace(/\.[^.]+$/, ''),
+      text: finalText,
+      type: file.type === 'application/pdf' ? 'PDF' : 'TXT',
+      date: new Date().toLocaleDateString('pt-BR'),
+      chars: finalText.length
+    });
+    
+    fbSaveChronicle(S.chron);
+    progress.style.display = 'none';
+    input.value = '';
+    renderKnowledge();
+    toast(truncated ? 'Material adicionado! (primeiros 50K caracteres)' : 'Material adicionado com sucesso!');
+    
+  } catch(e) {
+    progress.style.display = 'none';
+    console.error('KB upload error:', e);
+    toast('Erro ao processar arquivo: ' + e.message);
+  }
+}
+
+async function extractPdfText(file) {
+  return new Promise(function(resolve, reject) {
+    const reader = new FileReader();
+    reader.onload = function(e) {
+      try {
+        const arr = new Uint8Array(e.target.result);
+        // Basic PDF text extraction - look for text between BT and ET markers
+        let text = '';
+        let str = '';
+        for(let i = 0; i < arr.length; i++) {
+          str += String.fromCharCode(arr[i]);
+        }
+        // Extract text using regex patterns for PDF text streams
+        const matches = str.match(/\(([^)]{1,200})\)\s*Tj/g) || [];
+        const matches2 = str.match(/\[([^\]]+)\]\s*TJ/g) || [];
+        
+        matches.forEach(function(m) {
+          const t = m.replace(/\(([^)]+)\)\s*Tj/, '$1');
+          text += t + ' ';
+        });
+        
+        // Also try to extract raw readable text
+        const readable = str.replace(/[^ -~À-ÿ]/g, ' ')
+          .replace(/\s+/g, ' ')
+          .split(' ')
+          .filter(function(w) { return w.length > 2; })
+          .join(' ');
+        
+        // Use whichever gave more content
+        const finalText = text.length > readable.length * 0.3 ? text : readable;
+        resolve(finalText.substring(0, 60000));
+      } catch(err) {
+        reject(err);
+      }
+    };
+    reader.onerror = reject;
+    reader.readAsArrayBuffer(file);
+  });
+}
+
+function openAddKnowledge() {
+  const title = prompt('Título deste material (ex: Lore de Lisboa, Regras V5):');
+  if(!title) return;
+  const text = prompt('Cole o texto aqui (máx 5000 caracteres para textos manuais):');
+  if(!text) return;
+  if(!S.chron.knowledge) S.chron.knowledge = [];
+  S.chron.knowledge.push({
+    title: title,
+    text: text.substring(0, 5000),
+    type: 'texto',
+    date: new Date().toLocaleDateString('pt-BR'),
+    chars: Math.min(text.length, 5000)
+  });
+  fbSaveChronicle(S.chron);
+  renderKnowledge();
+  toast('Conhecimento adicionado!');
+}
+
+function delKnowledge(i) {
+  if(!confirm('Remover este material da base de conhecimento?')) return;
+  S.chron.knowledge.splice(i, 1);
+  fbSaveChronicle(S.chron);
+  renderKnowledge();
+  toast('Material removido.');
+}
+
 function renderHome() {
   const g=$id('grid-chron'); g.innerHTML='';
   S.chronicles.forEach(c=>{
@@ -1756,6 +1952,8 @@ function openChron(id, tab) {
   $id('chron-ttl').textContent=c.name;
   $id('chron-sys').textContent=c.system.toUpperCase();
   $id('drop-map').style.display = c.id==='vampire'?'flex':'none';
+  const kbBtn = $id('drop-knowledge');
+  if(kbBtn) kbBtn.style.display = isNarrator()?'flex':'none';
   goTab(tab||'overview');
 }
 
@@ -1802,6 +2000,7 @@ const TAB_META = {
   notes:       {icon:'📝', label:'Anotações'},
   group:       {icon:'👥', label:'Grupo'},
   oracle:      {icon:'🔮', label:'Oráculo'},
+  knowledge:   {icon:'📚', label:'Conhecimento'},
   map:         {icon:'🗺',  label:'Mapa'},
 };
 
@@ -1874,6 +2073,7 @@ const renders = {
   notes(){ renderNotes(); },
   group(){ renderGroup(); },
   oracle(){ renderOracle(); },
+  knowledge(){ renderKnowledge(); },
   map(){ renderMap(); }
 };
 
