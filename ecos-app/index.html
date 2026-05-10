@@ -1402,7 +1402,7 @@ function saveSummary() {
 // ================================================================
 // ORÁCULO — Assistente IA da Campanha
 // ================================================================
-// Using Anthropic API (free via Claude.ai)
+// Groq API
 let _oracleHistory = [];
 
 function buildCampaignContext() {
@@ -1512,60 +1512,55 @@ async function oracleAsk() {
   const btn = $id('oracle-send');
   const msgs = $id('oracle-msgs');
   if(!input || !msgs) return;
-  
   const question = input.value.trim();
   if(!question) return;
 
   msgs.innerHTML += '<div class="oracle-msg user"><div class="oracle-avatar">👤</div><div class="oracle-bubble">'+question+'</div></div>';
-  input.value = '';
-  input.style.height = 'auto';
-  btn.disabled = true;
-
+  input.value = ''; input.style.height = 'auto'; btn.disabled = true;
   msgs.innerHTML += '<div class="oracle-msg ai" id="oracle-typing"><div class="oracle-avatar">🔮</div><div class="oracle-bubble"><div class="oracle-typing"><span></span><span></span><span></span></div></div></div>';
   msgs.scrollTop = msgs.scrollHeight;
 
   _oracleHistory.push({role:'user', content: question});
 
   try {
-    const systemCtx = buildCampaignContext();
-    
-    const messages = _oracleHistory.map(m => ({
-      role: m.role,
-      content: m.content
-    }));
+    const ctx = buildCampaignContext();
+    const messages = [{role:'system', content: ctx}, ..._oracleHistory];
 
-    const res = await fetch('https://api.anthropic.com/v1/messages', {
+    const res = await fetch('https://api.groq.com/openai/v1/chat/completions', {
       method: 'POST',
-      headers: {'Content-Type': 'application/json'},
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer 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'
+      },
       body: JSON.stringify({
-        model: 'claude-sonnet-4-20250514',
-        max_tokens: 1000,
-        system: systemCtx,
-        messages: messages
+        model: 'llama-3.1-8b-instant',
+        messages: messages,
+        temperature: 0.75,
+        max_tokens: 800
       })
     });
 
+    if(!res.ok){ const err=await res.json(); throw new Error(err?.error?.message||'Erro '+res.status); }
     const data = await res.json();
-    const answer = data?.content?.[0]?.text || 'O Oráculo não conseguiu responder. Tente novamente.';
-    
+    const answer = data?.choices?.[0]?.message?.content || 'O Oráculo não conseguiu responder.';
     _oracleHistory.push({role:'assistant', content: answer});
 
     const typing = $id('oracle-typing');
     if(typing) typing.remove();
+    msgs.innerHTML += '<div class="oracle-msg ai"><div class="oracle-avatar">🔮</div><div class="oracle-bubble">'+answer.replace(/</g,'&lt;').split(String.fromCharCode(10)).join('<br>')+'</div></div>';
 
-    msgs.innerHTML += '<div class="oracle-msg ai"><div class="oracle-avatar">🔮</div><div class="oracle-bubble">'+answer.split('\n').join('<br>')+'</div></div>';
-
-  } catch(e) {
+  } catch(err) {
     const typing = $id('oracle-typing');
     if(typing) typing.remove();
-    msgs.innerHTML += '<div class="oracle-msg ai"><div class="oracle-avatar">🔮</div><div class="oracle-bubble" style="color:#c44;">Erro ao consultar o Oráculo: '+( e.message||'verifique sua conexão.')+'</div></div>';
-    console.error('Oracle error:', e);
+    msgs.innerHTML += '<div class="oracle-msg ai"><div class="oracle-avatar">🔮</div><div class="oracle-bubble" style="color:#c44;">'+err.message+'</div></div>';
     _oracleHistory.pop();
+    console.error('Oracle:', err);
   }
-
   btn.disabled = false;
   msgs.scrollTop = msgs.scrollHeight;
 }
+
+
 
 
 function renderHome() {
