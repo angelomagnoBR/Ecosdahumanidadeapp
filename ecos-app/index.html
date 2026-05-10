@@ -3349,7 +3349,7 @@ function fbListen() {
 
     renderHome();
     if(S.user) renderBell();
-    if(S.chron) { const t = activeTab(); if(t && renders[t]) renders[t](); }
+    if(S.chron) { const t = activeTab(); if(t && renders[t] && t !== 'oracle') renders[t](); }
   });
 
   window._fbOnValue(window._fbRef(window._db, 'app/notifications'), snap => {
