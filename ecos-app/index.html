@@ -207,12 +207,12 @@ nav{display:flex;align-items:center;justify-content:space-between;padding:0.9rem
 .tl-year-label{position:absolute;top:252px;left:50%;transform:translateX(-50%);font-family:'Share Tech Mono',monospace;font-size:0.65rem;letter-spacing:0.2em;color:var(--text-dim);transition:color 0.2s;white-space:nowrap;}
 .tl-year:hover .tl-year-label,.tl-year.active .tl-year-label{color:var(--vampire-crimson);}
 .tl-balloons{position:absolute;display:flex;gap:8px;opacity:0;pointer-events:none;transition:opacity 0.25s;z-index:10;}
-.tl-balloons.above{flex-direction:row;flex-wrap:wrap;justify-content:center;bottom:calc(100% - 220px);left:50%;transform:translateX(-50%);}
+.tl-balloons.above{flex-direction:row;flex-wrap:wrap;justify-content:center;bottom:280px;left:50%;transform:translateX(-50%);}
 .tl-balloons.below{flex-direction:column;top:268px;left:50%;transform:translateX(-50%);min-width:190px;}
 .tl-year.active .tl-balloons{opacity:1;pointer-events:all;}
 .tl-year.active .tl-connector{opacity:1;}
 .tl-connector{position:absolute;left:calc(50% - 0.5px);width:1px;background:rgba(196,30,58,0.45);}
-.tl-connector.up{top:20px;height:213px;opacity:0;transition:opacity 0.25s;}
+.tl-connector.up{top:auto;bottom:247px;height:14px;opacity:0;transition:opacity 0.25s;}
 .tl-connector.down{top:247px;height:30px;opacity:0;transition:opacity 0.25s;}
 .tl-balloon{background:#0d0005;border:1px solid rgba(139,0,0,0.3);border-radius:4px;padding:9px;width:180px;flex-shrink:0;}
 .tl-balloon{background:#0d0005;border:1px solid rgba(139,0,0,0.3);border-radius:4px;padding:9px;}
@@ -756,7 +756,7 @@ footer{text-align:center;padding:1.1rem;font-family:'Share Tech Mono',monospace;
   <div id="panel-map" class="panel" style="padding:0;position:fixed;top:57px;left:0;right:0;bottom:0;z-index:10;"></div>
 </div>
 
-<footer>ECOS DA HUMANIDADE &nbsp;·&nbsp; <span style="color:var(--gold);opacity:0.8;">V1.5</span> &nbsp;·&nbsp; ARQUIVO DAS CRÔNICAS</footer>
+<footer>ECOS DA HUMANIDADE &nbsp;·&nbsp; <span style="color:var(--gold);opacity:0.8;">V1.6</span> &nbsp;·&nbsp; ARQUIVO DAS CRÔNICAS</footer>
 </div><!-- .app -->
 
 <!-- ==================== OVERLAYS ==================== -->
@@ -1863,7 +1863,12 @@ function renderTimeline(){
       const canEdit=isNarrator()||(S.user&&t.author===S.user.name);
       return '<div class="tl-balloon">'+(t.charName?'<div class="tl-balloon-hdr"><div class="tl-ball-avatar">'+av+'</div><div><div class="tl-ball-name">'+t.charName+'</div><div class="tl-ball-char">'+(ch?ch.concept||'':'')+'</div></div></div>':'')+'<div class="tl-ball-title">'+t.event+'</div>'+(t.desc?'<div class="tl-ball-desc">'+t.desc+'</div>':'')+(canEdit?'<div class="tl-ball-actions"><button class="btn-sm btn-edit" onclick="event.stopPropagation();openEditTl('+t._idx+')">Editar</button><button class="btn-sm btn-del" onclick="event.stopPropagation();delTl('+t._idx+')">&#215;</button></div>':'')+'</div>';
     }).join('');
-    html+='<div class="tl-year" onclick="toggleTlYear(this)">'+(isAbove?'<div class="tl-balloons above">'+balloons+'</div><div class="tl-connector up"></div>':'')+'<div class="tl-year-dot"></div><div class="tl-year-label">'+yr+'</div>'+(!isAbove?'<div class="tl-connector down"></div><div class="tl-balloons below">'+balloons+'</div>':'')+'</div>';
+    const hasBalloons=balloons.length>0;
+    const connUp=hasBalloons&&isAbove?'<div class="tl-connector up"></div>':'';
+    const connDown=hasBalloons&&!isAbove?'<div class="tl-connector down"></div>':'';
+    const balloonsAbove=hasBalloons&&isAbove?'<div class="tl-balloons above">'+balloons+'</div>':'';
+    const balloonsBelow=hasBalloons&&!isAbove?'<div class="tl-balloons below">'+balloons+'</div>':'';
+    html+='<div class="tl-year" onclick="toggleTlYear(this)">'+balloonsAbove+connUp+'<div class="tl-year-dot"></div><div class="tl-year-label">'+yr+'</div>'+connDown+balloonsBelow+'</div>';
   });
   html+='<div class="tl-add-year" onclick="openAddTl()"><div class="tl-add-dot">+</div><div class="tl-add-label">Novo ano</div></div></div></div>';
   el.innerHTML=html;
