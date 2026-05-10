@@ -749,7 +749,7 @@ footer{text-align:center;padding:1.1rem;font-family:'Share Tech Mono',monospace;
   <div id="panel-map" class="panel" style="padding:0;position:fixed;top:57px;left:0;right:0;bottom:0;z-index:10;"></div>
 </div>
 
-<footer>ECOS DA HUMANIDADE &nbsp;·&nbsp; <span style="color:var(--gold);opacity:0.8;">V2.2</span> &nbsp;·&nbsp; ARQUIVO DAS CRÔNICAS</footer>
+<footer>ECOS DA HUMANIDADE &nbsp;·&nbsp; <span style="color:var(--gold);opacity:0.8;">V2.3</span> &nbsp;·&nbsp; ARQUIVO DAS CRÔNICAS</footer>
 </div><!-- .app -->
 
 <!-- ==================== OVERLAYS ==================== -->
@@ -1409,58 +1409,86 @@ function buildCampaignContext() {
   const c = S.chron;
   if(!c) return '';
   const NL = '\n';
-  let ctx = 'Você é o Oráculo do Festim das Sombras, um assistente de RPG para a campanha de Vampiro: A Máscara V5.' + NL;
-  ctx += 'Você conhece tudo sobre esta campanha e responde perguntas dos jogadores de forma imersiva e temática.' + NL;
-  ctx += 'IMPORTANTE: Você NUNCA revela informações marcadas como segredo do Narrador. Só compartilha o que os jogadores já descobriram.' + NL;
-  ctx += 'Responda sempre em português brasileiro, de forma concisa e envolvente.' + NL + NL;
-  ctx += '=== CAMPANHA: ' + c.name + ' ===' + NL;
+  
+  let ctx = 'Você é o Oráculo do Festim das Sombras, assistente da campanha de Vampiro: A Máscara V5.' + NL;
+  ctx += NL;
+  ctx += 'REGRAS ABSOLUTAS — NUNCA QUEBRE ESTAS REGRAS:' + NL;
+  ctx += '1. Você SOMENTE responde com base nas informações fornecidas abaixo. JAMAIS invente personagens, locais, eventos ou detalhes que não estejam listados.' + NL;
+  ctx += '2. Se não houver informação suficiente para responder, diga exatamente: "O Oráculo não possui registros sobre isso ainda."' + NL;
+  ctx += '3. Você NUNCA revela informações de segredos do Narrador.' + NL;
+  ctx += '4. Responda sempre em português brasileiro.' + NL;
+  ctx += '5. Seja conciso e direto. Não elabore além do que está nos registros.' + NL;
+  ctx += NL;
+  ctx += '=== REGISTROS DA CAMPANHA: ' + c.name + ' ===' + NL;
   ctx += 'Sistema: ' + c.system + NL;
   ctx += 'Status: ' + (c.status==='active'?'Em andamento':'Encerrada') + NL + NL;
+
   if(c.sessions && c.sessions.length) {
-    ctx += '=== SESSÕES ===' + NL;
-    c.sessions.forEach(function(s,i){ ctx += 'Sessão '+(i+1)+' — '+s.title+': '+s.summary+NL; });
+    ctx += '--- SESSÕES REGISTRADAS ---' + NL;
+    c.sessions.forEach(function(s,i){ ctx += 'Sessão '+(i+1)+' ('+s.date+'): '+s.title+' — '+s.summary+NL; });
     ctx += NL;
+  } else {
+    ctx += '--- SESSÕES: Nenhuma registrada ainda ---' + NL + NL;
   }
+
   if(c.npcs && c.npcs.length) {
-    ctx += '=== NPCs CONHECIDOS ===' + NL;
+    ctx += '--- NPCs CONHECIDOS ---' + NL;
     c.npcs.forEach(function(n){
-      if(n.name){
-        ctx += '• '+n.name+' ('+( n.role||'?')+') — Status: '+(n.status||'?')+NL;
-        if(n.known) ctx += '  O que se sabe: '+n.known+NL;
-        if(n.secretRevealed && n.secret) ctx += '  Revelado: '+n.secret+NL;
-      }
+      if(!n.name) return;
+      ctx += '• '+n.name+' | Função: '+(n.role||'desconhecida')+' | Status: '+(n.status||'desconhecido')+NL;
+      if(n.known) ctx += '  Informação pública: '+n.known+NL;
+      if(n.secretRevealed && n.secret) ctx += '  Revelado ao grupo: '+n.secret+NL;
     });
     ctx += NL;
+  } else {
+    ctx += '--- NPCs: Nenhum registrado ainda ---' + NL + NL;
   }
+
   if(c.locations && c.locations.length) {
-    ctx += '=== LOCAIS ===' + NL;
+    ctx += '--- LOCAIS CONHECIDOS ---' + NL;
     c.locations.forEach(function(l){
-      ctx += '• '+(l.icon||'📍')+' '+l.name+': '+l.desc+NL;
+      ctx += '• '+(l.icon||'')+''+l.name+': '+l.desc+NL;
       if(l.secretRevealed && l.secret) ctx += '  Revelado: '+l.secret+NL;
     });
     ctx += NL;
+  } else {
+    ctx += '--- LOCAIS: Nenhum registrado ainda ---' + NL + NL;
   }
+
   if(c.characters && c.characters.length) {
-    ctx += '=== PERSONAGENS DOS JOGADORES ===' + NL;
+    ctx += '--- PERSONAGENS DOS JOGADORES ---' + NL;
     c.characters.forEach(function(ch){
-      ctx += '• '+ch.name+' — Jogado por '+ch.player+(ch.concept?' — '+ch.concept:'')+NL;
+      ctx += '• '+ch.name+' (jogado por '+ch.player+')'+(ch.concept?' — '+ch.concept:'')+NL;
       if(ch.desc) ctx += '  '+ch.desc+NL;
     });
     ctx += NL;
   }
+
   if(c.rumors && c.rumors.length) {
     const facts=c.rumors.filter(function(r){return r.status==='fact';});
     const rumors=c.rumors.filter(function(r){return r.status!=='fact';});
-    if(facts.length){ ctx += '=== FATOS CONFIRMADOS ===' + NL; facts.forEach(function(r){ctx += '• '+r.text+NL;}); ctx += NL; }
-    if(rumors.length){ ctx += '=== RUMORES ===' + NL; rumors.forEach(function(r){ctx += '• '+r.text+NL;}); ctx += NL; }
+    if(facts.length){
+      ctx += '--- FATOS CONFIRMADOS ---' + NL;
+      facts.forEach(function(r){ctx += '• '+r.text+NL;});
+      ctx += NL;
+    }
+    if(rumors.length){
+      ctx += '--- RUMORES NÃO CONFIRMADOS ---' + NL;
+      rumors.forEach(function(r){ctx += '• '+r.text+NL;});
+      ctx += NL;
+    }
   }
+
   if(c.theories && c.theories.length) {
-    ctx += '=== TEORIAS DOS JOGADORES ===' + NL;
+    ctx += '--- TEORIAS DOS JOGADORES ---' + NL;
     c.theories.forEach(function(t){
-      ctx += '• "'+t.title+'": '+t.text+(t.verdict?' [Veredito: '+t.verdict+']':'')+NL;
+      ctx += '• '+t.title+': '+t.text+(t.verdict?' [Narrador: '+t.verdict+']':' [Sem veredito ainda]')+NL;
     });
     ctx += NL;
   }
+
+  ctx += NL + 'LEMBRE-SE: Responda SOMENTE com base nos registros acima. Se não há informação, diga que não há registros.' + NL;
+  
   return ctx;
 }
 
