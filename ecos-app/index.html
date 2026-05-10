@@ -1213,7 +1213,7 @@ const S = {
   notifications: [], // {id, text, icon, meta, chronId, read, ts}
 
   members: [
-    {id:1,name:'Narrador',login:'Narrador',role:'narrator',chronicles:['cyber','vampire'],password:'narrador123'},
+    {id:1,name:'Narrador',login:'Narrador',role:'narrator',chronicles:['cyber','vampire'],password:'matrix123'},
     {id:2,name:'Barbara "Babi"',login:'Barbara',role:'player',chronicles:['cyber'],password:'babi123'},
     {id:3,name:'Alexandre "Xaleh"',login:'Alexandre',role:'player',chronicles:['cyber','vampire'],password:'xaleh123'},
     {id:4,name:'Rafael "DrunkDog"',login:'Rafael',role:'player',chronicles:['cyber','vampire'],password:'drunkdog123'},
@@ -1749,10 +1749,10 @@ function renderKnowledge() {
   // Upload area
   html += '<div class="kb-upload-area" onclick="document.getElementById(\"kb-file-input\").click()">';
   html += '<div class="kb-upload-icon">📄</div>';
-  html += '<div class="kb-upload-label">CLIQUE PARA SUBIR UM PDF</div>';
-  html += '<div style="font-size:0.7rem;color:#555;margin-top:0.3rem;">O texto será extraído automaticamente</div>';
+  html += '<div class="kb-upload-label">CLIQUE PARA SUBIR UM ARQUIVO</div>';
+  html += '<div style="font-size:0.7rem;color:#555;margin-top:0.3rem;">PDF, Word (.docx) ou Bloco de Notas (.txt)</div>';
   html += '</div>';
-  html += '<input type="file" id="kb-file-input" accept=".pdf,.txt" style="display:none" onchange="handleKbUpload(this)">';
+  html += '<input type="file" id="kb-file-input" accept=".pdf,.txt,.docx,.doc" style="display:none" onchange="handleKbUpload(this)">';
   html += '<div id="kb-upload-progress" style="display:none;margin-top:0.5rem;"><div class="kb-progress"><div class="kb-progress-bar" id="kb-progress-bar" style="width:0%"></div></div><div id="kb-progress-label" style="font-family:Share Tech Mono,monospace;font-size:0.6rem;color:#666;margin-top:4px;text-align:center;"></div></div>';
 
   // Text input
@@ -1795,17 +1795,23 @@ async function handleKbUpload(input) {
     if(file.type === 'application/pdf') {
       label.textContent = 'Extraindo texto do PDF...';
       bar.style.width = '30%';
-      
-      // Extract text from PDF using FileReader + basic extraction
       text = await extractPdfText(file);
       bar.style.width = '80%';
+    } else if(file.name.endsWith('.docx') || file.type.includes('wordprocessingml')) {
+      label.textContent = 'Extraindo texto do Word...';
+      bar.style.width = '30%';
+      text = await extractDocxText(file);
+      bar.style.width = '80%';
     } else {
-      // Plain text file
+      // Plain text (.txt)
+      label.textContent = 'Lendo arquivo...';
+      bar.style.width = '50%';
       text = await new Promise(function(resolve) {
         const r = new FileReader();
         r.onload = function(e) { resolve(e.target.result); };
         r.readAsText(file, 'UTF-8');
       });
+      bar.style.width = '80%';
     }
     
     bar.style.width = '100%';
@@ -1825,7 +1831,7 @@ async function handleKbUpload(input) {
     S.chron.knowledge.push({
       title: file.name.replace(/\.[^.]+$/, ''),
       text: finalText,
-      type: file.type === 'application/pdf' ? 'PDF' : 'TXT',
+      type: file.name.endsWith('.docx')||file.type.includes('wordprocessingml') ? 'DOCX' : file.type==='application/pdf' ? 'PDF' : 'TXT',
       date: new Date().toLocaleDateString('pt-BR'),
       chars: finalText.length
     });
@@ -1841,6 +1847,33 @@ async function handleKbUpload(input) {
     console.error('KB upload error:', e);
     toast('Erro ao processar arquivo: ' + e.message);
   }
+}
+
+async function extractDocxText(file) {
+  return new Promise(function(resolve, reject) {
+    const reader = new FileReader();
+    reader.onload = async function(e) {
+      try {
+        // Use mammoth.js to extract text from docx
+        const mammoth = await import('https://cdnjs.cloudflare.com/ajax/libs/mammoth/1.6.0/mammoth.browser.min.js').catch(() => null);
+        if(mammoth) {
+          const result = await mammoth.extractRawText({arrayBuffer: e.target.result});
+          resolve(result.value || '');
+        } else {
+          // Fallback: basic XML extraction from docx zip
+          const arr = new Uint8Array(e.target.result);
+          let str = '';
+          for(let i=0;i<arr.length;i++) str+=String.fromCharCode(arr[i]);
+          // docx is a zip - extract text between w:t tags
+          const matches = str.match(/<w:t[^>]*>([^<]+)<\/w:t>/g) || [];
+          const text = matches.map(function(m){return m.replace(/<[^>]+>/g,'');}).join(' ');
+          resolve(text || str.replace(/[^ -~À-ÿ]/g,' ').replace(/\s+/g,' '));
+        }
+      } catch(err) { reject(err); }
+    };
+    reader.onerror = reject;
+    reader.readAsArrayBuffer(file);
+  });
 }
 
 async function extractPdfText(file) {
