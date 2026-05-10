@@ -324,6 +324,33 @@ nav{display:flex;align-items:center;justify-content:space-between;padding:0.9rem
 .char-card-photo{width:100%;height:140px;object-fit:cover;object-position:center top;border-radius:2px;margin-bottom:0.7rem;display:block;cursor:pointer;}
 .loc-card-photo{width:100%;height:140px;object-fit:cover;object-position:center;border-radius:2px;margin-bottom:0.6rem;display:block;cursor:pointer;}
 
+/* ORACLE */
+.oracle-wrap{display:flex;flex-direction:column;height:calc(100vh - 140px);min-height:400px;}
+.oracle-messages{flex:1;overflow-y:auto;display:flex;flex-direction:column;gap:0.8rem;padding:1rem 0;scroll-behavior:smooth;}
+.oracle-msg{display:flex;gap:0.7rem;align-items:flex-start;max-width:85%;}
+.oracle-msg.user{align-self:flex-end;flex-direction:row-reverse;}
+.oracle-bubble{padding:0.75rem 1rem;border-radius:6px;font-size:0.9rem;line-height:1.65;max-width:100%;}
+.oracle-msg.ai .oracle-bubble{background:rgba(139,0,0,0.08);border:1px solid rgba(139,0,0,0.2);color:#ccc;border-radius:2px 8px 8px 8px;}
+.oracle-msg.user .oracle-bubble{background:rgba(201,168,76,0.08);border:1px solid rgba(201,168,76,0.2);color:#d5c090;border-radius:8px 2px 8px 8px;}
+.oracle-avatar{width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:1rem;flex-shrink:0;margin-top:2px;}
+.oracle-msg.ai .oracle-avatar{background:rgba(139,0,0,0.15);border:1px solid rgba(139,0,0,0.3);}
+.oracle-msg.user .oracle-avatar{background:rgba(201,168,76,0.1);border:1px solid rgba(201,168,76,0.2);}
+.oracle-input-wrap{display:flex;gap:0.5rem;padding:0.8rem 0 0;border-top:1px solid var(--border);align-items:flex-end;}
+.oracle-input{flex:1;background:var(--surface);border:1px solid var(--border);border-radius:4px;padding:0.65rem 0.9rem;color:#ccc;font-size:0.9rem;resize:none;outline:none;font-family:'Crimson Pro',serif;line-height:1.5;max-height:120px;transition:border-color 0.2s;}
+.oracle-input:focus{border-color:rgba(139,0,0,0.4);}
+.oracle-send{background:rgba(139,0,0,0.15);border:1px solid rgba(139,0,0,0.35);color:#c87070;padding:0.65rem 1.1rem;border-radius:4px;cursor:pointer;font-family:'Cinzel',serif;font-size:0.7rem;letter-spacing:0.1em;transition:all 0.2s;white-space:nowrap;}
+.oracle-send:hover{background:rgba(139,0,0,0.25);border-color:rgba(139,0,0,0.5);}
+.oracle-send:disabled{opacity:0.4;cursor:not-allowed;}
+.oracle-typing{display:flex;gap:4px;align-items:center;padding:0.5rem 0;}
+.oracle-typing span{width:6px;height:6px;border-radius:50%;background:#8b0000;animation:oracle-pulse 1.2s infinite;}
+.oracle-typing span:nth-child(2){animation-delay:0.2s;}
+.oracle-typing span:nth-child(3){animation-delay:0.4s;}
+@keyframes oracle-pulse{0%,60%,100%{opacity:0.3;}30%{opacity:1;}}
+.oracle-header{font-family:'Cinzel',serif;font-size:0.7rem;letter-spacing:0.15em;color:var(--text-dim);text-align:center;padding:0.5rem 0 0.8rem;opacity:0.6;}
+.oracle-suggestions{display:flex;flex-wrap:wrap;gap:0.4rem;margin-bottom:0.8rem;}
+.oracle-sug{font-size:0.72rem;padding:4px 10px;border:1px solid var(--border);border-radius:20px;background:none;color:var(--text-dim);cursor:pointer;transition:all 0.2s;font-family:'Share Tech Mono',monospace;}
+.oracle-sug:hover{border-color:rgba(139,0,0,0.4);color:#c87070;}
+
 /* EMPTY */
 .empty{text-align:center;padding:2.5rem 1rem;color:var(--text-dim);font-style:italic;}
 .empty-ico{font-size:1.8rem;margin-bottom:0.7rem;opacity:0.28;}
@@ -691,6 +718,7 @@ footer{text-align:center;padding:1.1rem;font-family:'Share Tech Mono',monospace;
           <button class="drop-item" onclick="goTab('polls')">📊 <span>Enquetes</span></button>
           <button class="drop-item" onclick="goTab('notes')">📝 <span>Anotações</span></button>
           <button class="drop-item" onclick="goTab('group')">👥 <span>Grupo</span></button>
+          <button class="drop-item" onclick="goTab('oracle')">🔮 <span>Oráculo</span></button>
           <button class="drop-item" onclick="goTab('connections')">🕸️ <span>Conexões</span></button>
           <button class="drop-item" id="drop-map" style="display:none" onclick="goTab('map')">🗺 <span>Mapa</span></button>
         </div>
@@ -716,11 +744,12 @@ footer{text-align:center;padding:1.1rem;font-family:'Share Tech Mono',monospace;
   <div id="panel-polls"    class="panel"></div>
   <div id="panel-notes"    class="panel"></div>
   <div id="panel-group"    class="panel"></div>
+  <div id="panel-oracle"   class="panel"></div>
   <div id="panel-connections" class="panel"></div>
   <div id="panel-map" class="panel" style="padding:0;position:fixed;top:57px;left:0;right:0;bottom:0;z-index:10;"></div>
 </div>
 
-<footer>ECOS DA HUMANIDADE &nbsp;·&nbsp; <span style="color:var(--gold);opacity:0.8;">V2.0</span> &nbsp;·&nbsp; ARQUIVO DAS CRÔNICAS</footer>
+<footer>ECOS DA HUMANIDADE &nbsp;·&nbsp; <span style="color:var(--gold);opacity:0.8;">V2.1</span> &nbsp;·&nbsp; ARQUIVO DAS CRÔNICAS</footer>
 </div><!-- .app -->
 
 <!-- ==================== OVERLAYS ==================== -->
@@ -1369,6 +1398,192 @@ function saveSummary() {
   toast('Apresentação atualizada!');
 }
 
+
+// ================================================================
+// ORÁCULO — Assistente IA da Campanha
+// ================================================================
+const GEMINI_KEY = 'AIzaSyAKXG2Zapnqz0436Qa_czVdHji1nwgJWS8';
+let _oracleHistory = [];
+
+function buildCampaignContext() {
+  const c = S.chron;
+  if(!c) return '';
+  const NL = '\n';
+  let ctx = 'Você é o Oráculo do Festim das Sombras, um assistente de RPG para a campanha de Vampiro: A Máscara V5.' + NL;
+  ctx += 'Você conhece tudo sobre esta campanha e responde perguntas dos jogadores de forma imersiva e temática.' + NL;
+  ctx += 'IMPORTANTE: Você NUNCA revela informações marcadas como segredo do Narrador. Só compartilha o que os jogadores já descobriram.' + NL;
+  ctx += 'Responda sempre em português brasileiro, de forma concisa e envolvente.' + NL + NL;
+  ctx += '=== CAMPANHA: ' + c.name + ' ===' + NL;
+  ctx += 'Sistema: ' + c.system + NL;
+  ctx += 'Status: ' + (c.status==='active'?'Em andamento':'Encerrada') + NL + NL;
+  if(c.sessions && c.sessions.length) {
+    ctx += '=== SESSÕES ===' + NL;
+    c.sessions.forEach(function(s,i){ ctx += 'Sessão '+(i+1)+' — '+s.title+': '+s.summary+NL; });
+    ctx += NL;
+  }
+  if(c.npcs && c.npcs.length) {
+    ctx += '=== NPCs CONHECIDOS ===' + NL;
+    c.npcs.forEach(function(n){
+      if(n.name){
+        ctx += '• '+n.name+' ('+( n.role||'?')+') — Status: '+(n.status||'?')+NL;
+        if(n.known) ctx += '  O que se sabe: '+n.known+NL;
+        if(n.secretRevealed && n.secret) ctx += '  Revelado: '+n.secret+NL;
+      }
+    });
+    ctx += NL;
+  }
+  if(c.locations && c.locations.length) {
+    ctx += '=== LOCAIS ===' + NL;
+    c.locations.forEach(function(l){
+      ctx += '• '+(l.icon||'📍')+' '+l.name+': '+l.desc+NL;
+      if(l.secretRevealed && l.secret) ctx += '  Revelado: '+l.secret+NL;
+    });
+    ctx += NL;
+  }
+  if(c.characters && c.characters.length) {
+    ctx += '=== PERSONAGENS DOS JOGADORES ===' + NL;
+    c.characters.forEach(function(ch){
+      ctx += '• '+ch.name+' — Jogado por '+ch.player+(ch.concept?' — '+ch.concept:'')+NL;
+      if(ch.desc) ctx += '  '+ch.desc+NL;
+    });
+    ctx += NL;
+  }
+  if(c.rumors && c.rumors.length) {
+    const facts=c.rumors.filter(function(r){return r.status==='fact';});
+    const rumors=c.rumors.filter(function(r){return r.status!=='fact';});
+    if(facts.length){ ctx += '=== FATOS CONFIRMADOS ===' + NL; facts.forEach(function(r){ctx += '• '+r.text+NL;}); ctx += NL; }
+    if(rumors.length){ ctx += '=== RUMORES ===' + NL; rumors.forEach(function(r){ctx += '• '+r.text+NL;}); ctx += NL; }
+  }
+  if(c.theories && c.theories.length) {
+    ctx += '=== TEORIAS DOS JOGADORES ===' + NL;
+    c.theories.forEach(function(t){
+      ctx += '• "'+t.title+'": '+t.text+(t.verdict?' [Veredito: '+t.verdict+']':'')+NL;
+    });
+    ctx += NL;
+  }
+  return ctx;
+}
+
+function renderOracle() {
+  const el = $id('panel-oracle');
+  if(!isLoggedIn()) {
+    el.innerHTML = '<div class="empty"><div class="empty-ico">🔮</div>Faça login para consultar o Oráculo.</div>';
+    return;
+  }
+
+  const suggestions = [
+    'Quem é o Príncipe da cidade?',
+    'O que sabemos sobre os Anarquistas?',
+    'Resuma a última sessão',
+    'Quais locais já exploramos?',
+    'Quais teorias temos?',
+    'Quem são nossos aliados?',
+  ];
+
+  el.innerHTML = `
+    <div class="oracle-wrap" id="oracle-wrap">
+      <div class="oracle-header">🔮 ORÁCULO DA CAMPANHA · FESTIM DAS SOMBRAS</div>
+      <div class="oracle-messages" id="oracle-msgs">
+        <div class="oracle-msg ai">
+          <div class="oracle-avatar">🔮</div>
+          <div class="oracle-bubble">Saudações, ${S.user.name}. Sou o Oráculo do Festim das Sombras. Posso responder perguntas sobre NPCs, locais, sessões, rumores e muito mais. O que deseja saber?</div>
+        </div>
+        <div class="oracle-suggestions">
+          ${suggestions.map(s=>`<button class="oracle-sug" onclick="oracleSuggest('${s}')">${s}</button>`).join('')}
+        </div>
+      </div>
+      <div class="oracle-input-wrap">
+        <textarea class="oracle-input" id="oracle-input" placeholder="Faça uma pergunta sobre a campanha..." rows="1"
+          onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();oracleAsk();}"
+          oninput="this.style.height='auto';this.style.height=Math.min(this.scrollHeight,120)+'px'"></textarea>
+        <button class="oracle-send" id="oracle-send" onclick="oracleAsk()">Consultar</button>
+      </div>
+    </div>`;
+  _oracleHistory = [];
+}
+
+function oracleSuggest(text) {
+  const input = $id('oracle-input');
+  if(input) { input.value = text; input.focus(); }
+}
+
+async function oracleAsk() {
+  const input = $id('oracle-input');
+  const btn = $id('oracle-send');
+  const msgs = $id('oracle-msgs');
+  if(!input || !msgs) return;
+  
+  const question = input.value.trim();
+  if(!question) return;
+
+  // Add user message
+  msgs.innerHTML += `
+    <div class="oracle-msg user">
+      <div class="oracle-avatar">👤</div>
+      <div class="oracle-bubble">${question}</div>
+    </div>`;
+  input.value = '';
+  input.style.height = 'auto';
+  btn.disabled = true;
+
+  // Add typing indicator
+  msgs.innerHTML += `
+    <div class="oracle-msg ai" id="oracle-typing">
+      <div class="oracle-avatar">🔮</div>
+      <div class="oracle-bubble"><div class="oracle-typing"><span></span><span></span><span></span></div></div>
+    </div>`;
+  msgs.scrollTop = msgs.scrollHeight;
+
+  // Build history for context
+  _oracleHistory.push({role:'user', parts:[{text:question}]});
+
+  try {
+    const systemCtx = buildCampaignContext();
+    
+    const body = {
+      system_instruction: {parts:[{text: systemCtx}]},
+      contents: _oracleHistory,
+      generationConfig: {
+        temperature: 0.7,
+        maxOutputTokens: 600,
+      }
+    };
+
+    const res = await fetch(
+      `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${GEMINI_KEY}`,
+      {method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify(body)}
+    );
+    
+    const data = await res.json();
+    const answer = data?.candidates?.[0]?.content?.parts?.[0]?.text || 'O Oráculo não conseguiu responder. Tente novamente.';
+    
+    _oracleHistory.push({role:'model', parts:[{text:answer}]});
+    
+    // Remove typing, add answer
+    const typing = $id('oracle-typing');
+    if(typing) typing.remove();
+    
+    msgs.innerHTML += `
+      <div class="oracle-msg ai">
+        <div class="oracle-avatar">🔮</div>
+        <div class="oracle-bubble">${answer.split('\n').join('<br>')}</div>
+      </div>`;
+
+  } catch(e) {
+    const typing = $id('oracle-typing');
+    if(typing) typing.remove();
+    msgs.innerHTML += `
+      <div class="oracle-msg ai">
+        <div class="oracle-avatar">🔮</div>
+        <div class="oracle-bubble" style="color:#c44;">Erro ao consultar o Oráculo. Verifique sua conexão.</div>
+      </div>`;
+    console.error('Oracle error:', e);
+  }
+
+  btn.disabled = false;
+  msgs.scrollTop = msgs.scrollHeight;
+}
+
 function renderHome() {
   const g=$id('grid-chron'); g.innerHTML='';
   S.chronicles.forEach(c=>{
@@ -1457,6 +1672,7 @@ const TAB_META = {
   polls:       {icon:'📊', label:'Enquetes'},
   notes:       {icon:'📝', label:'Anotações'},
   group:       {icon:'👥', label:'Grupo'},
+  oracle:      {icon:'🔮', label:'Oráculo'},
   map:         {icon:'🗺',  label:'Mapa'},
 };
 
@@ -1528,6 +1744,7 @@ const renders = {
   polls(){ renderPolls(); },
   notes(){ renderNotes(); },
   group(){ renderGroup(); },
+  oracle(){ renderOracle(); },
   map(){ renderMap(); }
 };
 
