@@ -195,35 +195,25 @@ nav{display:flex;align-items:center;justify-content:space-between;padding:0.9rem
 .loc-secret-content{font-size:0.84rem;color:#999;line-height:1.55;margin-top:0.5rem;padding-top:0.5rem;border-top:1px solid rgba(201,168,76,0.1);}
 
 /* TIMELINE */
-/* TIMELINE */
 .tl-hint{text-align:center;font-family:'Share Tech Mono',monospace;font-size:0.6rem;color:rgba(201,168,76,0.4);padding:4px 0 10px;letter-spacing:0.12em;}
 .tl-scroll{width:100%;overflow-x:auto;overflow-y:visible;padding:0 0 20px;cursor:grab;}
 .tl-scroll:active{cursor:grabbing;}
 .tl-scroll::-webkit-scrollbar{height:3px;}
 .tl-scroll::-webkit-scrollbar-thumb{background:rgba(201,168,76,0.2);border-radius:2px;}
 .tl-root{position:relative;display:flex;flex-direction:column;min-width:max-content;padding:0 40px;}
-/* LINE */
 .tl-axis{position:relative;height:2px;background:linear-gradient(90deg,transparent,rgba(139,0,0,0.6) 5%,#c41e3a 30%,#c41e3a 70%,rgba(139,0,0,0.6) 95%,transparent);margin:0;flex-shrink:0;}
-/* YEARS ROW — sits on the line */
 .tl-years-row{display:flex;align-items:center;position:relative;height:0;}
 .tl-year{position:relative;display:flex;flex-direction:column;align-items:center;min-width:160px;flex-shrink:0;cursor:pointer;}
-/* dot sits on the axis */
 .tl-year-dot{width:12px;height:12px;border-radius:50%;border:2px solid #c41e3a;background:#080808;position:relative;z-index:4;transition:all 0.22s;margin-top:-7px;}
 .tl-year:hover .tl-year-dot,.tl-year.active .tl-year-dot{background:#c41e3a;box-shadow:0 0 14px rgba(196,30,58,0.7);transform:scale(1.4);}
-/* label below dot */
 .tl-year-label{font-family:'Share Tech Mono',monospace;font-size:0.58rem;letter-spacing:0.12em;color:#555;margin-top:7px;white-space:nowrap;transition:color 0.2s;background:#080808;padding:2px 6px;border-radius:2px;}
 .tl-year:hover .tl-year-label,.tl-year.active .tl-year-label{color:#c41e3a;}
-/* BALLOONS above — separate row above axis */
 .tl-row-above{display:flex;align-items:flex-end;min-height:220px;position:relative;padding-bottom:16px;}
 .tl-col-above{display:flex;flex-direction:column;align-items:center;min-width:160px;flex-shrink:0;position:relative;}
 .tl-col-above .tl-stem{width:1px;height:16px;background:rgba(196,30,58,0.45);opacity:0;transition:opacity 0.22s;margin-top:auto;}
-/* BALLOONS below — separate row below axis */
 .tl-row-below{display:flex;align-items:flex-start;min-height:20px;padding-top:0;}
 .tl-col-below{display:flex;flex-direction:column;align-items:center;min-width:160px;flex-shrink:0;position:relative;}
 .tl-col-below .tl-stem{width:1px;height:16px;background:rgba(196,30,58,0.45);opacity:0;transition:opacity 0.22s;}
-/* show stems when year active */
-.tl-year.active ~ .tl-row-above .tl-col-above .tl-stem{opacity:1;}
-
 .tl-balloons-above{display:flex;flex-direction:column;gap:6px;align-items:center;opacity:0;pointer-events:none;transition:opacity 0.22s;}
 .tl-balloons-below{display:flex;flex-direction:column;gap:6px;align-items:center;opacity:0;pointer-events:none;transition:opacity 0.22s;padding-top:16px;}
 .tl-balloon{background:linear-gradient(135deg,#0d0008,#120010);border:1px solid rgba(139,0,0,0.4);border-radius:5px;padding:10px 11px;width:170px;box-shadow:0 4px 20px rgba(0,0,0,0.5);transition:border-color 0.2s;}
@@ -246,7 +236,6 @@ nav{display:flex;align-items:center;justify-content:space-between;padding:0.9rem
   .tl-col-above,.tl-col-below{min-width:130px;}
   .tl-balloon{width:150px;}
 }
-
 /* CHARACTERS */
 .chars-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:0.9rem;}
 .char-card{background:var(--surface);border:1px solid var(--border);border-radius:3px;padding:1.1rem;transition:all 0.2s;}
@@ -375,6 +364,55 @@ nav{display:flex;align-items:center;justify-content:space-between;padding:0.9rem
 .card-photo{width:100%;height:160px;object-fit:cover;object-position:center top;border-radius:2px;margin-bottom:0.7rem;display:block;cursor:pointer;}
 .char-card-photo{width:100%;height:140px;object-fit:cover;object-position:center top;border-radius:2px;margin-bottom:0.7rem;display:block;cursor:pointer;}
 .loc-card-photo{width:100%;height:140px;object-fit:cover;object-position:center;border-radius:2px;margin-bottom:0.6rem;display:block;cursor:pointer;}
+
+/* KNOWLEDGE BASE */
+.kb-wrap{display:flex;flex-direction:column;gap:1rem;}
+.kb-entry{background:var(--surface);border:1px solid var(--border);border-radius:3px;padding:1rem;}
+.kb-entry-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:0.5rem;}
+.kb-entry-title{font-family:'Cinzel',serif;font-size:0.88rem;color:#d5d5d5;}
+.kb-entry-meta{font-family:'Share Tech Mono',monospace;font-size:0.55rem;color:var(--text-dim);}
+.kb-entry-preview{font-size:0.8rem;color:#666;line-height:1.5;overflow:hidden;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;}
+.kb-upload-area{border:1.5px dashed rgba(201,168,76,0.25);border-radius:4px;padding:1.5rem;text-align:center;cursor:pointer;transition:all 0.2s;}
+.kb-upload-area:hover{border-color:rgba(201,168,76,0.5);background:rgba(201,168,76,0.03);}
+.kb-upload-icon{font-size:1.8rem;margin-bottom:0.5rem;opacity:0.5;}
+.kb-upload-label{font-family:'Share Tech Mono',monospace;font-size:0.65rem;color:var(--text-dim);letter-spacing:0.1em;}
+.kb-progress{height:3px;background:rgba(201,168,76,0.2);border-radius:2px;margin-top:0.5rem;overflow:hidden;}
+.kb-progress-bar{height:100%;background:var(--gold);border-radius:2px;transition:width 0.3s;}
+
+/* ORACLE LOG */
+.oracle-log-wrap{display:flex;flex-direction:column;gap:0.6rem;}
+.oracle-log-item{background:var(--surface);border:1px solid var(--border);border-radius:3px;padding:0.8rem 1rem;display:flex;gap:0.8rem;align-items:flex-start;}
+.oracle-log-item:hover{border-color:rgba(201,168,76,0.2);}
+.oracle-log-user{font-family:'Cinzel',serif;font-size:0.72rem;color:var(--gold);flex-shrink:0;min-width:80px;}
+.oracle-log-q{font-size:0.88rem;color:#ccc;flex:1;line-height:1.5;}
+.oracle-log-date{font-family:'Share Tech Mono',monospace;font-size:0.55rem;color:var(--text-dim);flex-shrink:0;}
+
+/* ORACLE */
+.oracle-wrap{display:flex;flex-direction:column;height:calc(100vh - 140px);min-height:400px;}
+.oracle-messages{flex:1;overflow-y:auto;display:flex;flex-direction:column;gap:0.8rem;padding:1rem 0;scroll-behavior:smooth;}
+.oracle-msg{display:flex;gap:0.7rem;align-items:flex-start;max-width:85%;}
+.oracle-msg.user{align-self:flex-end;flex-direction:row-reverse;}
+.oracle-bubble{padding:0.75rem 1rem;border-radius:6px;font-size:0.9rem;line-height:1.65;max-width:100%;}
+.oracle-msg.ai .oracle-bubble{background:rgba(139,0,0,0.08);border:1px solid rgba(139,0,0,0.2);color:#ccc;border-radius:2px 8px 8px 8px;}
+.oracle-msg.user .oracle-bubble{background:rgba(201,168,76,0.08);border:1px solid rgba(201,168,76,0.2);color:#d5c090;border-radius:8px 2px 8px 8px;}
+.oracle-avatar{width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:1rem;flex-shrink:0;margin-top:2px;}
+.oracle-msg.ai .oracle-avatar{background:rgba(139,0,0,0.15);border:1px solid rgba(139,0,0,0.3);}
+.oracle-msg.user .oracle-avatar{background:rgba(201,168,76,0.1);border:1px solid rgba(201,168,76,0.2);}
+.oracle-input-wrap{display:flex;gap:0.5rem;padding:0.8rem 0 0;border-top:1px solid var(--border);align-items:flex-end;}
+.oracle-input{flex:1;background:var(--surface);border:1px solid var(--border);border-radius:4px;padding:0.65rem 0.9rem;color:#ccc;font-size:0.9rem;resize:none;outline:none;font-family:'Crimson Pro',serif;line-height:1.5;max-height:120px;transition:border-color 0.2s;}
+.oracle-input:focus{border-color:rgba(139,0,0,0.4);}
+.oracle-send{background:rgba(139,0,0,0.15);border:1px solid rgba(139,0,0,0.35);color:#c87070;padding:0.65rem 1.1rem;border-radius:4px;cursor:pointer;font-family:'Cinzel',serif;font-size:0.7rem;letter-spacing:0.1em;transition:all 0.2s;white-space:nowrap;}
+.oracle-send:hover{background:rgba(139,0,0,0.25);border-color:rgba(139,0,0,0.5);}
+.oracle-send:disabled{opacity:0.4;cursor:not-allowed;}
+.oracle-typing{display:flex;gap:4px;align-items:center;padding:0.5rem 0;}
+.oracle-typing span{width:6px;height:6px;border-radius:50%;background:#8b0000;animation:oracle-pulse 1.2s infinite;}
+.oracle-typing span:nth-child(2){animation-delay:0.2s;}
+.oracle-typing span:nth-child(3){animation-delay:0.4s;}
+@keyframes oracle-pulse{0%,60%,100%{opacity:0.3;}30%{opacity:1;}}
+.oracle-header{font-family:'Cinzel',serif;font-size:0.7rem;letter-spacing:0.15em;color:var(--text-dim);text-align:center;padding:0.5rem 0 0.8rem;opacity:0.6;}
+.oracle-suggestions{display:flex;flex-wrap:wrap;gap:0.4rem;margin-bottom:0.8rem;}
+.oracle-sug{font-size:0.72rem;padding:4px 10px;border:1px solid var(--border);border-radius:20px;background:none;color:var(--text-dim);cursor:pointer;transition:all 0.2s;font-family:'Share Tech Mono',monospace;}
+.oracle-sug:hover{border-color:rgba(139,0,0,0.4);color:#c87070;}
 
 /* EMPTY */
 .empty{text-align:center;padding:2.5rem 1rem;color:var(--text-dim);font-style:italic;}
@@ -743,6 +781,8 @@ footer{text-align:center;padding:1.1rem;font-family:'Share Tech Mono',monospace;
           <button class="drop-item" onclick="goTab('polls')">📊 <span>Enquetes</span></button>
           <button class="drop-item" onclick="goTab('notes')">📝 <span>Anotações</span></button>
           <button class="drop-item" onclick="goTab('group')">👥 <span>Grupo</span></button>
+          <button class="drop-item" onclick="goTab('oracle')">🔮 <span>Oráculo</span></button>
+          <button class="drop-item" id="drop-knowledge" style="display:none" onclick="goTab('knowledge')">📚 <span>Conhecimento</span></button>
           <button class="drop-item" onclick="goTab('connections')">🕸️ <span>Conexões</span></button>
           <button class="drop-item" id="drop-map" style="display:none" onclick="goTab('map')">🗺 <span>Mapa</span></button>
         </div>
@@ -768,11 +808,13 @@ footer{text-align:center;padding:1.1rem;font-family:'Share Tech Mono',monospace;
   <div id="panel-polls"    class="panel"></div>
   <div id="panel-notes"    class="panel"></div>
   <div id="panel-group"    class="panel"></div>
+  <div id="panel-oracle"   class="panel"></div>
+  <div id="panel-knowledge" class="panel"></div>
   <div id="panel-connections" class="panel"></div>
   <div id="panel-map" class="panel" style="padding:0;position:fixed;top:57px;left:0;right:0;bottom:0;z-index:10;"></div>
 </div>
 
-<footer>ECOS DA HUMANIDADE &nbsp;·&nbsp; <span style="color:var(--gold);opacity:0.8;">V2.6</span> &nbsp;·&nbsp; ARQUIVO DAS CRÔNICAS</footer>
+<footer>ECOS DA HUMANIDADE &nbsp;·&nbsp; <span style="color:var(--gold);opacity:0.8;">V2.5</span> &nbsp;·&nbsp; ARQUIVO DAS CRÔNICAS</footer>
 </div><!-- .app -->
 
 <!-- ==================== OVERLAYS ==================== -->
@@ -1421,6 +1463,485 @@ function saveSummary() {
   toast('Apresentação atualizada!');
 }
 
+
+// ================================================================
+// ORÁCULO — Assistente IA da Campanha
+// ================================================================
+// Groq API
+let _oracleHistory = [];
+
+function buildCampaignContext() {
+  const c = S.chron;
+  if(!c) return '';
+  const NL = '\n';
+  
+  let ctx = 'Você é o Oráculo do Festim das Sombras, assistente da campanha de Vampiro: A Máscara V5.' + NL;
+  ctx += NL;
+  ctx += 'REGRAS ABSOLUTAS — NUNCA QUEBRE ESTAS REGRAS:' + NL;
+  ctx += '1. Você SOMENTE responde com base nas informações fornecidas abaixo. JAMAIS invente personagens, locais, eventos ou detalhes que não estejam listados.' + NL;
+  ctx += '2. Se não houver informação suficiente para responder, diga exatamente: "O Oráculo não possui registros sobre isso ainda."' + NL;
+  ctx += '3. Você NUNCA revela informações de segredos do Narrador.' + NL;
+  ctx += '4. Responda sempre em português brasileiro.' + NL;
+  ctx += '5. Seja conciso e direto. Não elabore além do que está nos registros.' + NL;
+  ctx += NL;
+  ctx += '=== REGISTROS DA CAMPANHA: ' + c.name + ' ===' + NL;
+  ctx += 'Sistema: ' + c.system + NL;
+  ctx += 'Status: ' + (c.status==='active'?'Em andamento':'Encerrada') + NL + NL;
+
+  if(c.sessions && c.sessions.length) {
+    ctx += '--- SESSÕES REGISTRADAS ---' + NL;
+    c.sessions.forEach(function(s,i){ ctx += 'Sessão '+(i+1)+' ('+s.date+'): '+s.title+' — '+s.summary+NL; });
+    ctx += NL;
+  } else {
+    ctx += '--- SESSÕES: Nenhuma registrada ainda ---' + NL + NL;
+  }
+
+  if(c.npcs && c.npcs.length) {
+    ctx += '--- NPCs CONHECIDOS ---' + NL;
+    c.npcs.forEach(function(n){
+      if(!n.name) return;
+      ctx += '• '+n.name+' | Função: '+(n.role||'desconhecida')+' | Status: '+(n.status||'desconhecido')+NL;
+      if(n.known) ctx += '  Informação pública: '+n.known+NL;
+      if(n.secretRevealed && n.secret) ctx += '  Revelado ao grupo: '+n.secret+NL;
+    });
+    ctx += NL;
+  } else {
+    ctx += '--- NPCs: Nenhum registrado ainda ---' + NL + NL;
+  }
+
+  if(c.locations && c.locations.length) {
+    ctx += '--- LOCAIS CONHECIDOS ---' + NL;
+    c.locations.forEach(function(l){
+      ctx += '• '+(l.icon||'')+''+l.name+': '+l.desc+NL;
+      if(l.secretRevealed && l.secret) ctx += '  Revelado: '+l.secret+NL;
+    });
+    ctx += NL;
+  } else {
+    ctx += '--- LOCAIS: Nenhum registrado ainda ---' + NL + NL;
+  }
+
+  if(c.characters && c.characters.length) {
+    ctx += '--- PERSONAGENS DOS JOGADORES ---' + NL;
+    c.characters.forEach(function(ch){
+      ctx += '• '+ch.name+' (jogado por '+ch.player+')'+(ch.concept?' — '+ch.concept:'')+NL;
+      if(ch.desc) ctx += '  '+ch.desc+NL;
+    });
+    ctx += NL;
+  }
+
+  if(c.rumors && c.rumors.length) {
+    const facts=c.rumors.filter(function(r){return r.status==='fact';});
+    const rumors=c.rumors.filter(function(r){return r.status!=='fact';});
+    if(facts.length){
+      ctx += '--- FATOS CONFIRMADOS ---' + NL;
+      facts.forEach(function(r){ctx += '• '+r.text+NL;});
+      ctx += NL;
+    }
+    if(rumors.length){
+      ctx += '--- RUMORES NÃO CONFIRMADOS ---' + NL;
+      rumors.forEach(function(r){ctx += '• '+r.text+NL;});
+      ctx += NL;
+    }
+  }
+
+  if(c.theories && c.theories.length) {
+    ctx += '--- TEORIAS DOS JOGADORES ---' + NL;
+    c.theories.forEach(function(t){
+      ctx += '• '+t.title+': '+t.text+(t.verdict?' [Narrador: '+t.verdict+']':' [Sem veredito ainda]')+NL;
+    });
+    ctx += NL;
+  }
+
+  ctx += NL + 'LEMBRE-SE: Responda SOMENTE com base nos registros acima. Se não há informação, diga que não há registros.' + NL;
+  
+  return ctx;
+}
+
+function renderOracle() {
+  const el = $id('panel-oracle');
+  if(!isLoggedIn()) {
+    el.innerHTML = '<div class="empty"><div class="empty-ico">🔮</div>Faça login para consultar o Oráculo.</div>';
+    return;
+  }
+
+  const suggestions = [
+    'Quem é o Príncipe da cidade?',
+    'O que sabemos sobre os Anarquistas?',
+    'Resuma a última sessão',
+    'Quais locais já exploramos?',
+    'Quais teorias temos?',
+    'Quem são nossos aliados?',
+  ];
+
+  const logBtn = isNarrator() ? '<button class="btn-add" style="margin-left:0.5rem;" onclick="toggleOracleLog()">📋 Ver Log</button>' : '';
+  el.innerHTML = `
+    <div class="oracle-wrap" id="oracle-wrap">
+      <div class="oracle-header" style="display:flex;align-items:center;justify-content:center;gap:0.5rem;">🔮 ORÁCULO DA CAMPANHA · FESTIM DAS SOMBRAS${logBtn?'<span>'+logBtn+'</span>':''}</div>
+      <div id="oracle-log-panel" style="display:none;"></div>
+      <div class="oracle-messages" id="oracle-msgs">
+        <div class="oracle-msg ai">
+          <div class="oracle-avatar">🔮</div>
+          <div class="oracle-bubble">Saudações, ${S.user.name}. Sou o Oráculo do Festim das Sombras. Posso responder perguntas sobre NPCs, locais, sessões, rumores e muito mais. O que deseja saber?</div>
+        </div>
+        <div class="oracle-suggestions">
+          ${suggestions.map(s=>`<button class="oracle-sug" onclick="oracleSuggest('${s}')">${s}</button>`).join('')}
+        </div>
+      </div>
+      <div class="oracle-input-wrap">
+        <textarea class="oracle-input" id="oracle-input" placeholder="Faça uma pergunta sobre a campanha..." rows="1"
+          onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();oracleAsk();}"
+          oninput="this.style.height='auto';this.style.height=Math.min(this.scrollHeight,120)+'px'"></textarea>
+        <button class="oracle-send" id="oracle-send" onclick="oracleAsk()">Consultar</button>
+      </div>
+    </div>`;
+  _oracleHistory = [];
+}
+
+function oracleSuggest(text) {
+  const input = $id('oracle-input');
+  if(input) { input.value = text; input.focus(); }
+}
+
+
+function toggleOracleLog() {
+  const panel = $id('oracle-log-panel');
+  const msgs = $id('oracle-msgs');
+  const inputWrap = document.querySelector('.oracle-input-wrap');
+  if(!panel) return;
+  const showing = panel.style.display !== 'none';
+  if(showing) {
+    panel.style.display = 'none';
+    if(msgs) msgs.style.display = '';
+    if(inputWrap) inputWrap.style.display = '';
+  } else {
+    panel.style.display = 'block';
+    if(msgs) msgs.style.display = 'none';
+    if(inputWrap) inputWrap.style.display = 'none';
+    renderOracleLog();
+  }
+}
+
+function renderOracleLog() {
+  const panel = $id('oracle-log-panel');
+  if(!panel) return;
+  const log = (S.chron && S.chron.oracleLog) ? [...S.chron.oracleLog].reverse() : [];
+  
+  let html = '<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:0.8rem;">';
+  html += '<span style="font-family:Cinzel,serif;font-size:0.8rem;color:var(--gold);">📋 Log do Oráculo ('+log.length+' perguntas)</span>';
+  if(log.length) html += '<button class="btn-sm btn-del" onclick="clearOracleLog()">Limpar Log</button>';
+  html += '</div>';
+
+  if(!log.length) {
+    html += '<div class="empty"><div class="empty-ico">📋</div>Nenhuma pergunta registrada ainda.</div>';
+  } else {
+    html += '<div class="oracle-log-wrap">';
+    log.forEach(function(l) {
+      html += '<div class="oracle-log-item">';
+      html += '<div class="oracle-log-user">'+l.user+'</div>';
+      html += '<div class="oracle-log-q">'+l.question+'</div>';
+      html += '<div class="oracle-log-date">'+l.date+'</div>';
+      html += '</div>';
+    });
+    html += '</div>';
+  }
+  panel.innerHTML = html;
+}
+
+function clearOracleLog() {
+  if(!confirm('Limpar todo o log do Oráculo?')) return;
+  S.chron.oracleLog = [];
+  if(window._db) {
+    window._fbSet(window._fbRef(window._db, 'chronicles/'+S.chron.id+'/oracleLog'), []).catch(console.error);
+  }
+  renderOracleLog();
+  toast('Log limpo.');
+}
+
+async function oracleAsk() {
+  const input = $id('oracle-input');
+  const btn = $id('oracle-send');
+  const msgs = $id('oracle-msgs');
+  if(!input || !msgs) return;
+  const question = input.value.trim();
+  if(!question) return;
+
+  msgs.innerHTML += '<div class="oracle-msg user"><div class="oracle-avatar">👤</div><div class="oracle-bubble">'+question+'</div></div>';
+  input.value = ''; input.style.height = 'auto'; btn.disabled = true;
+  msgs.innerHTML += '<div class="oracle-msg ai" id="oracle-typing"><div class="oracle-avatar">🔮</div><div class="oracle-bubble"><div class="oracle-typing"><span></span><span></span><span></span></div></div></div>';
+  msgs.scrollTop = msgs.scrollHeight;
+
+  _oracleHistory.push({role:'user', content: question});
+  // Log to Firebase
+  if(S.user && S.chron) {
+    const log = {
+      user: S.user.name,
+      question: question,
+      ts: Date.now(),
+      date: new Date().toLocaleString('pt-BR')
+    };
+    if(!S.chron.oracleLog) S.chron.oracleLog = [];
+    S.chron.oracleLog.push(log);
+    // Save just the log separately to avoid saving whole chronicle
+    if(window._db) {
+      const logRef = window._fbRef(window._db, 'chronicles/' + S.chron.id + '/oracleLog');
+      window._fbSet(logRef, S.chron.oracleLog).catch(console.error);
+    }
+  }
+
+  try {
+    const ctx = buildCampaignContext();
+    const messages = [{role:'system', content: ctx}, ..._oracleHistory];
+
+    const res = await fetch('https://api.groq.com/openai/v1/chat/completions', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer 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'
+      },
+      body: JSON.stringify({
+        model: 'llama-3.3-70b-versatile',
+        messages: messages,
+        temperature: 0.75,
+        max_tokens: 500
+      })
+    });
+
+    if(!res.ok){ const err=await res.json(); throw new Error(err?.error?.message||'Erro '+res.status); }
+    const data = await res.json();
+    const answer = data?.choices?.[0]?.message?.content || 'O Oráculo não conseguiu responder.';
+    _oracleHistory.push({role:'assistant', content: answer});
+
+    const typing = $id('oracle-typing');
+    if(typing) typing.remove();
+    msgs.innerHTML += '<div class="oracle-msg ai"><div class="oracle-avatar">🔮</div><div class="oracle-bubble">'+answer.replace(/</g,'&lt;').split(String.fromCharCode(10)).join('<br>')+'</div></div>';
+
+  } catch(err) {
+    const typing = $id('oracle-typing');
+    if(typing) typing.remove();
+    msgs.innerHTML += '<div class="oracle-msg ai"><div class="oracle-avatar">🔮</div><div class="oracle-bubble" style="color:#c44;">'+err.message+'</div></div>';
+    _oracleHistory.pop();
+    console.error('Oracle:', err);
+  }
+  btn.disabled = false;
+  msgs.scrollTop = msgs.scrollHeight;
+}
+
+
+
+
+
+// ================================================================
+// KNOWLEDGE BASE — Base de Conhecimento do Oráculo
+// ================================================================
+
+function renderKnowledge() {
+  const el = $id('panel-knowledge');
+  if(!isNarrator()) {
+    el.innerHTML = '<div class="empty"><div class="empty-ico">🔒</div>Apenas o Narrador pode gerenciar o conhecimento do Oráculo.</div>';
+    return;
+  }
+  if(!S.chron.knowledge) S.chron.knowledge = [];
+  const kb = S.chron.knowledge;
+
+  let html = '<div class="toolbar"><span class="toolbar-title">📚 Base de Conhecimento (' + kb.length + ')</span></div>';
+  html += '<p style="font-size:0.82rem;color:#666;line-height:1.6;margin-bottom:1rem;">Adicione textos, regras, lore e PDFs que o Oráculo usará para responder com precisão. Quanto mais material, melhor as respostas.</p>';
+
+  // Upload area
+  html += '<div class="kb-upload-area" onclick="document.getElementById(\"kb-file-input\").click()">';
+  html += '<div class="kb-upload-icon">📄</div>';
+  html += '<div class="kb-upload-label">CLIQUE PARA SUBIR UM ARQUIVO</div>';
+  html += '<div style="font-size:0.7rem;color:#555;margin-top:0.3rem;">PDF, Word (.docx) ou Bloco de Notas (.txt)</div>';
+  html += '</div>';
+  html += '<input type="file" id="kb-file-input" accept=".pdf,.txt,.docx,.doc" style="display:none" onchange="handleKbUpload(this)">';
+  html += '<div id="kb-upload-progress" style="display:none;margin-top:0.5rem;"><div class="kb-progress"><div class="kb-progress-bar" id="kb-progress-bar" style="width:0%"></div></div><div id="kb-progress-label" style="font-family:Share Tech Mono,monospace;font-size:0.6rem;color:#666;margin-top:4px;text-align:center;"></div></div>';
+
+  // Text input
+  html += '<div style="margin-top:1rem;"><button class="btn-add" onclick="openAddKnowledge()">+ Adicionar Texto</button></div>';
+
+  // Entries list
+  if(kb.length) {
+    html += '<div style="margin-top:1rem;" class="kb-wrap">';
+    kb.forEach(function(k, i) {
+      const preview = k.text ? k.text.substring(0, 120) + '...' : '';
+      html += '<div class="kb-entry">';
+      html += '<div class="kb-entry-header">';
+      html += '<div><div class="kb-entry-title">' + k.title + '</div>';
+      html += '<div class="kb-entry-meta">' + (k.type||'texto') + ' · ' + (k.date||'') + ' · ' + Math.round((k.text||'').length/1000) + 'K chars</div></div>';
+      html += '<button class="btn-sm btn-del" onclick="delKnowledge(' + i + ')">Remover</button>';
+      html += '</div>';
+      html += '<div class="kb-entry-preview">' + preview + '</div>';
+      html += '</div>';
+    });
+    html += '</div>';
+  } else {
+    html += '<div class="empty" style="margin-top:1rem;"><div class="empty-ico">📚</div>Nenhum material adicionado ainda.<br><small style="opacity:0.6;font-size:0.75rem;">Suba o PDF do Vampiro V5, notas da campanha, lore da cidade...</small></div>';
+  }
+
+  el.innerHTML = html;
+}
+
+async function handleKbUpload(input) {
+  const file = input.files[0];
+  if(!file) return;
+  
+  const progress = $id('kb-upload-progress');
+  const bar = $id('kb-progress-bar');
+  const label = $id('kb-progress-label');
+  progress.style.display = 'block';
+  
+  try {
+    let text = '';
+    
+    if(file.type === 'application/pdf') {
+      label.textContent = 'Extraindo texto do PDF...';
+      bar.style.width = '30%';
+      text = await extractPdfText(file);
+      bar.style.width = '80%';
+    } else if(file.name.endsWith('.docx') || file.type.includes('wordprocessingml')) {
+      label.textContent = 'Extraindo texto do Word...';
+      bar.style.width = '30%';
+      text = await extractDocxText(file);
+      bar.style.width = '80%';
+    } else {
+      // Plain text (.txt)
+      label.textContent = 'Lendo arquivo...';
+      bar.style.width = '50%';
+      text = await new Promise(function(resolve) {
+        const r = new FileReader();
+        r.onload = function(e) { resolve(e.target.result); };
+        r.readAsText(file, 'UTF-8');
+      });
+      bar.style.width = '80%';
+    }
+    
+    bar.style.width = '100%';
+    label.textContent = 'Salvando...';
+    
+    if(!text || text.trim().length < 10) {
+      toast('Não foi possível extrair texto do arquivo.');
+      progress.style.display = 'none';
+      return;
+    }
+    
+    // Limit to 50000 chars to avoid overwhelming the context
+    const truncated = text.length > 50000;
+    const finalText = text.substring(0, 50000);
+    
+    if(!S.chron.knowledge) S.chron.knowledge = [];
+    S.chron.knowledge.push({
+      title: file.name.replace(/\.[^.]+$/, ''),
+      text: finalText,
+      type: file.name.endsWith('.docx')||file.type.includes('wordprocessingml') ? 'DOCX' : file.type==='application/pdf' ? 'PDF' : 'TXT',
+      date: new Date().toLocaleDateString('pt-BR'),
+      chars: finalText.length
+    });
+    
+    fbSaveChronicle(S.chron);
+    progress.style.display = 'none';
+    input.value = '';
+    renderKnowledge();
+    toast(truncated ? 'Material adicionado! (primeiros 50K caracteres)' : 'Material adicionado com sucesso!');
+    
+  } catch(e) {
+    progress.style.display = 'none';
+    console.error('KB upload error:', e);
+    toast('Erro ao processar arquivo: ' + e.message);
+  }
+}
+
+async function extractDocxText(file) {
+  return new Promise(function(resolve, reject) {
+    const reader = new FileReader();
+    reader.onload = async function(e) {
+      try {
+        // Use mammoth.js to extract text from docx
+        const mammoth = await import('https://cdnjs.cloudflare.com/ajax/libs/mammoth/1.6.0/mammoth.browser.min.js').catch(() => null);
+        if(mammoth) {
+          const result = await mammoth.extractRawText({arrayBuffer: e.target.result});
+          resolve(result.value || '');
+        } else {
+          // Fallback: basic XML extraction from docx zip
+          const arr = new Uint8Array(e.target.result);
+          let str = '';
+          for(let i=0;i<arr.length;i++) str+=String.fromCharCode(arr[i]);
+          // docx is a zip - extract text between w:t tags
+          const matches = str.match(/<w:t[^>]*>([^<]+)<\/w:t>/g) || [];
+          const text = matches.map(function(m){return m.replace(/<[^>]+>/g,'');}).join(' ');
+          resolve(text || str.replace(/[^ -~À-ÿ]/g,' ').replace(/\s+/g,' '));
+        }
+      } catch(err) { reject(err); }
+    };
+    reader.onerror = reject;
+    reader.readAsArrayBuffer(file);
+  });
+}
+
+async function extractPdfText(file) {
+  return new Promise(function(resolve, reject) {
+    const reader = new FileReader();
+    reader.onload = function(e) {
+      try {
+        const arr = new Uint8Array(e.target.result);
+        // Basic PDF text extraction - look for text between BT and ET markers
+        let text = '';
+        let str = '';
+        for(let i = 0; i < arr.length; i++) {
+          str += String.fromCharCode(arr[i]);
+        }
+        // Extract text using regex patterns for PDF text streams
+        const matches = str.match(/\(([^)]{1,200})\)\s*Tj/g) || [];
+        const matches2 = str.match(/\[([^\]]+)\]\s*TJ/g) || [];
+        
+        matches.forEach(function(m) {
+          const t = m.replace(/\(([^)]+)\)\s*Tj/, '$1');
+          text += t + ' ';
+        });
+        
+        // Also try to extract raw readable text
+        const readable = str.replace(/[^ -~À-ÿ]/g, ' ')
+          .replace(/\s+/g, ' ')
+          .split(' ')
+          .filter(function(w) { return w.length > 2; })
+          .join(' ');
+        
+        // Use whichever gave more content
+        const finalText = text.length > readable.length * 0.3 ? text : readable;
+        resolve(finalText.substring(0, 60000));
+      } catch(err) {
+        reject(err);
+      }
+    };
+    reader.onerror = reject;
+    reader.readAsArrayBuffer(file);
+  });
+}
+
+function openAddKnowledge() {
+  const title = prompt('Título deste material (ex: Lore de Lisboa, Regras V5):');
+  if(!title) return;
+  const text = prompt('Cole o texto aqui (máx 5000 caracteres para textos manuais):');
+  if(!text) return;
+  if(!S.chron.knowledge) S.chron.knowledge = [];
+  S.chron.knowledge.push({
+    title: title,
+    text: text.substring(0, 5000),
+    type: 'texto',
+    date: new Date().toLocaleDateString('pt-BR'),
+    chars: Math.min(text.length, 5000)
+  });
+  fbSaveChronicle(S.chron);
+  renderKnowledge();
+  toast('Conhecimento adicionado!');
+}
+
+function delKnowledge(i) {
+  if(!confirm('Remover este material da base de conhecimento?')) return;
+  S.chron.knowledge.splice(i, 1);
+  fbSaveChronicle(S.chron);
+  renderKnowledge();
+  toast('Material removido.');
+}
+
 function renderHome() {
   const g=$id('grid-chron'); g.innerHTML='';
   S.chronicles.forEach(c=>{
@@ -1464,6 +1985,8 @@ function openChron(id, tab) {
   $id('chron-ttl').textContent=c.name;
   $id('chron-sys').textContent=c.system.toUpperCase();
   $id('drop-map').style.display = c.id==='vampire'?'flex':'none';
+  const kbBtn = $id('drop-knowledge');
+  if(kbBtn) kbBtn.style.display = isNarrator()?'flex':'none';
   goTab(tab||'overview');
 }
 
@@ -1509,6 +2032,8 @@ const TAB_META = {
   polls:       {icon:'📊', label:'Enquetes'},
   notes:       {icon:'📝', label:'Anotações'},
   group:       {icon:'👥', label:'Grupo'},
+  oracle:      {icon:'🔮', label:'Oráculo'},
+  knowledge:   {icon:'📚', label:'Conhecimento'},
   map:         {icon:'🗺',  label:'Mapa'},
 };
 
@@ -1580,6 +2105,8 @@ const renders = {
   polls(){ renderPolls(); },
   notes(){ renderNotes(); },
   group(){ renderGroup(); },
+  oracle(){ renderOracle(); },
+  knowledge(){ renderKnowledge(); },
   map(){ renderMap(); }
 };
 
@@ -1822,7 +2349,7 @@ function renderLocations(){
   const el=$id('panel-locations'), c=S.chron;
   let html='<div class="toolbar">';
   if(isLoggedIn()) html+='<span class="toolbar-title">Locais ('+((c.locations||[]).length)+')</span>';
-  if(isNarrator()) html+='<button class="btn-add" onclick="openAddLoc()">+ Novo Local</button>';
+  if(isLoggedIn()) html+='<button class="btn-add" onclick="openAddLoc()">+ Novo Local</button>';
   html+='</div>';
   if(!(c.locations||[]).length){
     html+='<div class="empty"><div class="empty-ico">🗺️</div>Nenhum local registrado.</div>';
@@ -1854,7 +2381,7 @@ function renderLocations(){
 }
 
 
-function openAddLoc(){ S.editIdx=null; $id('ov-loc-title').textContent='⊕ Novo Local'; ['loc-name','loc-icon','loc-desc','loc-secret'].forEach(id=>setVal(id,'')); $id('loc-reveal-field').style.display='none'; clearPhotoInput('loc-photo-file','loc-photo-preview','loc-photo-img'); openOv('ov-location'); }
+function openAddLoc(){ S.editIdx=null; $id('ov-loc-title').textContent='⊕ Novo Local'; ['loc-name','loc-icon','loc-desc','loc-secret'].forEach(id=>setVal(id,'')); $id('loc-reveal-field').style.display='none'; const sb=document.querySelector('#ov-location .secret-box'); if(sb) sb.style.display=isNarrator()?'':'none'; clearPhotoInput('loc-photo-file','loc-photo-preview','loc-photo-img'); openOv('ov-location'); }
 function openEditLoc(i){ S.editIdx=i; const l=S.chron.locations[i]; $id('ov-loc-title').textContent='✎ Editar Local'; setVal('loc-name',l.name); setVal('loc-icon',l.icon); setVal('loc-desc',l.desc); setVal('loc-secret',l.secret||''); $id('loc-reveal-field').style.display='block'; $id('loc-revealed').value=l.secretRevealed?'true':'false'; if(l.photo){$id('loc-photo-img').src=l.photo;$id('loc-photo-preview').style.display='block';}else{clearPhotoInput('loc-photo-file','loc-photo-preview','loc-photo-img');} openOv('ov-location'); }
 async function saveLoc(){
   const name=val('loc-name'); if(!name){ toast('Nome obrigatório.'); return; }
@@ -2025,16 +2552,10 @@ function saveTl(){
 // ---- CHARACTERS ----
 function renderCharacters(){
   const el=$id('panel-characters'), c=S.chron;
-  const isPlayerOwn = ch => {
-    if(!S.user) return false;
-    const p = (ch.player||'').toLowerCase().trim();
-    const n = (S.user.name||'').toLowerCase().trim();
-    const l = (S.user.login||'').toLowerCase().trim();
-    return p===n || p.includes(l) || l.includes(p.split(' ')[0]);
-  };
+  const isPlayerOwn = ch => S.user && ch.player === S.user.name;
   let html='<div class="toolbar">';
-  html+='<span class="toolbar-title">Personagens ('+((c.characters||[]).length)+')</span>';
-  if(isLoggedIn()) html+='<button class="btn-add" onclick="openAddChar()">+ Novo</button>';
+  if(isNarrator()) html+='<span class="toolbar-title">Personagens ('+((c.characters||[]).length)+')</span><button class="btn-add" onclick="openAddChar()">+ Novo</button>';
+  else html+='<span class="toolbar-title">Personagens</span>';
   html+='</div>';
   if(!(c.characters||[]).length){
     html+='<div class="empty"><div class="empty-ico">⚔️</div>Nenhum personagem registrado ainda.</div>';
@@ -3102,7 +3623,7 @@ function fbListen() {
 
     renderHome();
     if(S.user) renderBell();
-    if(S.chron) { const t = activeTab(); if(t && renders[t]) renders[t](); }
+    if(S.chron) { const t = activeTab(); if(t && renders[t] && t !== 'oracle') renders[t](); }
   });
 
   window._fbOnValue(window._fbRef(window._db, 'app/notifications'), snap => {
