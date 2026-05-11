@@ -1,11 +1,10 @@
-const CACHE_NAME = 'ecos-v22';
+const CACHE_NAME = 'ecos-v26';
 
 self.addEventListener('install', e => {
   self.skipWaiting();
 });
 
 self.addEventListener('activate', e => {
-  // Clear all old caches
   e.waitUntil(
     caches.keys().then(keys =>
       Promise.all(keys.filter(k => k !== CACHE_NAME).map(k => caches.delete(k)))
@@ -14,10 +13,10 @@ self.addEventListener('activate', e => {
 });
 
 self.addEventListener('fetch', e => {
-  // Never cache API calls
   if(e.request.url.includes('api.groq.com') || 
      e.request.url.includes('firebase') ||
-     e.request.url.includes('googleapis.com')) {
+     e.request.url.includes('googleapis.com') ||
+     e.request.url.includes('generativelanguage')) {
     e.respondWith(fetch(e.request));
     return;
   }
