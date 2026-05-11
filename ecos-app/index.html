@@ -362,7 +362,7 @@ nav{display:flex;align-items:center;justify-content:space-between;padding:0.9rem
   .overview-stats{grid-template-columns:repeat(3,1fr);}
 }
 .card-photo{width:100%;height:160px;object-fit:cover;object-position:center top;border-radius:2px;margin-bottom:0.7rem;display:block;cursor:pointer;}
-.char-card-photo{width:100%;height:140px;object-fit:cover;object-position:center top;border-radius:2px;margin-bottom:0.7rem;display:block;cursor:pointer;}
+    if(ch.photo) html+='<img src="'+ch.photo+'" alt="'+ch.name+'" class="char-card-photo" style="cursor:pointer;" onclick="openImgLightbox(this.src,this.alt)">';
 .loc-card-photo{width:100%;height:140px;object-fit:cover;object-position:center;border-radius:2px;margin-bottom:0.6rem;display:block;cursor:pointer;}
 
 /* KNOWLEDGE BASE */
@@ -814,7 +814,7 @@ footer{text-align:center;padding:1.1rem;font-family:'Share Tech Mono',monospace;
   <div id="panel-map" class="panel" style="padding:0;position:fixed;top:57px;left:0;right:0;bottom:0;z-index:10;"></div>
 </div>
 
-<footer>ECOS DA HUMANIDADE &nbsp;·&nbsp; <span style="color:var(--gold);opacity:0.8;">V2.5</span> &nbsp;·&nbsp; ARQUIVO DAS CRÔNICAS</footer>
+<footer>ECOS DA HUMANIDADE &nbsp;·&nbsp; <span style="color:var(--gold);opacity:0.8;">V2.6</span> &nbsp;·&nbsp; ARQUIVO DAS CRÔNICAS</footer>
 </div><!-- .app -->
 
 <!-- ==================== OVERLAYS ==================== -->
@@ -1014,7 +1014,7 @@ footer{text-align:center;padding:1.1rem;font-family:'Share Tech Mono',monospace;
   <div class="modal wide">
     <div class="modal-h" id="ov-char-title">⊕ Novo Personagem</div>
     <div class="field"><label>Nome do Personagem</label><input id="char-name" type="text" placeholder="Nome do personagem"></div>
-    <div class="field"><label>Jogador</label>
+    <div class="field" id="char-player-field"><label>Jogador</label>
       <select id="char-player-sel"></select>
     </div>
     <div class="field"><label>Foto (opcional)</label>
@@ -2552,10 +2552,17 @@ function saveTl(){
 // ---- CHARACTERS ----
 function renderCharacters(){
   const el=$id('panel-characters'), c=S.chron;
-  const isPlayerOwn = ch => S.user && ch.player === S.user.name;
+  const isPlayerOwn = ch => {
+    if(!S.user) return false;
+    const p = (ch.player||'').toLowerCase();
+    const n = (S.user.name||'').toLowerCase();
+    const l = (S.user.login||'').toLowerCase();
+    // Match by exact name, login, or if player name contains login
+    return ch.playerLogin===S.user.login || p===n || p.includes(l) || n.includes(p.split(' ')[0]);
+  };
   let html='<div class="toolbar">';
-  if(isNarrator()) html+='<span class="toolbar-title">Personagens ('+((c.characters||[]).length)+')</span><button class="btn-add" onclick="openAddChar()">+ Novo</button>';
-  else html+='<span class="toolbar-title">Personagens</span>';
+  html+='<span class="toolbar-title">Personagens ('+((c.characters||[]).length)+')</span>';
+  if(isLoggedIn()) html+='<button class="btn-add" onclick="openAddChar()">+ Novo</button>';
   html+='</div>';
   if(!(c.characters||[]).length){
     html+='<div class="empty"><div class="empty-ico">⚔️</div>Nenhum personagem registrado ainda.</div>';
@@ -2565,17 +2572,23 @@ function renderCharacters(){
   (c.characters||[]).forEach((ch,i)=>{
     const canEdit=isNarrator()||isPlayerOwn(ch);
     html+='<div class="char-card">';
-    if(ch.photo) html+='<img src="'+ch.photo+'" class="char-card-photo" onclick="openImgLightbox(\''+ch.photo+'\',\''+ch.name+'\')" style="cursor:pointer;">';
+    if(ch.photo) html+='<img src="'+ch.photo+'" class="char-card-photo" onclick="openImgLightbox(this.src,this.alt)" style="cursor:pointer;">';
     html+='<div class="char-name">'+ch.name+'</div>';
     html+='<div class="char-player">Jogado por '+ch.player+'</div>';
     if(ch.concept) html+='<div class="char-concept">'+ch.concept+'</div>';
     if(ch.desc) html+='<div class="char-concept" style="margin-top:0.4rem;color:#666;">'+ch.desc+'</div>';
-    if(canEdit) html+='<div class="card-actions" style="margin-top:0.6rem;"><button class="btn-sm btn-edit" onclick="openEditChar('+i+')">Editar</button>'+(isNarrator()?'<button class="btn-sm btn-del" onclick="delChar('+i+')">Remover</button>':'')+'</div>';
+    if(canEdit){
+      html+='<div class="card-actions" style="margin-top:0.6rem;">';
+      html+='<button class="btn-sm btn-edit" onclick="openEditChar('+i+')">Editar</button>';
+      if(isNarrator()) html+='<button class="btn-sm btn-del" onclick="delChar('+i+')">Remover</button>';
+      html+='</div>';
+    }
     html+='</div>';
   });
   html+='</div>';
   el.innerHTML=html;
 }
+
 
 function openAddChar(){ S.editIdx=null; $id('ov-char-title').textContent='⊕ Novo Personagem'; ['char-name','char-concept','char-desc'].forEach(id=>setVal(id,'')); populateCharPlayerSel(); clearPhotoInput('char-photo-file','char-photo-preview','char-photo-img'); openOv('ov-char'); }
 function openEditChar(i){ S.editIdx=i; const ch=S.chron.characters[i]; $id('ov-char-title').textContent='✎ Editar Personagem'; setVal('char-name',ch.name); setVal('char-concept',ch.concept); setVal('char-desc',ch.desc); populateCharPlayerSel(); $id('char-player-sel').value=ch.player; if(ch.photo){$id('char-photo-img').src=ch.photo;$id('char-photo-preview').style.display='block';}else{clearPhotoInput('char-photo-file','char-photo-preview','char-photo-img');} openOv('ov-char'); }
@@ -3623,7 +3636,7 @@ function fbListen() {
 
     renderHome();
     if(S.user) renderBell();
-    if(S.chron) { const t = activeTab(); if(t && renders[t] && t !== 'oracle') renders[t](); }
+    if(S.chron) { const t = activeTab(); if(t && renders[t]) renders[t](); }
   });
 
   window._fbOnValue(window._fbRef(window._db, 'app/notifications'), snap => {
