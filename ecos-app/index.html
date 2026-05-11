@@ -195,25 +195,35 @@ nav{display:flex;align-items:center;justify-content:space-between;padding:0.9rem
 .loc-secret-content{font-size:0.84rem;color:#999;line-height:1.55;margin-top:0.5rem;padding-top:0.5rem;border-top:1px solid rgba(201,168,76,0.1);}
 
 /* TIMELINE */
+/* TIMELINE */
 .tl-hint{text-align:center;font-family:'Share Tech Mono',monospace;font-size:0.6rem;color:rgba(201,168,76,0.4);padding:4px 0 10px;letter-spacing:0.12em;}
 .tl-scroll{width:100%;overflow-x:auto;overflow-y:visible;padding:0 0 20px;cursor:grab;}
 .tl-scroll:active{cursor:grabbing;}
 .tl-scroll::-webkit-scrollbar{height:3px;}
 .tl-scroll::-webkit-scrollbar-thumb{background:rgba(201,168,76,0.2);border-radius:2px;}
 .tl-root{position:relative;display:flex;flex-direction:column;min-width:max-content;padding:0 40px;}
+/* LINE */
 .tl-axis{position:relative;height:2px;background:linear-gradient(90deg,transparent,rgba(139,0,0,0.6) 5%,#c41e3a 30%,#c41e3a 70%,rgba(139,0,0,0.6) 95%,transparent);margin:0;flex-shrink:0;}
+/* YEARS ROW — sits on the line */
 .tl-years-row{display:flex;align-items:center;position:relative;height:0;}
 .tl-year{position:relative;display:flex;flex-direction:column;align-items:center;min-width:160px;flex-shrink:0;cursor:pointer;}
+/* dot sits on the axis */
 .tl-year-dot{width:12px;height:12px;border-radius:50%;border:2px solid #c41e3a;background:#080808;position:relative;z-index:4;transition:all 0.22s;margin-top:-7px;}
 .tl-year:hover .tl-year-dot,.tl-year.active .tl-year-dot{background:#c41e3a;box-shadow:0 0 14px rgba(196,30,58,0.7);transform:scale(1.4);}
+/* label below dot */
 .tl-year-label{font-family:'Share Tech Mono',monospace;font-size:0.58rem;letter-spacing:0.12em;color:#555;margin-top:7px;white-space:nowrap;transition:color 0.2s;background:#080808;padding:2px 6px;border-radius:2px;}
 .tl-year:hover .tl-year-label,.tl-year.active .tl-year-label{color:#c41e3a;}
+/* BALLOONS above — separate row above axis */
 .tl-row-above{display:flex;align-items:flex-end;min-height:220px;position:relative;padding-bottom:16px;}
 .tl-col-above{display:flex;flex-direction:column;align-items:center;min-width:160px;flex-shrink:0;position:relative;}
 .tl-col-above .tl-stem{width:1px;height:16px;background:rgba(196,30,58,0.45);opacity:0;transition:opacity 0.22s;margin-top:auto;}
+/* BALLOONS below — separate row below axis */
 .tl-row-below{display:flex;align-items:flex-start;min-height:20px;padding-top:0;}
 .tl-col-below{display:flex;flex-direction:column;align-items:center;min-width:160px;flex-shrink:0;position:relative;}
 .tl-col-below .tl-stem{width:1px;height:16px;background:rgba(196,30,58,0.45);opacity:0;transition:opacity 0.22s;}
+/* show stems when year active */
+.tl-year.active ~ .tl-row-above .tl-col-above .tl-stem{opacity:1;}
+
 .tl-balloons-above{display:flex;flex-direction:column;gap:6px;align-items:center;opacity:0;pointer-events:none;transition:opacity 0.22s;}
 .tl-balloons-below{display:flex;flex-direction:column;gap:6px;align-items:center;opacity:0;pointer-events:none;transition:opacity 0.22s;padding-top:16px;}
 .tl-balloon{background:linear-gradient(135deg,#0d0008,#120010);border:1px solid rgba(139,0,0,0.4);border-radius:5px;padding:10px 11px;width:170px;box-shadow:0 4px 20px rgba(0,0,0,0.5);transition:border-color 0.2s;}
@@ -236,6 +246,7 @@ nav{display:flex;align-items:center;justify-content:space-between;padding:0.9rem
   .tl-col-above,.tl-col-below{min-width:130px;}
   .tl-balloon{width:150px;}
 }
+
 /* CHARACTERS */
 .chars-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:0.9rem;}
 .char-card{background:var(--surface);border:1px solid var(--border);border-radius:3px;padding:1.1rem;transition:all 0.2s;}
@@ -364,55 +375,6 @@ nav{display:flex;align-items:center;justify-content:space-between;padding:0.9rem
 .card-photo{width:100%;height:160px;object-fit:cover;object-position:center top;border-radius:2px;margin-bottom:0.7rem;display:block;cursor:pointer;}
 .char-card-photo{width:100%;height:140px;object-fit:cover;object-position:center top;border-radius:2px;margin-bottom:0.7rem;display:block;cursor:pointer;}
 .loc-card-photo{width:100%;height:140px;object-fit:cover;object-position:center;border-radius:2px;margin-bottom:0.6rem;display:block;cursor:pointer;}
-
-/* KNOWLEDGE BASE */
-.kb-wrap{display:flex;flex-direction:column;gap:1rem;}
-.kb-entry{background:var(--surface);border:1px solid var(--border);border-radius:3px;padding:1rem;}
-.kb-entry-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:0.5rem;}
-.kb-entry-title{font-family:'Cinzel',serif;font-size:0.88rem;color:#d5d5d5;}
-.kb-entry-meta{font-family:'Share Tech Mono',monospace;font-size:0.55rem;color:var(--text-dim);}
-.kb-entry-preview{font-size:0.8rem;color:#666;line-height:1.5;overflow:hidden;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;}
-.kb-upload-area{border:1.5px dashed rgba(201,168,76,0.25);border-radius:4px;padding:1.5rem;text-align:center;cursor:pointer;transition:all 0.2s;}
-.kb-upload-area:hover{border-color:rgba(201,168,76,0.5);background:rgba(201,168,76,0.03);}
-.kb-upload-icon{font-size:1.8rem;margin-bottom:0.5rem;opacity:0.5;}
-.kb-upload-label{font-family:'Share Tech Mono',monospace;font-size:0.65rem;color:var(--text-dim);letter-spacing:0.1em;}
-.kb-progress{height:3px;background:rgba(201,168,76,0.2);border-radius:2px;margin-top:0.5rem;overflow:hidden;}
-.kb-progress-bar{height:100%;background:var(--gold);border-radius:2px;transition:width 0.3s;}
-
-/* ORACLE LOG */
-.oracle-log-wrap{display:flex;flex-direction:column;gap:0.6rem;}
-.oracle-log-item{background:var(--surface);border:1px solid var(--border);border-radius:3px;padding:0.8rem 1rem;display:flex;gap:0.8rem;align-items:flex-start;}
-.oracle-log-item:hover{border-color:rgba(201,168,76,0.2);}
-.oracle-log-user{font-family:'Cinzel',serif;font-size:0.72rem;color:var(--gold);flex-shrink:0;min-width:80px;}
-.oracle-log-q{font-size:0.88rem;color:#ccc;flex:1;line-height:1.5;}
-.oracle-log-date{font-family:'Share Tech Mono',monospace;font-size:0.55rem;color:var(--text-dim);flex-shrink:0;}
-
-/* ORACLE */
-.oracle-wrap{display:flex;flex-direction:column;height:calc(100vh - 140px);min-height:400px;}
-.oracle-messages{flex:1;overflow-y:auto;display:flex;flex-direction:column;gap:0.8rem;padding:1rem 0;scroll-behavior:smooth;}
-.oracle-msg{display:flex;gap:0.7rem;align-items:flex-start;max-width:85%;}
-.oracle-msg.user{align-self:flex-end;flex-direction:row-reverse;}
-.oracle-bubble{padding:0.75rem 1rem;border-radius:6px;font-size:0.9rem;line-height:1.65;max-width:100%;}
-.oracle-msg.ai .oracle-bubble{background:rgba(139,0,0,0.08);border:1px solid rgba(139,0,0,0.2);color:#ccc;border-radius:2px 8px 8px 8px;}
-.oracle-msg.user .oracle-bubble{background:rgba(201,168,76,0.08);border:1px solid rgba(201,168,76,0.2);color:#d5c090;border-radius:8px 2px 8px 8px;}
-.oracle-avatar{width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:1rem;flex-shrink:0;margin-top:2px;}
-.oracle-msg.ai .oracle-avatar{background:rgba(139,0,0,0.15);border:1px solid rgba(139,0,0,0.3);}
-.oracle-msg.user .oracle-avatar{background:rgba(201,168,76,0.1);border:1px solid rgba(201,168,76,0.2);}
-.oracle-input-wrap{display:flex;gap:0.5rem;padding:0.8rem 0 0;border-top:1px solid var(--border);align-items:flex-end;}
-.oracle-input{flex:1;background:var(--surface);border:1px solid var(--border);border-radius:4px;padding:0.65rem 0.9rem;color:#ccc;font-size:0.9rem;resize:none;outline:none;font-family:'Crimson Pro',serif;line-height:1.5;max-height:120px;transition:border-color 0.2s;}
-.oracle-input:focus{border-color:rgba(139,0,0,0.4);}
-.oracle-send{background:rgba(139,0,0,0.15);border:1px solid rgba(139,0,0,0.35);color:#c87070;padding:0.65rem 1.1rem;border-radius:4px;cursor:pointer;font-family:'Cinzel',serif;font-size:0.7rem;letter-spacing:0.1em;transition:all 0.2s;white-space:nowrap;}
-.oracle-send:hover{background:rgba(139,0,0,0.25);border-color:rgba(139,0,0,0.5);}
-.oracle-send:disabled{opacity:0.4;cursor:not-allowed;}
-.oracle-typing{display:flex;gap:4px;align-items:center;padding:0.5rem 0;}
-.oracle-typing span{width:6px;height:6px;border-radius:50%;background:#8b0000;animation:oracle-pulse 1.2s infinite;}
-.oracle-typing span:nth-child(2){animation-delay:0.2s;}
-.oracle-typing span:nth-child(3){animation-delay:0.4s;}
-@keyframes oracle-pulse{0%,60%,100%{opacity:0.3;}30%{opacity:1;}}
-.oracle-header{font-family:'Cinzel',serif;font-size:0.7rem;letter-spacing:0.15em;color:var(--text-dim);text-align:center;padding:0.5rem 0 0.8rem;opacity:0.6;}
-.oracle-suggestions{display:flex;flex-wrap:wrap;gap:0.4rem;margin-bottom:0.8rem;}
-.oracle-sug{font-size:0.72rem;padding:4px 10px;border:1px solid var(--border);border-radius:20px;background:none;color:var(--text-dim);cursor:pointer;transition:all 0.2s;font-family:'Share Tech Mono',monospace;}
-.oracle-sug:hover{border-color:rgba(139,0,0,0.4);color:#c87070;}
 
 /* EMPTY */
 .empty{text-align:center;padding:2.5rem 1rem;color:var(--text-dim);font-style:italic;}
@@ -781,8 +743,6 @@ footer{text-align:center;padding:1.1rem;font-family:'Share Tech Mono',monospace;
           <button class="drop-item" onclick="goTab('polls')">📊 <span>Enquetes</span></button>
           <button class="drop-item" onclick="goTab('notes')">📝 <span>Anotações</span></button>
           <button class="drop-item" onclick="goTab('group')">👥 <span>Grupo</span></button>
-          <button class="drop-item" onclick="goTab('oracle')">🔮 <span>Oráculo</span></button>
-          <button class="drop-item" id="drop-knowledge" style="display:none" onclick="goTab('knowledge')">📚 <span>Conhecimento</span></button>
           <button class="drop-item" onclick="goTab('connections')">🕸️ <span>Conexões</span></button>
           <button class="drop-item" id="drop-map" style="display:none" onclick="goTab('map')">🗺 <span>Mapa</span></button>
         </div>
@@ -808,8 +768,6 @@ footer{text-align:center;padding:1.1rem;font-family:'Share Tech Mono',monospace;
   <div id="panel-polls"    class="panel"></div>
   <div id="panel-notes"    class="panel"></div>
   <div id="panel-group"    class="panel"></div>
-  <div id="panel-oracle"   class="panel"></div>
-  <div id="panel-knowledge" class="panel"></div>
   <div id="panel-connections" class="panel"></div>
   <div id="panel-map" class="panel" style="padding:0;position:fixed;top:57px;left:0;right:0;bottom:0;z-index:10;"></div>
 </div>
@@ -1014,7 +972,7 @@ footer{text-align:center;padding:1.1rem;font-family:'Share Tech Mono',monospace;
   <div class="modal wide">
     <div class="modal-h" id="ov-char-title">⊕ Novo Personagem</div>
     <div class="field"><label>Nome do Personagem</label><input id="char-name" type="text" placeholder="Nome do personagem"></div>
-    <div class="field" id="char-player-field"><label>Jogador</label>
+    <div class="field"><label>Jogador</label>
       <select id="char-player-sel"></select>
     </div>
     <div class="field"><label>Foto (opcional)</label>
@@ -1463,485 +1421,6 @@ function saveSummary() {
   toast('Apresentação atualizada!');
 }
 
-
-// ================================================================
-// ORÁCULO — Assistente IA da Campanha
-// ================================================================
-// Groq API
-let _oracleHistory = [];
-
-function buildCampaignContext() {
-  const c = S.chron;
-  if(!c) return '';
-  const NL = '\n';
-  
-  let ctx = 'Você é o Oráculo do Festim das Sombras, assistente da campanha de Vampiro: A Máscara V5.' + NL;
-  ctx += NL;
-  ctx += 'REGRAS ABSOLUTAS — NUNCA QUEBRE ESTAS REGRAS:' + NL;
-  ctx += '1. Você SOMENTE responde com base nas informações fornecidas abaixo. JAMAIS invente personagens, locais, eventos ou detalhes que não estejam listados.' + NL;
-  ctx += '2. Se não houver informação suficiente para responder, diga exatamente: "O Oráculo não possui registros sobre isso ainda."' + NL;
-  ctx += '3. Você NUNCA revela informações de segredos do Narrador.' + NL;
-  ctx += '4. Responda sempre em português brasileiro.' + NL;
-  ctx += '5. Seja conciso e direto. Não elabore além do que está nos registros.' + NL;
-  ctx += NL;
-  ctx += '=== REGISTROS DA CAMPANHA: ' + c.name + ' ===' + NL;
-  ctx += 'Sistema: ' + c.system + NL;
-  ctx += 'Status: ' + (c.status==='active'?'Em andamento':'Encerrada') + NL + NL;
-
-  if(c.sessions && c.sessions.length) {
-    ctx += '--- SESSÕES REGISTRADAS ---' + NL;
-    c.sessions.forEach(function(s,i){ ctx += 'Sessão '+(i+1)+' ('+s.date+'): '+s.title+' — '+s.summary+NL; });
-    ctx += NL;
-  } else {
-    ctx += '--- SESSÕES: Nenhuma registrada ainda ---' + NL + NL;
-  }
-
-  if(c.npcs && c.npcs.length) {
-    ctx += '--- NPCs CONHECIDOS ---' + NL;
-    c.npcs.forEach(function(n){
-      if(!n.name) return;
-      ctx += '• '+n.name+' | Função: '+(n.role||'desconhecida')+' | Status: '+(n.status||'desconhecido')+NL;
-      if(n.known) ctx += '  Informação pública: '+n.known+NL;
-      if(n.secretRevealed && n.secret) ctx += '  Revelado ao grupo: '+n.secret+NL;
-    });
-    ctx += NL;
-  } else {
-    ctx += '--- NPCs: Nenhum registrado ainda ---' + NL + NL;
-  }
-
-  if(c.locations && c.locations.length) {
-    ctx += '--- LOCAIS CONHECIDOS ---' + NL;
-    c.locations.forEach(function(l){
-      ctx += '• '+(l.icon||'')+''+l.name+': '+l.desc+NL;
-      if(l.secretRevealed && l.secret) ctx += '  Revelado: '+l.secret+NL;
-    });
-    ctx += NL;
-  } else {
-    ctx += '--- LOCAIS: Nenhum registrado ainda ---' + NL + NL;
-  }
-
-  if(c.characters && c.characters.length) {
-    ctx += '--- PERSONAGENS DOS JOGADORES ---' + NL;
-    c.characters.forEach(function(ch){
-      ctx += '• '+ch.name+' (jogado por '+ch.player+')'+(ch.concept?' — '+ch.concept:'')+NL;
-      if(ch.desc) ctx += '  '+ch.desc+NL;
-    });
-    ctx += NL;
-  }
-
-  if(c.rumors && c.rumors.length) {
-    const facts=c.rumors.filter(function(r){return r.status==='fact';});
-    const rumors=c.rumors.filter(function(r){return r.status!=='fact';});
-    if(facts.length){
-      ctx += '--- FATOS CONFIRMADOS ---' + NL;
-      facts.forEach(function(r){ctx += '• '+r.text+NL;});
-      ctx += NL;
-    }
-    if(rumors.length){
-      ctx += '--- RUMORES NÃO CONFIRMADOS ---' + NL;
-      rumors.forEach(function(r){ctx += '• '+r.text+NL;});
-      ctx += NL;
-    }
-  }
-
-  if(c.theories && c.theories.length) {
-    ctx += '--- TEORIAS DOS JOGADORES ---' + NL;
-    c.theories.forEach(function(t){
-      ctx += '• '+t.title+': '+t.text+(t.verdict?' [Narrador: '+t.verdict+']':' [Sem veredito ainda]')+NL;
-    });
-    ctx += NL;
-  }
-
-  ctx += NL + 'LEMBRE-SE: Responda SOMENTE com base nos registros acima. Se não há informação, diga que não há registros.' + NL;
-  
-  return ctx;
-}
-
-function renderOracle() {
-  const el = $id('panel-oracle');
-  if(!isLoggedIn()) {
-    el.innerHTML = '<div class="empty"><div class="empty-ico">🔮</div>Faça login para consultar o Oráculo.</div>';
-    return;
-  }
-
-  const suggestions = [
-    'Quem é o Príncipe da cidade?',
-    'O que sabemos sobre os Anarquistas?',
-    'Resuma a última sessão',
-    'Quais locais já exploramos?',
-    'Quais teorias temos?',
-    'Quem são nossos aliados?',
-  ];
-
-  const logBtn = isNarrator() ? '<button class="btn-add" style="margin-left:0.5rem;" onclick="toggleOracleLog()">📋 Ver Log</button>' : '';
-  el.innerHTML = `
-    <div class="oracle-wrap" id="oracle-wrap">
-      <div class="oracle-header" style="display:flex;align-items:center;justify-content:center;gap:0.5rem;">🔮 ORÁCULO DA CAMPANHA · FESTIM DAS SOMBRAS${logBtn?'<span>'+logBtn+'</span>':''}</div>
-      <div id="oracle-log-panel" style="display:none;"></div>
-      <div class="oracle-messages" id="oracle-msgs">
-        <div class="oracle-msg ai">
-          <div class="oracle-avatar">🔮</div>
-          <div class="oracle-bubble">Saudações, ${S.user.name}. Sou o Oráculo do Festim das Sombras. Posso responder perguntas sobre NPCs, locais, sessões, rumores e muito mais. O que deseja saber?</div>
-        </div>
-        <div class="oracle-suggestions">
-          ${suggestions.map(s=>`<button class="oracle-sug" onclick="oracleSuggest('${s}')">${s}</button>`).join('')}
-        </div>
-      </div>
-      <div class="oracle-input-wrap">
-        <textarea class="oracle-input" id="oracle-input" placeholder="Faça uma pergunta sobre a campanha..." rows="1"
-          onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();oracleAsk();}"
-          oninput="this.style.height='auto';this.style.height=Math.min(this.scrollHeight,120)+'px'"></textarea>
-        <button class="oracle-send" id="oracle-send" onclick="oracleAsk()">Consultar</button>
-      </div>
-    </div>`;
-  _oracleHistory = [];
-}
-
-function oracleSuggest(text) {
-  const input = $id('oracle-input');
-  if(input) { input.value = text; input.focus(); }
-}
-
-
-function toggleOracleLog() {
-  const panel = $id('oracle-log-panel');
-  const msgs = $id('oracle-msgs');
-  const inputWrap = document.querySelector('.oracle-input-wrap');
-  if(!panel) return;
-  const showing = panel.style.display !== 'none';
-  if(showing) {
-    panel.style.display = 'none';
-    if(msgs) msgs.style.display = '';
-    if(inputWrap) inputWrap.style.display = '';
-  } else {
-    panel.style.display = 'block';
-    if(msgs) msgs.style.display = 'none';
-    if(inputWrap) inputWrap.style.display = 'none';
-    renderOracleLog();
-  }
-}
-
-function renderOracleLog() {
-  const panel = $id('oracle-log-panel');
-  if(!panel) return;
-  const log = (S.chron && S.chron.oracleLog) ? [...S.chron.oracleLog].reverse() : [];
-  
-  let html = '<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:0.8rem;">';
-  html += '<span style="font-family:Cinzel,serif;font-size:0.8rem;color:var(--gold);">📋 Log do Oráculo ('+log.length+' perguntas)</span>';
-  if(log.length) html += '<button class="btn-sm btn-del" onclick="clearOracleLog()">Limpar Log</button>';
-  html += '</div>';
-
-  if(!log.length) {
-    html += '<div class="empty"><div class="empty-ico">📋</div>Nenhuma pergunta registrada ainda.</div>';
-  } else {
-    html += '<div class="oracle-log-wrap">';
-    log.forEach(function(l) {
-      html += '<div class="oracle-log-item">';
-      html += '<div class="oracle-log-user">'+l.user+'</div>';
-      html += '<div class="oracle-log-q">'+l.question+'</div>';
-      html += '<div class="oracle-log-date">'+l.date+'</div>';
-      html += '</div>';
-    });
-    html += '</div>';
-  }
-  panel.innerHTML = html;
-}
-
-function clearOracleLog() {
-  if(!confirm('Limpar todo o log do Oráculo?')) return;
-  S.chron.oracleLog = [];
-  if(window._db) {
-    window._fbSet(window._fbRef(window._db, 'chronicles/'+S.chron.id+'/oracleLog'), []).catch(console.error);
-  }
-  renderOracleLog();
-  toast('Log limpo.');
-}
-
-async function oracleAsk() {
-  const input = $id('oracle-input');
-  const btn = $id('oracle-send');
-  const msgs = $id('oracle-msgs');
-  if(!input || !msgs) return;
-  const question = input.value.trim();
-  if(!question) return;
-
-  msgs.innerHTML += '<div class="oracle-msg user"><div class="oracle-avatar">👤</div><div class="oracle-bubble">'+question+'</div></div>';
-  input.value = ''; input.style.height = 'auto'; btn.disabled = true;
-  msgs.innerHTML += '<div class="oracle-msg ai" id="oracle-typing"><div class="oracle-avatar">🔮</div><div class="oracle-bubble"><div class="oracle-typing"><span></span><span></span><span></span></div></div></div>';
-  msgs.scrollTop = msgs.scrollHeight;
-
-  _oracleHistory.push({role:'user', content: question});
-  // Log to Firebase
-  if(S.user && S.chron) {
-    const log = {
-      user: S.user.name,
-      question: question,
-      ts: Date.now(),
-      date: new Date().toLocaleString('pt-BR')
-    };
-    if(!S.chron.oracleLog) S.chron.oracleLog = [];
-    S.chron.oracleLog.push(log);
-    // Save just the log separately to avoid saving whole chronicle
-    if(window._db) {
-      const logRef = window._fbRef(window._db, 'chronicles/' + S.chron.id + '/oracleLog');
-      window._fbSet(logRef, S.chron.oracleLog).catch(console.error);
-    }
-  }
-
-  try {
-    const ctx = buildCampaignContext();
-    const messages = [{role:'system', content: ctx}, ..._oracleHistory];
-
-    const res = await fetch('https://api.groq.com/openai/v1/chat/completions', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': 'Bearer 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'
-      },
-      body: JSON.stringify({
-        model: 'llama-3.3-70b-versatile',
-        messages: messages,
-        temperature: 0.75,
-        max_tokens: 500
-      })
-    });
-
-    if(!res.ok){ const err=await res.json(); throw new Error(err?.error?.message||'Erro '+res.status); }
-    const data = await res.json();
-    const answer = data?.choices?.[0]?.message?.content || 'O Oráculo não conseguiu responder.';
-    _oracleHistory.push({role:'assistant', content: answer});
-
-    const typing = $id('oracle-typing');
-    if(typing) typing.remove();
-    msgs.innerHTML += '<div class="oracle-msg ai"><div class="oracle-avatar">🔮</div><div class="oracle-bubble">'+answer.replace(/</g,'&lt;').split(String.fromCharCode(10)).join('<br>')+'</div></div>';
-
-  } catch(err) {
-    const typing = $id('oracle-typing');
-    if(typing) typing.remove();
-    msgs.innerHTML += '<div class="oracle-msg ai"><div class="oracle-avatar">🔮</div><div class="oracle-bubble" style="color:#c44;">'+err.message+'</div></div>';
-    _oracleHistory.pop();
-    console.error('Oracle:', err);
-  }
-  btn.disabled = false;
-  msgs.scrollTop = msgs.scrollHeight;
-}
-
-
-
-
-
-// ================================================================
-// KNOWLEDGE BASE — Base de Conhecimento do Oráculo
-// ================================================================
-
-function renderKnowledge() {
-  const el = $id('panel-knowledge');
-  if(!isNarrator()) {
-    el.innerHTML = '<div class="empty"><div class="empty-ico">🔒</div>Apenas o Narrador pode gerenciar o conhecimento do Oráculo.</div>';
-    return;
-  }
-  if(!S.chron.knowledge) S.chron.knowledge = [];
-  const kb = S.chron.knowledge;
-
-  let html = '<div class="toolbar"><span class="toolbar-title">📚 Base de Conhecimento (' + kb.length + ')</span></div>';
-  html += '<p style="font-size:0.82rem;color:#666;line-height:1.6;margin-bottom:1rem;">Adicione textos, regras, lore e PDFs que o Oráculo usará para responder com precisão. Quanto mais material, melhor as respostas.</p>';
-
-  // Upload area
-  html += '<div class="kb-upload-area" onclick="document.getElementById(\"kb-file-input\").click()">';
-  html += '<div class="kb-upload-icon">📄</div>';
-  html += '<div class="kb-upload-label">CLIQUE PARA SUBIR UM ARQUIVO</div>';
-  html += '<div style="font-size:0.7rem;color:#555;margin-top:0.3rem;">PDF, Word (.docx) ou Bloco de Notas (.txt)</div>';
-  html += '</div>';
-  html += '<input type="file" id="kb-file-input" accept=".pdf,.txt,.docx,.doc" style="display:none" onchange="handleKbUpload(this)">';
-  html += '<div id="kb-upload-progress" style="display:none;margin-top:0.5rem;"><div class="kb-progress"><div class="kb-progress-bar" id="kb-progress-bar" style="width:0%"></div></div><div id="kb-progress-label" style="font-family:Share Tech Mono,monospace;font-size:0.6rem;color:#666;margin-top:4px;text-align:center;"></div></div>';
-
-  // Text input
-  html += '<div style="margin-top:1rem;"><button class="btn-add" onclick="openAddKnowledge()">+ Adicionar Texto</button></div>';
-
-  // Entries list
-  if(kb.length) {
-    html += '<div style="margin-top:1rem;" class="kb-wrap">';
-    kb.forEach(function(k, i) {
-      const preview = k.text ? k.text.substring(0, 120) + '...' : '';
-      html += '<div class="kb-entry">';
-      html += '<div class="kb-entry-header">';
-      html += '<div><div class="kb-entry-title">' + k.title + '</div>';
-      html += '<div class="kb-entry-meta">' + (k.type||'texto') + ' · ' + (k.date||'') + ' · ' + Math.round((k.text||'').length/1000) + 'K chars</div></div>';
-      html += '<button class="btn-sm btn-del" onclick="delKnowledge(' + i + ')">Remover</button>';
-      html += '</div>';
-      html += '<div class="kb-entry-preview">' + preview + '</div>';
-      html += '</div>';
-    });
-    html += '</div>';
-  } else {
-    html += '<div class="empty" style="margin-top:1rem;"><div class="empty-ico">📚</div>Nenhum material adicionado ainda.<br><small style="opacity:0.6;font-size:0.75rem;">Suba o PDF do Vampiro V5, notas da campanha, lore da cidade...</small></div>';
-  }
-
-  el.innerHTML = html;
-}
-
-async function handleKbUpload(input) {
-  const file = input.files[0];
-  if(!file) return;
-  
-  const progress = $id('kb-upload-progress');
-  const bar = $id('kb-progress-bar');
-  const label = $id('kb-progress-label');
-  progress.style.display = 'block';
-  
-  try {
-    let text = '';
-    
-    if(file.type === 'application/pdf') {
-      label.textContent = 'Extraindo texto do PDF...';
-      bar.style.width = '30%';
-      text = await extractPdfText(file);
-      bar.style.width = '80%';
-    } else if(file.name.endsWith('.docx') || file.type.includes('wordprocessingml')) {
-      label.textContent = 'Extraindo texto do Word...';
-      bar.style.width = '30%';
-      text = await extractDocxText(file);
-      bar.style.width = '80%';
-    } else {
-      // Plain text (.txt)
-      label.textContent = 'Lendo arquivo...';
-      bar.style.width = '50%';
-      text = await new Promise(function(resolve) {
-        const r = new FileReader();
-        r.onload = function(e) { resolve(e.target.result); };
-        r.readAsText(file, 'UTF-8');
-      });
-      bar.style.width = '80%';
-    }
-    
-    bar.style.width = '100%';
-    label.textContent = 'Salvando...';
-    
-    if(!text || text.trim().length < 10) {
-      toast('Não foi possível extrair texto do arquivo.');
-      progress.style.display = 'none';
-      return;
-    }
-    
-    // Limit to 50000 chars to avoid overwhelming the context
-    const truncated = text.length > 50000;
-    const finalText = text.substring(0, 50000);
-    
-    if(!S.chron.knowledge) S.chron.knowledge = [];
-    S.chron.knowledge.push({
-      title: file.name.replace(/\.[^.]+$/, ''),
-      text: finalText,
-      type: file.name.endsWith('.docx')||file.type.includes('wordprocessingml') ? 'DOCX' : file.type==='application/pdf' ? 'PDF' : 'TXT',
-      date: new Date().toLocaleDateString('pt-BR'),
-      chars: finalText.length
-    });
-    
-    fbSaveChronicle(S.chron);
-    progress.style.display = 'none';
-    input.value = '';
-    renderKnowledge();
-    toast(truncated ? 'Material adicionado! (primeiros 50K caracteres)' : 'Material adicionado com sucesso!');
-    
-  } catch(e) {
-    progress.style.display = 'none';
-    console.error('KB upload error:', e);
-    toast('Erro ao processar arquivo: ' + e.message);
-  }
-}
-
-async function extractDocxText(file) {
-  return new Promise(function(resolve, reject) {
-    const reader = new FileReader();
-    reader.onload = async function(e) {
-      try {
-        // Use mammoth.js to extract text from docx
-        const mammoth = await import('https://cdnjs.cloudflare.com/ajax/libs/mammoth/1.6.0/mammoth.browser.min.js').catch(() => null);
-        if(mammoth) {
-          const result = await mammoth.extractRawText({arrayBuffer: e.target.result});
-          resolve(result.value || '');
-        } else {
-          // Fallback: basic XML extraction from docx zip
-          const arr = new Uint8Array(e.target.result);
-          let str = '';
-          for(let i=0;i<arr.length;i++) str+=String.fromCharCode(arr[i]);
-          // docx is a zip - extract text between w:t tags
-          const matches = str.match(/<w:t[^>]*>([^<]+)<\/w:t>/g) || [];
-          const text = matches.map(function(m){return m.replace(/<[^>]+>/g,'');}).join(' ');
-          resolve(text || str.replace(/[^ -~À-ÿ]/g,' ').replace(/\s+/g,' '));
-        }
-      } catch(err) { reject(err); }
-    };
-    reader.onerror = reject;
-    reader.readAsArrayBuffer(file);
-  });
-}
-
-async function extractPdfText(file) {
-  return new Promise(function(resolve, reject) {
-    const reader = new FileReader();
-    reader.onload = function(e) {
-      try {
-        const arr = new Uint8Array(e.target.result);
-        // Basic PDF text extraction - look for text between BT and ET markers
-        let text = '';
-        let str = '';
-        for(let i = 0; i < arr.length; i++) {
-          str += String.fromCharCode(arr[i]);
-        }
-        // Extract text using regex patterns for PDF text streams
-        const matches = str.match(/\(([^)]{1,200})\)\s*Tj/g) || [];
-        const matches2 = str.match(/\[([^\]]+)\]\s*TJ/g) || [];
-        
-        matches.forEach(function(m) {
-          const t = m.replace(/\(([^)]+)\)\s*Tj/, '$1');
-          text += t + ' ';
-        });
-        
-        // Also try to extract raw readable text
-        const readable = str.replace(/[^ -~À-ÿ]/g, ' ')
-          .replace(/\s+/g, ' ')
-          .split(' ')
-          .filter(function(w) { return w.length > 2; })
-          .join(' ');
-        
-        // Use whichever gave more content
-        const finalText = text.length > readable.length * 0.3 ? text : readable;
-        resolve(finalText.substring(0, 60000));
-      } catch(err) {
-        reject(err);
-      }
-    };
-    reader.onerror = reject;
-    reader.readAsArrayBuffer(file);
-  });
-}
-
-function openAddKnowledge() {
-  const title = prompt('Título deste material (ex: Lore de Lisboa, Regras V5):');
-  if(!title) return;
-  const text = prompt('Cole o texto aqui (máx 5000 caracteres para textos manuais):');
-  if(!text) return;
-  if(!S.chron.knowledge) S.chron.knowledge = [];
-  S.chron.knowledge.push({
-    title: title,
-    text: text.substring(0, 5000),
-    type: 'texto',
-    date: new Date().toLocaleDateString('pt-BR'),
-    chars: Math.min(text.length, 5000)
-  });
-  fbSaveChronicle(S.chron);
-  renderKnowledge();
-  toast('Conhecimento adicionado!');
-}
-
-function delKnowledge(i) {
-  if(!confirm('Remover este material da base de conhecimento?')) return;
-  S.chron.knowledge.splice(i, 1);
-  fbSaveChronicle(S.chron);
-  renderKnowledge();
-  toast('Material removido.');
-}
-
 function renderHome() {
   const g=$id('grid-chron'); g.innerHTML='';
   S.chronicles.forEach(c=>{
@@ -1985,8 +1464,6 @@ function openChron(id, tab) {
   $id('chron-ttl').textContent=c.name;
   $id('chron-sys').textContent=c.system.toUpperCase();
   $id('drop-map').style.display = c.id==='vampire'?'flex':'none';
-  const kbBtn = $id('drop-knowledge');
-  if(kbBtn) kbBtn.style.display = isNarrator()?'flex':'none';
   goTab(tab||'overview');
 }
 
@@ -2032,8 +1509,6 @@ const TAB_META = {
   polls:       {icon:'📊', label:'Enquetes'},
   notes:       {icon:'📝', label:'Anotações'},
   group:       {icon:'👥', label:'Grupo'},
-  oracle:      {icon:'🔮', label:'Oráculo'},
-  knowledge:   {icon:'📚', label:'Conhecimento'},
   map:         {icon:'🗺',  label:'Mapa'},
 };
 
@@ -2105,8 +1580,6 @@ const renders = {
   polls(){ renderPolls(); },
   notes(){ renderNotes(); },
   group(){ renderGroup(); },
-  oracle(){ renderOracle(); },
-  knowledge(){ renderKnowledge(); },
   map(){ renderMap(); }
 };
 
@@ -2349,7 +1822,7 @@ function renderLocations(){
   const el=$id('panel-locations'), c=S.chron;
   let html='<div class="toolbar">';
   if(isLoggedIn()) html+='<span class="toolbar-title">Locais ('+((c.locations||[]).length)+')</span>';
-  if(isLoggedIn()) html+='<button class="btn-add" onclick="openAddLoc()">+ Novo Local</button>';
+  if(isNarrator()) html+='<button class="btn-add" onclick="openAddLoc()">+ Novo Local</button>';
   html+='</div>';
   if(!(c.locations||[]).length){
     html+='<div class="empty"><div class="empty-ico">🗺️</div>Nenhum local registrado.</div>';
@@ -2381,7 +1854,7 @@ function renderLocations(){
 }
 
 
-function openAddLoc(){ S.editIdx=null; $id('ov-loc-title').textContent='⊕ Novo Local'; ['loc-name','loc-icon','loc-desc','loc-secret'].forEach(id=>setVal(id,'')); $id('loc-reveal-field').style.display='none'; const sb=document.querySelector('#ov-location .secret-box'); if(sb) sb.style.display=isNarrator()?'':'none'; clearPhotoInput('loc-photo-file','loc-photo-preview','loc-photo-img'); openOv('ov-location'); }
+function openAddLoc(){ S.editIdx=null; $id('ov-loc-title').textContent='⊕ Novo Local'; ['loc-name','loc-icon','loc-desc','loc-secret'].forEach(id=>setVal(id,'')); $id('loc-reveal-field').style.display='none'; clearPhotoInput('loc-photo-file','loc-photo-preview','loc-photo-img'); openOv('ov-location'); }
 function openEditLoc(i){ S.editIdx=i; const l=S.chron.locations[i]; $id('ov-loc-title').textContent='✎ Editar Local'; setVal('loc-name',l.name); setVal('loc-icon',l.icon); setVal('loc-desc',l.desc); setVal('loc-secret',l.secret||''); $id('loc-reveal-field').style.display='block'; $id('loc-revealed').value=l.secretRevealed?'true':'false'; if(l.photo){$id('loc-photo-img').src=l.photo;$id('loc-photo-preview').style.display='block';}else{clearPhotoInput('loc-photo-file','loc-photo-preview','loc-photo-img');} openOv('ov-location'); }
 async function saveLoc(){
   const name=val('loc-name'); if(!name){ toast('Nome obrigatório.'); return; }
@@ -2554,11 +2027,10 @@ function renderCharacters(){
   const el=$id('panel-characters'), c=S.chron;
   const isPlayerOwn = ch => {
     if(!S.user) return false;
-    const p = (ch.player||'').toLowerCase();
-    const n = (S.user.name||'').toLowerCase();
-    const l = (S.user.login||'').toLowerCase();
-    // Match by exact name, login, or if player name contains login
-    return ch.playerLogin===S.user.login || p===n || p.includes(l) || n.includes(p.split(' ')[0]);
+    const p = (ch.player||'').toLowerCase().trim();
+    const n = (S.user.name||'').toLowerCase().trim();
+    const l = (S.user.login||'').toLowerCase().trim();
+    return p===n || p.includes(l) || l.includes(p.split(' ')[0]);
   };
   let html='<div class="toolbar">';
   html+='<span class="toolbar-title">Personagens ('+((c.characters||[]).length)+')</span>';
@@ -2572,20 +2044,1205 @@ function renderCharacters(){
   (c.characters||[]).forEach((ch,i)=>{
     const canEdit=isNarrator()||isPlayerOwn(ch);
     html+='<div class="char-card">';
-    if(ch.photo) html+='<img src="'+ch.photo+'" class="char-card-photo" onclick="openImgLightbox(''+ch.photo+'',''+ch.name+'')" style="cursor:pointer;">';
+    if(ch.photo) html+='<img src="'+ch.photo+'" class="char-card-photo" onclick="openImgLightbox(\''+ch.photo+'\',\''+ch.name+'\')" style="cursor:pointer;">';
     html+='<div class="char-name">'+ch.name+'</div>';
     html+='<div class="char-player">Jogado por '+ch.player+'</div>';
     if(ch.concept) html+='<div class="char-concept">'+ch.concept+'</div>';
     if(ch.desc) html+='<div class="char-concept" style="margin-top:0.4rem;color:#666;">'+ch.desc+'</div>';
-    if(canEdit){
-      html+='<div class="card-actions" style="margin-top:0.6rem;">';
-      html+='<button class="btn-sm btn-edit" onclick="openEditChar('+i+')">Editar</button>';
-      if(isNarrator()) html+='<button class="btn-sm btn-del" onclick="delChar('+i+')">Remover</button>';
-      html+='</div>';
-    }
+    if(canEdit) html+='<div class="card-actions" style="margin-top:0.6rem;"><button class="btn-sm btn-edit" onclick="openEditChar('+i+')">Editar</button>'+(isNarrator()?'<button class="btn-sm btn-del" onclick="delChar('+i+')">Remover</button>':'')+'</div>';
     html+='</div>';
   });
   html+='</div>';
   el.innerHTML=html;
 }
 
+function openAddChar(){ S.editIdx=null; $id('ov-char-title').textContent='⊕ Novo Personagem'; ['char-name','char-concept','char-desc'].forEach(id=>setVal(id,'')); populateCharPlayerSel(); clearPhotoInput('char-photo-file','char-photo-preview','char-photo-img'); openOv('ov-char'); }
+function openEditChar(i){ S.editIdx=i; const ch=S.chron.characters[i]; $id('ov-char-title').textContent='✎ Editar Personagem'; setVal('char-name',ch.name); setVal('char-concept',ch.concept); setVal('char-desc',ch.desc); populateCharPlayerSel(); $id('char-player-sel').value=ch.player; if(ch.photo){$id('char-photo-img').src=ch.photo;$id('char-photo-preview').style.display='block';}else{clearPhotoInput('char-photo-file','char-photo-preview','char-photo-img');} openOv('ov-char'); }
+async function saveChar(){
+  const name=val('char-name'); if(!name){ toast('Nome obrigatório.'); return; }
+  const photo = await readPhoto('char-photo-file');
+  const existing = S.editIdx!==null ? S.chron.characters[S.editIdx].photo : null;
+  const obj={name,player:$id('char-player-sel').value,concept:val('char-concept'),desc:val('char-desc'),photo:photo||existing||null};
+  if(S.editIdx===null){ S.chron.characters.push(obj); if(S.user) addNotif('⚔️',`Novo personagem em <strong>${S.chron.name}</strong>: ${obj.name}`,S.chron.id,'characters'); }
+  else S.chron.characters[S.editIdx]=obj;
+  fbSaveChronicle(S.chron); closeOv('ov-char'); renderCharacters(); toast(S.editIdx===null?'Personagem adicionado!':'Personagem atualizado!');
+}
+function delChar(i){ if(!confirm('Remover personagem?'))return; S.chron.characters.splice(i,1); fbSaveChronicle(S.chron); renderCharacters(); toast('Personagem removido.'); }
+
+// ---- NOTES ----
+// Sanitiza nome para usar como chave do Firebase
+function userKey(name) {
+  return (name||'').replace(/[^a-zA-Z0-9_]/g, '_').toLowerCase();
+}
+
+function renderNotes(){
+  const el=$id('panel-notes');
+  if(!isLoggedIn()){
+    el.innerHTML=`<div class="empty"><div class="empty-ico">🔒</div>Faça login para ver e criar anotações.</div>`;
+    return;
+  }
+  if(!S.chron.notesByUser) S.chron.notesByUser={};
+  const key = userKey(S.user.name);
+  const myNotes = (S.chron.notesByUser[key]||[]).slice().sort((a,b)=>b.ts-a.ts);
+
+  let html=`<div class="toolbar">
+    <span class="toolbar-title">Minhas Anotações (${myNotes.length})</span>
+    <button class="btn-add" onclick="openAddNote()">+ Nova Anotação</button>
+  </div>`;
+
+  if(!myNotes.length){
+    html+=`<div class="empty"><div class="empty-ico">📝</div>Nenhuma anotação ainda.<br><small style="font-size:0.8rem;opacity:0.6;">Use este espaço para anotar teorias, observações e pensamentos entre as sessões.</small></div>`;
+  } else {
+    html+='<div class="notes-journal">';
+    myNotes.forEach((n)=>{
+      const realIdx = (S.chron.notesByUser[key]||[]).findIndex(x=>x.id===n.id);
+      html+=`<div class="note-card" id="note-card-${n.id}" onclick="toggleNote('${n.id}')">
+        <div class="note-card-top">
+          <div>
+            <div class="note-title">${n.title||'Sem título'}</div>
+            <div class="note-author">por ${S.user.name}</div>
+          </div>
+          <div class="note-date">${n.date||''}</div>
+        </div>
+        <div class="note-preview" id="note-prev-${n.id}">${(n.body||'').replace(/</g,'&lt;')}</div>
+        <div class="note-full" id="note-full-${n.id}" style="display:none">${(n.body||'').replace(/</g,'&lt;')}</div>
+        <div class="card-actions" style="margin-top:0.6rem;">
+          <button class="btn-sm btn-edit" onclick="event.stopPropagation();openEditNote(${realIdx})">Editar</button>
+          <button class="btn-sm btn-del" onclick="event.stopPropagation();delNote(${realIdx})">Remover</button>
+        </div>
+      </div>`;
+    });
+    html+='</div>';
+  }
+  el.innerHTML=html;
+}
+
+function toggleNote(id){
+  const prev=$id('note-prev-'+id), full=$id('note-full-'+id), card=$id('note-card-'+id);
+  if(!prev||!full) return;
+  const expanded = full.style.display!=='none';
+  prev.style.display = expanded?'':'none';
+  full.style.display = expanded?'none':'block';
+  card.classList.toggle('note-expanded',!expanded);
+}
+
+function openAddNote(){
+  S.editIdx=null;
+  $id('ov-note-title').textContent='⊕ Nova Anotação';
+  setVal('note-title-inp',''); setVal('note-body-inp','');
+  openOv('ov-note');
+}
+
+function openEditNote(i){
+  S.editIdx=i;
+  const key = userKey(S.user.name);
+  const notes = S.chron.notesByUser[key]||[];
+  const n=notes[i];
+  $id('ov-note-title').textContent='✎ Editar Anotação';
+  setVal('note-title-inp',n.title||'');
+  setVal('note-body-inp',n.body||'');
+  openOv('ov-note');
+}
+
+function saveNote(){
+  const title=val('note-title-inp'), body=val('note-body-inp');
+  if(!body){ toast('Escreva algo na anotação.'); return; }
+  if(!S.chron.notesByUser) S.chron.notesByUser={};
+  const key = userKey(S.user.name);
+  if(!S.chron.notesByUser[key]) S.chron.notesByUser[key]=[];
+  const now=new Date();
+  const date=now.toLocaleString('pt-BR',{day:'2-digit',month:'2-digit',year:'2-digit',hour:'2-digit',minute:'2-digit'});
+  if(S.editIdx===null){
+    S.chron.notesByUser[key].push({id:Date.now(),title:title||'Sem título',body,date,ts:Date.now()});
+    toast('Anotação salva!');
+  } else {
+    const notes=S.chron.notesByUser[key];
+    notes[S.editIdx].title=title||notes[S.editIdx].title;
+    notes[S.editIdx].body=body;
+    toast('Anotação atualizada!');
+  }
+  fbSaveChronicle(S.chron);
+  closeOv('ov-note');
+  renderNotes();
+}
+
+function delNote(i){
+  if(!confirm('Remover esta anotação?'))return;
+  const key = userKey(S.user.name);
+  S.chron.notesByUser[key].splice(i,1);
+  fbSaveChronicle(S.chron);
+  renderNotes();
+  toast('Anotação removida.');
+}
+
+// Legacy saveNotes compatibility
+function saveNotes(){ toast('Use o botão + Nova Anotação.'); }
+
+// ---- GROUP ----
+function renderGroup(){
+  const el=$id('panel-group'), c=S.chron;
+  const narrator=S.members.find(m=>m.role==='narrator');
+  const players=S.members.filter(m=>m.role==='player'&&m.chronicles.includes(c.id));
+  let html='<div class="toolbar">';
+  html+=`<span class="toolbar-title">Membros desta crônica</span>`;
+  if(isNarrator()) html+=`<button class="btn-add" onclick="openMembers()">Gerenciar Membros</button>`;
+  html+='</div>';
+  if(narrator){
+    html+=`<div class="group-section"><div class="sec-lbl">Narrador</div><div class="mem-grid">`;
+    html+=`<div class="mem-card nar"><div class="m-av m-nar">${initials(narrator.name)}</div><div><div class="m-name">${narrator.name}</div><div class="m-role">NARRADOR · STORYTELLER</div></div></div>`;
+    html+=`</div></div>`;
+  }
+  html+=`<div class="group-section"><div class="sec-lbl">Jogadores (${players.length})</div><div class="mem-grid">`;
+  players.forEach(m=>{
+    const tags=m.chronicles.map(cid=>{
+      const cr=S.chronicles.find(x=>x.id===cid); if(!cr)return'';
+      const cls=cid==='cyber'?'tag-cyber':cid==='vampire'?'tag-vampire':'tag-other';
+      return `<span class="chron-tag ${cls}">${cr.name.split(' ')[0].toUpperCase()}</span>`;
+    }).join(' ');
+    html+=`<div class="mem-card"><div class="m-av m-player">${initials(m.name)}</div><div><div class="m-name">${m.name}</div><div class="m-role">JOGADOR</div><div style="display:flex;gap:3px;flex-wrap:wrap;margin-top:3px;">${tags}</div></div></div>`;
+  });
+  html+=`</div></div>`;
+  el.innerHTML=html;
+}
+
+// ---- MEMBERS MANAGEMENT ----
+function openMembers(){
+  renderMemEditList(); renderMemChronChecks(); openOv('ov-members');
+}
+function renderMemEditList(){
+  $id('mem-edit-list').innerHTML=S.members.map(m=>`
+    <div class="mem-edit-row">
+      <div style="display:flex;align-items:center;gap:0.5rem;">
+        <div class="m-av ${m.role==='narrator'?'m-nar':'m-player'}" style="width:24px;height:24px;font-size:0.55rem;">${initials(m.name)}</div>
+        <div><div style="font-size:0.82rem;color:#ccc;">${m.name}</div>
+        <div style="font-family:'Share Tech Mono',monospace;font-size:0.52rem;color:#444;">${m.role==='narrator'?'NARRADOR':'JOGADOR'} · ${m.chronicles.join(', ')}</div></div>
+      </div>
+      ${m.role!=='narrator'?`<button onclick="removeMember(${m.id})" style="background:none;border:none;color:#443;cursor:pointer;font-size:0.75rem;" onmouseover="this.style.color='#c44'" onmouseout="this.style.color='#443'">✕</button>`:''}
+    </div>`).join('');
+}
+function renderMemChronChecks(){
+  $id('nm-chron-checks').innerHTML=S.chronicles.map(c=>`
+    <label style="display:flex;align-items:center;gap:0.35rem;cursor:pointer;font-size:0.8rem;color:#aaa;">
+      <input type="checkbox" value="${c.id}" style="accent-color:var(--gold);"> ${c.name}
+    </label>`).join('');
+}
+function addMember(){
+  const name=val('nm-name'),role=$id('nm-role').value,pass=$id('nm-pass').value;
+  const checks=document.querySelectorAll('#nm-chron-checks input:checked');
+  const chronicles=Array.from(checks).map(c=>c.value);
+  if(!name||!pass){ toast('Preencha nome e senha.'); return; }
+  const login=name.split(' ')[0]; // primeiro nome para login
+  S.members.push({id:Date.now(),name,login,role,chronicles,password:pass});
+  setVal('nm-name',''); setVal('nm-pass','');
+  document.querySelectorAll('#nm-chron-checks input').forEach(c=>c.checked=false);
+  renderMemEditList(); renderGroup(); renderHome(); toast(`${name} adicionado!`);
+}
+function removeMember(id){
+  if(S.user&&S.user.id===id){ toast('Não pode remover a si mesmo.'); return; }
+  S.members=S.members.filter(m=>m.id!==id);
+  renderMemEditList(); renderGroup(); toast('Membro removido.');
+}
+
+// ---- NEW CHRONICLE ----
+function addChronicle(){
+  const name=val('nc-name'); if(!name){ toast('Nome obrigatório.'); return; }
+  const id='c_'+Date.now();
+  S.chronicles.push({id,name,system:$id('nc-system').value,theme:$id('nc-theme').value,tagline:val('nc-tagline'),status:'active',sessions:[],npcs:[],locations:[],timeline:[],characters:[],notes:''});
+  closeOv('ov-newchron'); setVal('nc-name',''); setVal('nc-tagline','');
+  renderHome(); toast(`Crônica "${name}" criada!`);
+}
+
+// ================================================================
+// GALLERY
+// ================================================================
+function renderGallery(){
+  const el=$id('panel-gallery'), c=S.chron;
+  const catLabels={npc:'NPC',location:'Local',character:'Personagem',item:'Item',other:'Outro'};
+  let html='<div class="toolbar"><span class="toolbar-title">Galeria de Imagens</span>';
+  if(isLoggedIn()) html+=`<button class="btn-add" onclick="openOv('ov-gallery')">+ Adicionar</button>`;
+  html+='</div>';
+  if(!c.gallery.length){ html+=`<div class="empty"><div class="empty-ico">🖼️</div>Nenhuma imagem adicionada ainda.</div>`; el.innerHTML=html; return; }
+  html+='<div class="gallery-grid">';
+  c.gallery.forEach((img,i)=>{
+    const canDel=isNarrator()||(S.user&&img.addedBy===S.user.name);
+    html+=`<div class="gal-item" onclick="openLightbox(${i})">
+      <img src="${img.src}" alt="${img.name}" loading="lazy">
+      <div class="gal-item-info">
+        <div class="gal-item-name">${img.name}</div>
+        <div class="gal-item-cat">${catLabels[img.cat]||img.cat}</div>
+      </div>
+      ${canDel?`<button class="gal-item-del show btn-sm btn-del" onclick="event.stopPropagation();delGalleryItem(${i})">✕</button>`:''}
+    </div>`;
+  });
+  html+='</div>'; el.innerHTML=html;
+}
+async function saveGalleryItem(){
+  const name=val('gal-name'), cat=$id('gal-cat').value;
+  const galInput=$id('gal-file');
+  const src = galInput._croppedResult || (galInput.files[0] ? await compressImage(galInput.files[0]) : null);
+  if(!name||!src){ toast('Preencha o nome e selecione uma imagem.'); return; }
+  galInput._croppedResult = null;
+  S.chron.gallery.push({id:Date.now(),name,cat,src,addedBy:S.user?S.user.name:'?'});
+  if(S.user) addNotif('🖼️',`Nova imagem em <strong>${S.chron.name}</strong>: ${name}`,S.chron.id,'gallery');
+  closeOv('ov-gallery'); setVal('gal-name',''); galInput.value=''; $id('gal-preview').style.display='none';
+  fbSaveChronicle(S.chron); renderGallery(); toast('Imagem adicionada!');
+}
+function delGalleryItem(i){ if(!confirm('Remover imagem?'))return; S.chron.gallery.splice(i,1); fbSaveChronicle(S.chron); renderGallery(); toast('Imagem removida.'); }
+// ================================================================
+// LIGHTBOX COM ZOOM
+// ================================================================
+const _lb = { scale: 1, x: 0, y: 0, dragging: false, startX: 0, startY: 0, startImgX: 0, startImgY: 0, lastDist: 0, minScale: 1, maxScale: 5 };
+
+function openLightbox(i){ const img=S.chron.gallery[i]; openImgLightbox(img.src, img.name); }
+function openImgLightbox(src, caption){
+  _lb.scale=1; _lb.x=0; _lb.y=0;
+  const img=$id('lb-img');
+  img.src=src;
+  img.style.transform='translate(0,0) scale(1)';
+  img.classList.remove('zoomed');
+  $id('lb-cap').textContent=caption||'';
+  $id('lb-hint').style.display='';
+  $id('lightbox').classList.add('open');
+}
+function closeLightbox(){
+  $id('lightbox').classList.remove('open');
+  $id('lb-img').src='';
+}
+
+function lbToggleZoom(e){
+  if(_lb.scale > 1) {
+    // Volta ao normal
+    _lb.scale=1; _lb.x=0; _lb.y=0;
+    lbApplyTransform();
+    $id('lb-img').classList.remove('zoomed');
+  } else {
+    // Zoom 2.5x no ponto clicado
+    const img=$id('lb-img');
+    const rect=img.getBoundingClientRect();
+    const cx=(e.clientX-rect.left-rect.width/2);
+    const cy=(e.clientY-rect.top-rect.height/2);
+    _lb.scale=2.5;
+    _lb.x=-cx*1.5;
+    _lb.y=-cy*1.5;
+    lbApplyTransform();
+    img.classList.add('zoomed');
+    $id('lb-hint').style.display='none';
+  }
+}
+
+function lbApplyTransform(){
+  $id('lb-img').style.transform=`translate(${_lb.x}px,${_lb.y}px) scale(${_lb.scale})`;
+}
+
+function initLightbox(){
+  const lb = $id('lightbox');
+  const img = $id('lb-img');
+  if(!lb || !img) return;
+
+  // Fecha ao clicar no fundo
+  lb.addEventListener('click', e => {
+    if(e.target === lb) closeLightbox();
+  });
+
+  // ---- DESKTOP: mouse drag + scroll ----
+  img.addEventListener('mousedown', e => {
+    if(_lb.scale <= 1) return;
+    _lb.dragging = true;
+    _lb.startX = e.clientX; _lb.startY = e.clientY;
+    _lb.startImgX = _lb.x; _lb.startImgY = _lb.y;
+    e.preventDefault();
+  });
+  window.addEventListener('mousemove', e => {
+    if(!_lb.dragging) return;
+    _lb.x = _lb.startImgX + (e.clientX - _lb.startX);
+    _lb.y = _lb.startImgY + (e.clientY - _lb.startY);
+    lbApplyTransform();
+  });
+  window.addEventListener('mouseup', () => { _lb.dragging = false; });
+
+  lb.addEventListener('wheel', e => {
+    e.preventDefault();
+    _lb.scale = Math.max(1, Math.min(5, _lb.scale + (e.deltaY > 0 ? -0.3 : 0.3)));
+    if(_lb.scale <= 1){ _lb.x=0; _lb.y=0; img.classList.remove('zoomed'); }
+    else img.classList.add('zoomed');
+    lbApplyTransform();
+  }, {passive: false});
+
+  // ---- MOBILE: touch ----
+  let _t0 = null, _pinchDist = 0, _pinchScale = 1, _lastTap = 0;
+
+  lb.addEventListener('touchstart', e => {
+    if(e.touches.length === 1) {
+      _t0 = e.touches[0];
+      _lb.startX = _t0.clientX; _lb.startY = _t0.clientY;
+      _lb.startImgX = _lb.x; _lb.startImgY = _lb.y;
+
+      // Duplo toque = zoom
+      const now = Date.now();
+      if(now - _lastTap < 300) {
+        if(_lb.scale > 1) {
+          _lb.scale=1; _lb.x=0; _lb.y=0; img.classList.remove('zoomed');
+        } else {
+          _lb.scale = 2.5; img.classList.add('zoomed');
+        }
+        lbApplyTransform();
+      }
+      _lastTap = now;
+    }
+    if(e.touches.length === 2) {
+      _pinchDist = Math.hypot(
+        e.touches[0].clientX - e.touches[1].clientX,
+        e.touches[0].clientY - e.touches[1].clientY
+      );
+      _pinchScale = _lb.scale;
+    }
+  }, {passive: true});
+
+  lb.addEventListener('touchmove', e => {
+    e.preventDefault();
+    if(e.touches.length === 2) {
+      // Pinça zoom
+      const dist = Math.hypot(
+        e.touches[0].clientX - e.touches[1].clientX,
+        e.touches[0].clientY - e.touches[1].clientY
+      );
+      _lb.scale = Math.max(1, Math.min(5, _pinchScale * (dist / _pinchDist)));
+      if(_lb.scale <= 1){ _lb.x=0; _lb.y=0; img.classList.remove('zoomed'); }
+      else img.classList.add('zoomed');
+      lbApplyTransform();
+    } else if(e.touches.length === 1 && _lb.scale > 1) {
+      // Drag com zoom
+      _lb.x = _lb.startImgX + (e.touches[0].clientX - _lb.startX);
+      _lb.y = _lb.startImgY + (e.touches[0].clientY - _lb.startY);
+      lbApplyTransform();
+    } else if(e.touches.length === 1 && _lb.scale <= 1) {
+      // Swipe para fechar (arrastar pra baixo)
+      const dy = e.touches[0].clientY - _lb.startY;
+      if(dy > 80) closeLightbox();
+    }
+  }, {passive: false});
+
+  lb.addEventListener('touchend', () => { _t0 = null; });
+}
+
+
+// ================================================================
+// RUMORS
+// ================================================================
+function renderRumors(){
+  const el=$id('panel-rumors'), c=S.chron;
+  let html='<div class="toolbar"><span class="toolbar-title">Rumores & Fatos</span>';
+  if(isLoggedIn()) html+=`<button class="btn-add" onclick="openAddRumor()">+ Novo Rumor</button>`;
+  html+='</div>';
+  if(!c.rumors.length){ html+=`<div class="empty"><div class="empty-ico">💬</div>Nenhum rumor registrado ainda.</div>`; el.innerHTML=html; return; }
+  const facts=c.rumors.filter(r=>r.status==='fact');
+  const rumors=c.rumors.filter(r=>r.status==='rumor');
+  const pending=c.rumors.filter(r=>r.status==='pending');
+  function rGroup(list,title){
+    if(!list.length) return '';
+    let h=`<div class="sec-lbl" style="margin-top:1.2rem;">${title}</div><div class="rumors-list">`;
+    list.forEach(r=>{
+      const idx=c.rumors.indexOf(r);
+      const bCls=r.status==='fact'?'badge-fact':r.status==='rumor'?'badge-rumor':'badge-pending';
+      const bTxt=r.status==='fact'?'FATO':r.status==='rumor'?'RUMOR':'PENDENTE';
+      h+=`<div class="rumor-card">
+        <span class="rumor-badge ${bCls}">${bTxt}</span>
+        <div class="rumor-body">
+          <div class="rumor-text">${r.text}</div>
+          <div class="rumor-meta">Por ${r.author} ${r.date?'· '+r.date:''}</div>
+          ${reactionsHTML(r,'rumor',idx)}
+          <div class="rumor-actions">
+            ${isNarrator()&&r.status!=='fact'?`<button class="btn-sm btn-fact" onclick="setRumorStatus(${idx},'fact')">✓ Confirmar como Fato</button>`:''}
+            ${isNarrator()&&r.status!=='rumor'&&r.status!=='fact'?`<button class="btn-sm btn-rumor-mark" onclick="setRumorStatus(${idx},'rumor')">⚠ Marcar como Rumor</button>`:''}
+            ${isNarrator()||(S.user&&r.author===S.user.name)?`<button class="btn-sm btn-del" onclick="delRumor(${idx})">Remover</button>`:''}
+          </div>
+        </div>
+      </div>`;
+    });
+    return h+'</div>';
+  }
+  html+=rGroup(facts,'✓ Fatos Confirmados');
+  html+=rGroup(rumors,'⚠ Rumores');
+  html+=rGroup(pending,'? Sem Classificação');
+  el.innerHTML=html;
+}
+function openAddRumor(){
+  $id('ov-rumor-title').textContent='⊕ Novo Rumor'; setVal('rumor-text','');
+  $id('rumor-status-field').style.display=isNarrator()?'block':'none';
+  if(isNarrator()) $id('rumor-status').value='pending';
+  openOv('ov-rumor');
+}
+function saveRumor(){
+  const text=val('rumor-text'); if(!text){ toast('Escreva o rumor.'); return; }
+  const status=isNarrator()?$id('rumor-status').value:'pending';
+  S.chron.rumors.push({text,author:S.user?S.user.name:'?',date:new Date().toLocaleDateString('pt-BR'),status});
+  if(S.user) addNotif('💬',`Novo rumor em <strong>${S.chron.name}</strong> por ${S.user.name}`,S.chron.id,'rumors');
+  fbSaveChronicle(S.chron); closeOv('ov-rumor'); renderRumors(); toast('Rumor publicado!');
+}
+function setRumorStatus(i,status){ S.chron.rumors[i].status=status; fbSaveChronicle(S.chron); renderRumors(); if(status==='fact'&&S.user) addNotif('✅',`Narrador confirmou fato em <strong>${S.chron.name}</strong>: ${S.chron.rumors[i].text.substring(0,50)}...`,S.chron.id,'rumors'); toast(status==='fact'?'Confirmado como fato!':'Marcado como rumor.'); }
+function delRumor(i){ if(!confirm('Remover?'))return; S.chron.rumors.splice(i,1); fbSaveChronicle(S.chron); renderRumors(); toast('Removido.'); }
+
+// ================================================================
+// THEORIES
+// ================================================================
+function renderTheories(){
+  const el=$id('panel-theories'), c=S.chron;
+  let html='<div class="toolbar"><span class="toolbar-title">Teorias do Grupo</span>';
+  if(isLoggedIn()) html+=`<button class="btn-add" onclick="openAddTheory()">+ Nova Teoria</button>`;
+  html+='</div>';
+  if(!c.theories.length){ html+=`<div class="empty"><div class="empty-ico">🔍</div>Nenhuma teoria publicada ainda.</div>`; el.innerHTML=html; return; }
+  html+='<div class="theories-list">';
+  const verdictMap={confirmed:'✓ Narrador confirmou: correto!',denied:'✗ Narrador negou: errado.',partial:'~ Narrador: parcialmente correto.'};
+  const verdictCls={confirmed:'verdict-confirmed',denied:'verdict-denied',partial:'verdict-partial'};
+  c.theories.forEach((t,i)=>{
+    const myVote=S.user&&t.voters&&t.voters.includes(S.user.name);
+    const vCount=t.voters?t.voters.length:0;
+    html+=`<div class="theory-card">
+      <div class="theory-top"><div>
+        <div class="theory-title">${t.title}</div>
+        <div class="theory-author">Por ${t.author} · ${t.date||''}</div>
+      </div></div>
+      <div class="theory-text">${t.text}</div>
+      ${reactionsHTML(t,'theory',i)}
+      <div class="theory-votes">
+        ${isLoggedIn()?`<button class="vote-btn ${myVote?'voted':''}" onclick="voteTheory(${i})">${myVote?'★ Apoiada':'☆ Apoiar'}</button>`:''}
+        <span class="vote-count">${vCount} apoio${vCount!==1?'s':''}</span>
+      </div>
+      ${t.verdict?`<div class="narrator-verdict ${verdictCls[t.verdict]||''}">${verdictMap[t.verdict]||''}</div>`:''}
+      <div class="card-actions" style="margin-top:0.5rem;">
+        ${(isNarrator()||(S.user&&t.author===S.user.name))?`<button class="btn-sm btn-edit" onclick="openEditTheory(${i})">${isNarrator()?'Editar / Veredito':'Editar'}</button>`:'' }
+        ${(isNarrator()||(S.user&&t.author===S.user.name))?`<button class="btn-sm btn-del" onclick="delTheory(${i})">Remover</button>`:''}
+        ${!isNarrator()&&S.user&&t.author===S.user.name?`<button class="btn-sm btn-del" onclick="delTheory(${i})">Remover</button>`:''}
+      </div>
+    </div>`;
+  });
+  html+='</div>'; el.innerHTML=html;
+}
+function openAddTheory(){ S.editIdx=null; $id('ov-theory-title').textContent='⊕ Nova Teoria'; setVal('theory-title',''); setVal('theory-text',''); $id('theory-verdict-field').style.display='none'; openOv('ov-theory'); }
+function openEditTheory(i){
+  S.editIdx=i;
+  const t=S.chron.theories[i];
+  const isOwner = S.user && t.author===S.user.name;
+  $id('ov-theory-title').textContent = isNarrator() ? '✎ Editar / Veredito' : '✎ Editar Teoria';
+  setVal('theory-title',t.title);
+  setVal('theory-text',t.text);
+  // verdict only for narrator
+  $id('theory-verdict-field').style.display = isNarrator() ? 'block' : 'none';
+  if(isNarrator()) $id('theory-verdict').value=t.verdict||'';
+  // title/text editable by owner or narrator
+  $id('theory-title').readOnly = !isOwner && !isNarrator();
+  $id('theory-text').readOnly = !isOwner && !isNarrator();
+  openOv('ov-theory');
+}
+function saveTheory(){
+  const title=val('theory-title'), text=val('theory-text');
+  if(!title||!text){ toast('Preencha título e texto.'); return; }
+  if(S.editIdx===null){
+    S.chron.theories.push({title,text,author:S.user?S.user.name:'?',date:new Date().toLocaleDateString('pt-BR'),voters:[],verdict:''});
+    if(S.user) addNotif('🔍',`Nova teoria em <strong>${S.chron.name}</strong>: ${title}`,S.chron.id,'theories');
+    toast('Teoria publicada!');
+  } else {
+    const verdict = $id('theory-verdict').value;
+    S.chron.theories[S.editIdx].verdict = verdict;
+    if(verdict && S.user) {
+      const vMap = {confirmed:'confirmou ✓', denied:'negou ✗', partial:'disse parcialmente correto ~'};
+      addNotif('⚖️',`Narrador ${vMap[verdict]||'deu veredito em'} teoria: <strong>${S.chron.theories[S.editIdx].title}</strong>`,S.chron.id,'theories');
+    }
+    toast('Veredito salvo!');
+  }
+  fbSaveChronicle(S.chron); closeOv('ov-theory'); renderTheories();
+}
+function voteTheory(i){
+  if(!S.user) return;
+  const t=S.chron.theories[i];
+  if(!t.voters) t.voters=[];
+  const idx=t.voters.indexOf(S.user.name);
+  if(idx>=0) t.voters.splice(idx,1); else t.voters.push(S.user.name);
+  fbSaveChronicle(S.chron); renderTheories();
+}
+function delTheory(i){ if(!confirm('Remover teoria?'))return; S.chron.theories.splice(i,1); fbSaveChronicle(S.chron); renderTheories(); toast('Teoria removida.'); }
+
+// ================================================================
+// POLLS
+// ================================================================
+let pollOptCount=2;
+function initPollOpts(){ pollOptCount=2; $id('poll-opts-list').innerHTML=''; addPollOpt(); addPollOpt(); }
+function addPollOpt(){
+  const d=document.createElement('div');
+  d.style.cssText='display:flex;gap:0.4rem;align-items:center;margin-bottom:0.3rem;';
+  d.innerHTML=`<input type="text" placeholder="Opção ${pollOptCount}" style="flex:1;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-radius:2px;padding:0.42rem 0.7rem;color:#ddd;font-family:'Crimson Pro',serif;font-size:0.9rem;outline:none;">
+    <button onclick="this.parentElement.remove()" style="background:none;border:none;color:#444;cursor:pointer;font-size:0.8rem;" onmouseover="this.style.color='#c44'" onmouseout="this.style.color='#444'">✕</button>`;
+  $id('poll-opts-list').appendChild(d);
+  pollOptCount++;
+}
+function renderPolls(){
+  const el=$id('panel-polls'), c=S.chron;
+  let html='<div class="toolbar"><span class="toolbar-title">Enquetes do Grupo</span>';
+  if(isLoggedIn()) html+=`<button class="btn-add" onclick="openAddPoll()">+ Nova Enquete</button>`;
+  html+='</div>';
+  if(!c.polls.length){ html+=`<div class="empty"><div class="empty-ico">📊</div>Nenhuma enquete criada ainda.</div>`; el.innerHTML=html; return; }
+  html+='<div class="polls-list">';
+  c.polls.forEach((p,i)=>{
+    const myVote=S.user&&p.votes&&p.votes[userKey(S.user.name)]!==undefined?p.votes[userKey(S.user.name)]:null;
+    const totalVotes=p.votes?Object.keys(p.votes).length:0;
+    html+=`<div class="poll-card${p.closed?' poll-closed':''}">
+      <div class="poll-q">${p.question}</div>
+      <div class="poll-author">Por ${p.author} · ${p.date||''} ${p.closed?'· <span style="color:#c44;font-family:Share Tech Mono,monospace;font-size:0.55rem;">ENCERRADA</span>':''}</div>
+      <div class="poll-options">`;
+    p.options.forEach((opt,oi)=>{
+      const optVotes=p.votes?Object.values(p.votes).filter(v=>v===oi).length:0;
+      const pct=totalVotes>0?Math.round(optVotes/totalVotes*100):0;
+      const isChosen=myVote===oi;
+      const showBars=myVote!==null||!isLoggedIn()||p.closed;
+      html+=`<div class="poll-option" onclick="${isLoggedIn()&&!p.closed?`votePoll(${i},${oi})`:''}">
+        <input type="radio" name="poll_${i}" ${isChosen?'checked':''} ${!isLoggedIn()||p.closed?'disabled':''} style="accent-color:var(--gold);">
+        <span class="poll-option-label">${opt}</span>
+        <div class="poll-option-bar-wrap"><div class="poll-bar-bg"><div class="poll-bar-fill" style="width:${showBars?pct:0}%"></div></div></div>
+        <span class="poll-option-pct">${showBars?pct+'%':''}</span>
+      </div>`;
+    });
+    html+=`</div>`;
+    if(myVote!==null) html+=`<div class="poll-voted-label">✓ Você votou em "${p.options[myVote]}"</div>`;
+    html+=`<div class="poll-total">${totalVotes} voto${totalVotes!==1?'s':''}</div>`;
+    if(isNarrator()) html+=`<div class="card-actions" style="margin-top:0.6rem;">
+      <button class="btn-sm btn-edit" onclick="togglePollClose(${i})">${p.closed?'Reabrir':'Encerrar'}</button>
+      <button class="btn-sm btn-del" onclick="delPoll(${i})">Remover</button>
+    </div>`;
+    html+=`</div>`;
+  });
+  html+='</div>'; el.innerHTML=html;
+}
+function openAddPoll(){ setVal('poll-q',''); initPollOpts(); $id('poll-close').value=''; openOv('ov-poll'); }
+function savePoll(){
+  const question=val('poll-q'); if(!question){ toast('Escreva a pergunta.'); return; }
+  const inputs=$id('poll-opts-list').querySelectorAll('input[type=text]');
+  const options=Array.from(inputs).map(i=>i.value.trim()).filter(Boolean);
+  if(options.length<2){ toast('Adicione pelo menos 2 opções.'); return; }
+  S.chron.polls.push({question,options,author:S.user?S.user.name:'?',date:new Date().toLocaleDateString('pt-BR'),votes:{},closed:false});
+  if(S.user) addNotif('📊',`Nova enquete em <strong>${S.chron.name}</strong>: ${question}`,S.chron.id,'polls');
+  fbSaveChronicle(S.chron); closeOv('ov-poll'); renderPolls(); toast('Enquete criada!');
+}
+function votePoll(pi,oi){
+  if(!S.user||S.chron.polls[pi].closed) return;
+  if(!S.chron.polls[pi].votes) S.chron.polls[pi].votes={};
+  S.chron.polls[pi].votes[userKey(S.user.name)]=oi;
+  fbSaveChronicle(S.chron); renderPolls(); toast('Voto registrado!');
+}
+function togglePollClose(i){ S.chron.polls[i].closed=!S.chron.polls[i].closed; fbSaveChronicle(S.chron); renderPolls(); toast(S.chron.polls[i].closed?'Enquete encerrada.':'Enquete reaberta.'); }
+function delPoll(i){ if(!confirm('Remover enquete?'))return; S.chron.polls.splice(i,1); fbSaveChronicle(S.chron); renderPolls(); toast('Enquete removida.'); }
+
+// ================================================================
+// REACTIONS
+// ================================================================
+const REACTIONS = [
+  {emoji:'❤️', key:'love'},
+  {emoji:'😱', key:'shock'},
+  {emoji:'🤔', key:'suspect'},
+  {emoji:'⚔️', key:'epic'},
+  {emoji:'🩸', key:'blood'},
+  {emoji:'🔍', key:'investigate'},
+];
+
+function getReactions(item){ return item.reactions || {}; }
+
+function toggleReaction(type, idx, emoji_key){
+  if(!S.user){ toast('Faça login para reagir.'); return; }
+  const c = S.chron;
+  let arr;
+  if(type==='session') arr=c.sessions;
+  else if(type==='npc') arr=c.npcs;
+  else if(type==='location') arr=c.locations;
+  else if(type==='rumor') arr=c.rumors;
+  else if(type==='theory') arr=c.theories;
+  else return;
+  const item = arr[idx];
+  if(!item.reactions) item.reactions={};
+  if(!item.reactions[emoji_key]) item.reactions[emoji_key]=[];
+  const i = item.reactions[emoji_key].indexOf(S.user.name);
+  if(i>=0) item.reactions[emoji_key].splice(i,1);
+  else item.reactions[emoji_key].push(S.user.name);
+  fbSaveChronicle(c);
+  // re-render current tab
+  const tab = activeTab();
+  if(renders[tab]) renders[tab]();
+}
+
+function reactionsHTML(item, type, idx){
+  if(!isLoggedIn()) return '';
+  const r = item.reactions||{};
+  const userName = S.user ? S.user.name : '';
+  let html='<div class="reactions-bar">';
+  REACTIONS.forEach(({emoji,key})=>{
+    const users = r[key]||[];
+    const count = users.length;
+    const mine = users.includes(userName);
+    html+=`<button class="react-btn ${mine?'reacted':''}" onclick="event.stopPropagation();toggleReaction('${type}',${idx},'${key}')" title="${users.join(', ')||'Ninguém ainda'}">
+      ${emoji} <span class="react-count">${count||''}</span>
+    </button>`;
+  });
+  html+='</div>';
+  return html;
+}
+
+// ================================================================
+// CONNECTIONS
+// ================================================================
+function renderConnections(){
+  const el=$id('panel-connections'), c=S.chron;
+  if(!c.connections) c.connections=[];
+  const nodes = [
+    ...(c.npcs||[]).map(n=>({id:'npc_'+n.name, label:n.name, type:'npc'})),
+    ...(c.characters||[]).map(ch=>({id:'char_'+ch.name, label:ch.name, type:'char'})),
+  ];
+
+  let html=`<div class="toolbar">
+    <span class="toolbar-title">${c.connections.length} conexão${c.connections.length!==1?'ões':''}</span>
+    ${isNarrator()?`<button class="btn-add" onclick="openAddConnection()">+ Nova Conexão</button>`:''}
+  </div>`;
+
+  if(!nodes.length){
+    html+=`<div class="empty"><div class="empty-ico">🕸️</div>Adicione NPCs e Personagens primeiro para criar conexões.</div>`;
+    el.innerHTML=html; return;
+  }
+
+  // Legend
+  html+=`<div class="conn-legend">
+    <div class="legend-item"><div class="legend-dot" style="background:#d4a000"></div>Aliado</div>
+    <div class="legend-item"><div class="legend-dot" style="background:#c41e3a"></div>Inimigo</div>
+    <div class="legend-item"><div class="legend-dot" style="background:#0088cc"></div>Neutro</div>
+    <div class="legend-item"><div class="legend-dot" style="background:#9b30ff"></div>Família/Romance</div>
+    <div class="legend-item"><div class="legend-dot" style="background:#444"></div>Suspeita</div>
+  </div>`;
+
+  html+=`<div class="connections-wrap" id="conn-wrap"></div>`;
+
+  // Connection list below
+  if(c.connections.length){
+    html+=`<div style="margin-top:1rem;">
+      <div class="sec-lbl">Lista de Conexões</div>
+      <div style="display:flex;flex-direction:column;gap:0.5rem;">`;
+    c.connections.forEach((conn,i)=>{
+      const col={ally:'#d4a000',enemy:'#c41e3a',neutral:'#0088cc',family:'#9b30ff',unknown:'#555'}[conn.type]||'#555';
+      html+=`<div style="display:flex;align-items:center;justify-content:space-between;padding:0.6rem 0.9rem;background:var(--surface);border:1px solid var(--border);border-radius:3px;gap:0.5rem;">
+        <div style="display:flex;align-items:center;gap:0.5rem;flex:1;flex-wrap:wrap;">
+          <span style="font-family:'Cinzel',serif;font-size:0.82rem;color:#ccc;">${conn.from}</span>
+          <div style="height:2px;width:24px;background:${col};border-radius:1px;flex-shrink:0;"></div>
+          <span style="font-family:'Cinzel',serif;font-size:0.82rem;color:#ccc;">${conn.to}</span>
+          ${conn.desc?`<span style="font-size:0.78rem;color:#666;font-style:italic;">— ${conn.desc}</span>`:''}
+        </div>
+        ${isNarrator()?`<button class="btn-sm btn-del" onclick="delConnection(${i})">✕</button>`:''}
+      </div>`;
+    });
+    html+=`</div></div>`;
+  }
+
+  el.innerHTML=html;
+
+  // Draw visual graph
+  requestAnimationFrame(()=>drawGraph(nodes, c.connections));
+}
+
+function drawGraph(nodes, connections){
+  const wrap=$id('conn-wrap');
+  if(!wrap) return;
+  const W=wrap.offsetWidth, H=wrap.offsetHeight;
+
+  // Position nodes in a circle
+  const placed={};
+  nodes.forEach((n,i)=>{
+    const angle = (i/nodes.length)*Math.PI*2 - Math.PI/2;
+    const rx = W*0.38, ry = H*0.38;
+    placed[n.id]={
+      x: Math.round(W/2 + rx*Math.cos(angle)),
+      y: Math.round(H/2 + ry*Math.sin(angle)),
+      ...n
+    };
+  });
+
+  // Restore saved positions
+  if(S.chron._nodePos){
+    Object.keys(S.chron._nodePos).forEach(id=>{
+      if(placed[id]) Object.assign(placed[id], S.chron._nodePos[id]);
+    });
+  }
+
+  const typeCol={ally:'#d4a000',enemy:'#c41e3a',neutral:'#0088cc',family:'#9b30ff',unknown:'#444'};
+
+  // Draw SVG lines
+  let svgLines='';
+  connections.forEach(conn=>{
+    const fromNode=Object.values(placed).find(n=>n.label===conn.from);
+    const toNode=Object.values(placed).find(n=>n.label===conn.to);
+    if(!fromNode||!toNode) return;
+    const col=typeCol[conn.type]||'#444';
+    const mx=(fromNode.x+toNode.x)/2, my=(fromNode.y+toNode.y)/2;
+    svgLines+=`<line x1="${fromNode.x}" y1="${fromNode.y}" x2="${toNode.x}" y2="${toNode.y}" stroke="${col}" stroke-width="2" stroke-opacity="0.7"/>`;
+    if(conn.desc) svgLines+=`<text x="${mx}" y="${my}" fill="#888" font-size="10" text-anchor="middle" font-family="Share Tech Mono">${conn.desc}</text>`;
+  });
+
+  wrap.innerHTML=`<svg class="conn-svg" viewBox="0 0 ${W} ${H}"><defs><filter id="glow"><feGaussianBlur stdDeviation="2" result="blur"/><feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge></filter></defs>${svgLines}</svg>`;
+
+  // Draw nodes
+  Object.values(placed).forEach(n=>{
+    const div=document.createElement('div');
+    div.className='conn-node';
+    div.style.left=n.x+'px'; div.style.top=n.y+'px';
+    div.dataset.id=n.id;
+    const cls=n.type==='npc'?'node-npc':'node-char';
+    div.innerHTML=`<div class="conn-node-circle ${cls}">${n.label.split(' ').map(w=>w[0]).join('').substring(0,3)}</div><div class="conn-node-label">${n.label}</div>`;
+    div.title=n.label;
+    // Click to open NPC/char
+    div.addEventListener('click',()=>{
+      if(n.type==='npc') goTab('npcs');
+      else goTab('characters');
+    });
+    // Drag to reposition
+    makeDraggable(div, n.id, W, H);
+    wrap.appendChild(div);
+  });
+}
+
+function makeDraggable(el, nodeId, W, H){
+  let dragging=false, ox=0, oy=0;
+  const start=(ex,ey)=>{ dragging=true; ox=ex-el.offsetLeft; oy=ey-el.offsetTop; };
+  const move=(ex,ey)=>{
+    if(!dragging) return;
+    const x=Math.max(30,Math.min(W-30,ex-ox));
+    const y=Math.max(30,Math.min(H-30,ey-oy));
+    el.style.left=x+'px'; el.style.top=y+'px';
+    // Save position
+    if(!S.chron._nodePos) S.chron._nodePos={};
+    S.chron._nodePos[nodeId]={x,y};
+    // Redraw lines
+    requestAnimationFrame(()=>{
+      const wrap=$id('conn-wrap');
+      if(!wrap) return;
+      const placed={};
+      wrap.querySelectorAll('.conn-node').forEach(nd=>{
+        placed[nd.dataset.id]={x:nd.offsetLeft, y:nd.offsetTop};
+      });
+      const typeCol={ally:'#d4a000',enemy:'#c41e3a',neutral:'#0088cc',family:'#9b30ff',unknown:'#444'};
+      let svgLines='';
+      (S.chron.connections||[]).forEach(conn=>{
+        const nids = Object.keys(placed);
+        const fromNd = wrap.querySelector(`.conn-node[data-id]`);
+        // find by label
+        const allNodes=[...(S.chron.npcs||[]).map(n=>({id:'npc_'+n.name,label:n.name})),...(S.chron.characters||[]).map(c=>({id:'char_'+c.name,label:c.name}))];
+        const fNode=allNodes.find(n=>n.label===conn.from);
+        const tNode=allNodes.find(n=>n.label===conn.to);
+        if(!fNode||!tNode) return;
+        const fp=placed[fNode.id]||{}, tp=placed[tNode.id]||{};
+        if(!fp.x||!tp.x) return;
+        const col=typeCol[conn.type]||'#444';
+        svgLines+=`<line x1="${fp.x}" y1="${fp.y}" x2="${tp.x}" y2="${tp.y}" stroke="${col}" stroke-width="2" stroke-opacity="0.7"/>`;
+      });
+      const svg=wrap.querySelector('.conn-svg');
+      if(svg) svg.innerHTML=`<defs><filter id="glow"><feGaussianBlur stdDeviation="2" result="blur"/><feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge></filter></defs>${svgLines}`;
+    });
+  };
+  const end=()=>{ dragging=false; };
+  el.addEventListener('mousedown',e=>{ start(e.clientX,e.clientY); e.preventDefault(); });
+  document.addEventListener('mousemove',e=>{ if(dragging) move(e.clientX,e.clientY); });
+  document.addEventListener('mouseup',end);
+  el.addEventListener('touchstart',e=>{ const t=e.touches[0]; start(t.clientX,t.clientY); },{passive:true});
+  el.addEventListener('touchmove',e=>{ const t=e.touches[0]; move(t.clientX,t.clientY); e.preventDefault(); },{passive:false});
+  el.addEventListener('touchend',end);
+}
+
+function openAddConnection(){
+  const allNodes=[
+    ...(S.chron.npcs||[]).map(n=>n.name),
+    ...(S.chron.characters||[]).map(c=>c.name),
+  ];
+  const fromSel=$id('conn-from'), toSel=$id('conn-to');
+  fromSel.innerHTML=toSel.innerHTML=allNodes.map(n=>`<option>${n}</option>`).join('');
+  $id('ov-conn-title').textContent='⊕ Nova Conexão';
+  setVal('conn-desc','');
+  $id('conn-type').value='neutral';
+  openOv('ov-connection');
+}
+
+function saveConnection(){
+  const from=$id('conn-from').value, to=$id('conn-to').value;
+  if(from===to){ toast('Selecione duas pessoas diferentes.'); return; }
+  if(!S.chron.connections) S.chron.connections=[];
+  // avoid duplicate
+  const exists=S.chron.connections.find(c=>(c.from===from&&c.to===to)||(c.from===to&&c.to===from));
+  if(exists){ toast('Conexão já existe.'); return; }
+  S.chron.connections.push({from,to,type:$id('conn-type').value,desc:val('conn-desc')});
+  fbSaveChronicle(S.chron);
+  closeOv('ov-connection');
+  renderConnections();
+  toast('Conexão adicionada!');
+}
+
+function delConnection(i){
+  if(!confirm('Remover conexão?'))return;
+  S.chron.connections.splice(i,1);
+  fbSaveChronicle(S.chron);
+  renderConnections();
+  toast('Conexão removida.');
+}
+
+// ================================================================
+// FIREBASE — Sistema Robusto
+// ================================================================
+function cleanForFb(obj) {
+  return JSON.parse(JSON.stringify(obj, (k, v) => {
+    if(k.startsWith('_')) return undefined;
+    if(typeof v === 'function') return undefined;
+    if(v === undefined) return null;
+    return v;
+  }));
+}
+
+// Separa imagens do objeto principal para salvar em /images
+// Retorna {data: cronSemImagens, imgs: {chave: base64}}
+function splitImages(c) {
+  const data = cleanForFb(c);
+  const imgs = {};
+
+  ['npcs','locations','characters'].forEach(type => {
+    if(!data[type]) return;
+    data[type] = data[type].map(item => {
+      if(item.photo && item.photo.startsWith('data:')) {
+        const key = `${type}_${String(item.name||item.id||Date.now()).replace(/[^a-zA-Z0-9]/g,'_')}`;
+        imgs[key] = item.photo;
+        return {...item, photo: `__img__${key}`};
+      }
+      return item;
+    });
+  });
+
+  if(data.gallery) {
+    data.gallery = data.gallery.map(g => {
+      if(g.src && g.src.startsWith('data:')) {
+        const key = `gallery_${String(g.id||g.name||Date.now()).replace(/[^a-zA-Z0-9]/g,'_')}`;
+        imgs[key] = g.src;
+        return {...g, src: `__img__${key}`};
+      }
+      return g;
+    });
+  }
+
+  return {data, imgs};
+}
+
+// Reintegra imagens de volta ao objeto da crônica
+function mergeImages(chron, imgs) {
+  if(!imgs || !JSON.stringify(chron).includes('__img__')) return chron;
+
+  ['npcs','locations','characters'].forEach(type => {
+    if(!chron[type]) return;
+    chron[type] = chron[type].map(item => {
+      if(item.photo && item.photo.startsWith('__img__')) {
+        const key = item.photo.replace('__img__','');
+        return {...item, photo: imgs[key] || item.photo};
+      }
+      return item;
+    });
+  });
+
+  if(chron.gallery) {
+    chron.gallery = chron.gallery.map(g => {
+      if(g.src && g.src.startsWith('__img__')) {
+        const key = g.src.replace('__img__','');
+        return {...g, src: imgs[key] || g.src};
+      }
+      return g;
+    });
+  }
+
+  return chron;
+}
+
+// Cache local de imagens para não perder durante o fbListen
+const _imgCache = {};
+
+async function fbSaveChronicle(c) {
+  if(!window._db) return;
+  try {
+    const {data, imgs} = splitImages(c);
+
+    // Salva imagens no cache local para restauração imediata
+    if(Object.keys(imgs).length > 0) {
+      if(!_imgCache[c.id]) _imgCache[c.id] = {};
+      Object.assign(_imgCache[c.id], imgs);
+      // Salva imagens no Firebase
+      for(const [key, imgData] of Object.entries(imgs)) {
+        window._fbSet(window._fbRef(window._db, `images/${c.id}/${key}`), imgData)
+          .catch(e => console.error('Erro ao salvar imagem:', e));
+      }
+    }
+
+    await window._fbSet(window._fbRef(window._db, `chronicles/${c.id}`), data);
+    console.log(`✓ Salvo: ${c.name}`);
+  } catch(e) {
+    console.error('Erro fbSave:', e);
+    toast('⚠️ Erro ao salvar.');
+  }
+}
+
+async function loadImagesForChron(chron) {
+  // Primeiro tenta cache local
+  if(_imgCache[chron.id]) {
+    chron = mergeImages(chron, _imgCache[chron.id]);
+    if(!JSON.stringify(chron).includes('__img__')) return chron;
+  }
+  // Se ainda há refs, busca no Firebase
+  if(JSON.stringify(chron).includes('__img__')) {
+    try {
+      const snap = await window._fbGet(window._fbRef(window._db, `images/${chron.id}`));
+      if(snap.exists()) {
+        const imgs = snap.val();
+        if(!_imgCache[chron.id]) _imgCache[chron.id] = {};
+        Object.assign(_imgCache[chron.id], imgs);
+        chron = mergeImages(chron, imgs);
+      }
+    } catch(e) { console.error('loadImages:', e); }
+  }
+  return chron;
+}
+
+async function fbLoadAll() {
+  if(!window._db) return;
+  try {
+    showLoading(true);
+    const snap = await window._fbGet(window._fbRef(window._db, 'chronicles'));
+    if(snap.exists()) {
+      const data = snap.val();
+      // Firebase é a fonte da verdade — substitui completamente os dados locais
+      S.chronicles = S.chronicles.map(localChron => {
+        if(data[localChron.id]) {
+          // Merge: Firebase tem prioridade, local serve só de fallback para campos novos
+          return { ...localChron, ...data[localChron.id] };
+        }
+        // Crônica não existe no Firebase ainda — salva ela
+        fbSaveChronicle(localChron);
+        return localChron;
+      });
+      // Adiciona crônicas que existem no Firebase mas não no código local
+      Object.keys(data).forEach(id => {
+        if(!S.chronicles.find(c => c.id === id)) {
+          S.chronicles.push(data[id]);
+        }
+      });
+    } else {
+      // Firebase vazio — primeira vez, salva tudo
+      for(const c of S.chronicles) await fbSaveChronicle(c);
+    }
+    // Notificações
+    const notifSnap = await window._fbGet(window._fbRef(window._db, 'app/notifications'));
+    if(notifSnap.exists()) S.notifications = notifSnap.val() || [];
+
+    showLoading(false);
+    renderHome();
+    if(S.user) renderBell();
+    tryAutoLogin();
+  } catch(e) {
+    console.error('Erro ao carregar:', e);
+    showLoading(false);
+    toast('⚠️ Erro ao conectar. Verifique sua internet.');
+  }
+}
+
+async function fbSaveNotifications() {
+  if(!window._db) return;
+  try {
+    await window._fbSet(window._fbRef(window._db, 'app/notifications'), S.notifications.slice(0,50));
+  } catch(e) { console.error('Erro notif:', e); }
+}
+
+function fbListen() {
+  if(!window._db) return;
+
+  window._fbOnValue(window._fbRef(window._db, 'chronicles'), async snap => {
+    if(!snap.exists()) return;
+    const data = snap.val();
+
+    for(const id of Object.keys(data)) {
+      const idx = S.chronicles.findIndex(c => c.id === id);
+      let incoming = {...data[id]};
+
+      if(idx >= 0) {
+        const local = S.chronicles[idx];
+        const pos = local._nodePos;
+
+        // Preserva imagens locais — não substitui por refs do Firebase
+        ['npcs','locations','characters'].forEach(type => {
+          if(!incoming[type] || !local[type]) return;
+          incoming[type] = incoming[type].map((item, i) => {
+            const loc = local[type][i];
+            if(item.photo && item.photo.startsWith('__img__') && loc && loc.photo && !loc.photo.startsWith('__img__')) {
+              return {...item, photo: loc.photo};
+            }
+            return item;
+          });
+        });
+        if(incoming.gallery && local.gallery) {
+          incoming.gallery = incoming.gallery.map((g, i) => {
+            const loc = local.gallery[i];
+            if(g.src && g.src.startsWith('__img__') && loc && loc.src && !loc.src.startsWith('__img__')) {
+              return {...g, src: loc.src};
+            }
+            return g;
+          });
+        }
+
+        // Tenta cache para refs restantes
+        incoming = await loadImagesForChron(incoming);
+        S.chronicles[idx] = {...local, ...incoming};
+        if(pos) S.chronicles[idx]._nodePos = pos;
+        if(S.chron && S.chron.id === id) S.chron = S.chronicles[idx];
+      } else {
+        incoming = await loadImagesForChron(incoming);
+        S.chronicles.push(incoming);
+      }
+    }
+
+    renderHome();
+    if(S.user) renderBell();
+    if(S.chron) { const t = activeTab(); if(t && renders[t]) renders[t](); }
+  });
+
+  window._fbOnValue(window._fbRef(window._db, 'app/notifications'), snap => {
+    S.notifications = snap.exists() ? (snap.val()||[]) : [];
+    if(S.user) { renderBell(); renderNotifPanel(); }
+  });
+}
+
+function showLoading(on) {
+  let el = $id('loading-screen');
+  if(!el) return;
+  el.style.display = on ? 'flex' : 'none';
+}
+
+// ================================================================
+// INIT
+// ================================================================
+renderHome();
+// file previews — abre editor de crop ao selecionar
+function setupPhotoInput(fileId, previewId, imgId) {
+  const el = $id(fileId);
+  if(!el) return;
+  el.addEventListener('change', function(){
+    if(!this.files[0]) return;
+    const file = this.files[0];
+    compressImage(file, 1200, 1200, 0.9).then(src => {
+      openCropEditor(src, (result) => {
+        if(!result) { el.value=''; return; }
+        el._croppedResult = result;
+        $id(imgId).src = result;
+        $id(previewId).style.display = 'block';
+      });
+    });
+  });
+}
+setupPhotoInput('gal-file','gal-preview','gal-prev-img');
+setupPhotoInput('npc-photo-file','npc-photo-preview','npc-photo-img');
+setupPhotoInput('loc-photo-file','loc-photo-preview','loc-photo-img');
+setupPhotoInput('char-photo-file','char-photo-preview','char-photo-img');
+initCropDrag();
+initLightbox();
+
+// Wait for Firebase then load data
+function initFirebase() {
+  fbLoadAll().then(() => {
+    fbListen();
+    tryAutoLogin();
+  });
+}
+if(window._firebaseReady) initFirebase();
+else window.addEventListener('firebaseReady', initFirebase);
+
+async function forceSyncFromFirebase() {
+  if(!window._db) { toast('Firebase não conectado.'); return; }
+  try {
+    showLoading(true);
+    const snap = await window._fbGet(window._fbRef(window._db, 'chronicles'));
+    if(snap.exists()) {
+      const data = snap.val();
+      console.log('Firebase data:', data);
+      Object.keys(data).forEach(id => {
+        const idx = S.chronicles.findIndex(c => c.id === id);
+        if(idx >= 0) {
+          const nodePos = S.chronicles[idx]._nodePos;
+          S.chronicles[idx] = { ...S.chronicles[idx], ...data[id] };
+          if(nodePos) S.chronicles[idx]._nodePos = nodePos;
+        }
+      });
+      if(S.chron) {
+        const updated = S.chronicles.find(c => c.id === S.chron.id);
+        if(updated) S.chron = updated;
+      }
+    }
+    showLoading(false);
+    renderHome();
+    if(S.chron) { const t=activeTab(); if(renders[t]) renders[t](); }
+    toast('✓ Sincronizado com o servidor!');
+  } catch(e) {
+    showLoading(false);
+    console.error(e);
+    toast('⚠️ Erro ao sincronizar: ' + e.message);
+  }
+}
+
+function tryAutoLogin() {
+  try {
+    const saved = localStorage.getItem('ecos_user');
+    if(!saved) return;
+    const {login, pass} = JSON.parse(saved);
+    const m = S.members.find(m=>(m.login||m.name).toLowerCase()===login.toLowerCase()&&m.password===pass);
+    if(m) {
+      S.user = m;
+      updateAuthUI();
+      toast(`Bem-vindo de volta, ${m.name}!`);
+    } else {
+      localStorage.removeItem('ecos_user');
+    }
+  } catch(e) { localStorage.removeItem('ecos_user'); }
+}
+
+// ================================================================
+// PWA INSTALL PROMPT
+// ================================================================
+let deferredPrompt = null;
+
+window.addEventListener('beforeinstallprompt', e => {
+  e.preventDefault();
+  deferredPrompt = e;
+  // Show install button on home screen
+  const btn = $id('btn-install');
+  if(btn) btn.style.display = 'inline-block';
+});
+
+async function doInstall() {
+  if(!deferredPrompt) {
+    toast('Use ⋮ → Adicionar à tela inicial no Chrome.');
+    return;
+  }
+  deferredPrompt.prompt();
+  const result = await deferredPrompt.userChoice;
+  deferredPrompt = null;
+  const btn = $id('btn-install');
+  if(btn) btn.style.display = 'none';
+  if(result.outcome === 'accepted') toast('App instalado! 🎉');
+}
+
+window.addEventListener('appinstalled', () => {
+  const btn = $id('btn-install');
+  if(btn) btn.style.display = 'none';
+  toast('App instalado com sucesso! 🎉');
+});
+
+// ================================================================
+// SERVICE WORKER (necessário para PWA standalone no Android)
+// ================================================================
+if('serviceWorker' in navigator && !location.hostname.includes('claudeusercontent.com')) {
+  navigator.serviceWorker.register('./sw.js')
+    .then(() => console.log('SW registrado'))
+    .catch(e => console.log('SW erro:', e));
+}
+</script>
+</body>
+</html>
