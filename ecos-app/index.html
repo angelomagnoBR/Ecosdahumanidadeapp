@@ -1602,7 +1602,7 @@ function renderOracle() {
 
 function oracleSuggest(text) {
   const input = $id('oracle-input');
-  if(input) { input.value = text; oracleAsk(); }
+  if(input) { input.value = text; setTimeout(oracleAsk, 50); }
 }
 
 
