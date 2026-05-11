@@ -2590,6 +2590,12 @@ function renderCharacters(){
 }
 
 
+function populateCharPlayerSel(){
+  const sel=$id('char-player-sel'); sel.innerHTML='';
+  const members=S.members.filter(m=>m.role==='player'&&m.chronicles.includes(S.chron.id));
+  members.forEach(m=>{ const o=document.createElement('option'); o.value=m.name; o.textContent=m.name; sel.appendChild(o); });
+}
+
 function openAddChar(){ S.editIdx=null; $id('ov-char-title').textContent='⊕ Novo Personagem'; ['char-name','char-concept','char-desc'].forEach(id=>setVal(id,'')); populateCharPlayerSel(); clearPhotoInput('char-photo-file','char-photo-preview','char-photo-img'); openOv('ov-char'); }
 function openEditChar(i){ S.editIdx=i; const ch=S.chron.characters[i]; $id('ov-char-title').textContent='✎ Editar Personagem'; setVal('char-name',ch.name); setVal('char-concept',ch.concept); setVal('char-desc',ch.desc); populateCharPlayerSel(); $id('char-player-sel').value=ch.player; if(ch.photo){$id('char-photo-img').src=ch.photo;$id('char-photo-preview').style.display='block';}else{clearPhotoInput('char-photo-file','char-photo-preview','char-photo-img');} openOv('ov-char'); }
 async function saveChar(){
