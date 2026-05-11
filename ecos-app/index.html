@@ -1693,6 +1693,7 @@ async function oracleAsk() {
   }
 
   try {
+    console.log('Calling Groq...');
     const ctx = buildCampaignContext();
     const messages = [{role:'system', content: ctx}, ..._oracleHistory];
 
@@ -1710,7 +1711,8 @@ async function oracleAsk() {
       })
     });
 
-    if(!res.ok){ const err=await res.json(); throw new Error(err?.error?.message||'Erro '+res.status); }
+    console.log('Groq response status:', res.status);
+    if(!res.ok){ const err=await res.json(); console.error('Groq error:', err); throw new Error(err?.error?.message||'Erro '+res.status); }
     const data = await res.json();
     const answer = data?.choices?.[0]?.message?.content || 'O Oráculo não conseguiu responder.';
     _oracleHistory.push({role:'assistant', content: answer});
@@ -3646,7 +3648,7 @@ function fbListen() {
 
     renderHome();
     if(S.user) renderBell();
-    if(S.chron) { const t = activeTab(); if(t && renders[t]) renders[t](); }
+    if(S.chron) { const t = activeTab(); if(t && renders[t] && t !== 'oracle' && t !== 'knowledge') renders[t](); }
   });
 
   window._fbOnValue(window._fbRef(window._db, 'app/notifications'), snap => {
