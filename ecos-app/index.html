@@ -173,6 +173,24 @@ nav{display:flex;align-items:center;justify-content:space-between;padding:0.9rem
 .npc-card:hover{border-color:rgba(201,168,76,0.18);}
 .npc-status{display:inline-block;font-family:'Share Tech Mono',monospace;font-size:0.52rem;padding:2px 7px;border-radius:2px;margin-bottom:0.45rem;}
 .s-ally{background:rgba(0,200,80,0.08);color:#4a9;border:1px solid rgba(0,180,70,0.2);}
+.clan-badge{display:inline-block;font-family:'Share Tech Mono',monospace;font-size:0.52rem;padding:2px 8px;border-radius:2px;margin-left:4px;vertical-align:middle;font-weight:600;letter-spacing:0.05em;}
+.clan-banu{background:rgba(180,60,0,0.15);color:#c87040;border:1px solid rgba(180,60,0,0.3);}
+.clan-brujah{background:rgba(200,30,30,0.15);color:#d05050;border:1px solid rgba(200,30,30,0.3);}
+.clan-gangrel{background:rgba(100,140,60,0.15);color:#7a9a50;border:1px solid rgba(100,140,60,0.3);}
+.clan-malkavian{background:rgba(130,60,180,0.15);color:#9a70c0;border:1px solid rgba(130,60,180,0.3);}
+.clan-nosferatu{background:rgba(60,80,60,0.2);color:#708070;border:1px solid rgba(60,80,60,0.4);}
+.clan-toreador{background:rgba(180,30,80,0.15);color:#c05070;border:1px solid rgba(180,30,80,0.3);}
+.clan-tremere{background:rgba(100,0,0,0.2);color:#c04040;border:1px solid rgba(100,0,0,0.4);}
+.clan-ventrue{background:rgba(0,60,140,0.15);color:#5080c0;border:1px solid rgba(0,60,140,0.3);}
+.clan-caitiff{background:rgba(100,80,40,0.15);color:#906040;border:1px solid rgba(100,80,40,0.3);}
+.clan-ministry{background:rgba(180,150,0,0.15);color:#c0a030;border:1px solid rgba(180,150,0,0.3);}
+.clan-lasombra{background:rgba(20,20,20,0.4);color:#888;border:1px solid rgba(255,255,255,0.1);}
+.clan-hecata{background:rgba(60,60,80,0.2);color:#8888aa;border:1px solid rgba(60,60,80,0.4);}
+.clan-thinblood{background:rgba(180,180,180,0.08);color:#999;border:1px solid rgba(180,180,180,0.2);}
+.clan-human{background:rgba(201,168,76,0.1);color:#c9a84c;border:1px solid rgba(201,168,76,0.2);}
+.clan-ghoul{background:rgba(80,120,60,0.15);color:#70a050;border:1px solid rgba(80,120,60,0.3);}
+.clan-pillar{background:rgba(60,120,180,0.15);color:#5090c0;border:1px solid rgba(60,120,180,0.3);}
+.clan-other{background:rgba(80,80,80,0.15);color:#888;border:1px solid rgba(80,80,80,0.3);}
 .s-neutral{background:rgba(200,180,0,0.08);color:#aa8;border:1px solid rgba(200,180,0,0.2);}
 .s-hostile{background:rgba(220,40,40,0.08);color:#a44;border:1px solid rgba(220,40,40,0.2);}
 .s-unknown{background:rgba(255,255,255,0.04);color:#555;border:1px solid rgba(255,255,255,0.08);}
@@ -943,7 +961,43 @@ footer{text-align:center;padding:1.1rem;font-family:'Share Tech Mono',monospace;
     <div class="modal-h" id="ov-npc-title">⊕ Novo NPC</div>
     <div class="field"><label>Nome</label><input id="npc-name" type="text" placeholder="Nome do NPC"></div>
     <div class="field"><label>Função / Ocupação</label><input id="npc-role" type="text" placeholder="Ex: Ripperdoc, Príncipe, Fixador"></div>
-    <div class="field"><label>Clã / Facção</label><input id="npc-clan" type="text" placeholder="Ex: Nosferatu, Ventrue, Camarilla..."></div>
+    <div class="field"><label>Clã / Facção</label>
+      <select id="npc-clan">
+        <option value="">— Selecionar —</option>
+        <optgroup label="Camarilla">
+          <option value="Banu Haqim">Banu Haqim</option>
+          <option value="Brujah">Brujah</option>
+          <option value="Gangrel">Gangrel</option>
+          <option value="Malkavian">Malkavian</option>
+          <option value="Nosferatu">Nosferatu</option>
+          <option value="Toreador">Toreador</option>
+          <option value="Tremere">Tremere</option>
+          <option value="Ventrue">Ventrue</option>
+        </optgroup>
+        <optgroup label="Anarquistas">
+          <option value="Caitiff">Caitiff</option>
+          <option value="The Ministry">The Ministry</option>
+          <option value="Ravnos">Ravnos</option>
+          <option value="Salubri">Salubri</option>
+          <option value="Tzimisce">Tzimisce</option>
+        </optgroup>
+        <optgroup label="Sabbat">
+          <option value="Lasombra">Lasombra</option>
+          <option value="Tzimisce (Sabbat)">Tzimisce (Sabbat)</option>
+        </optgroup>
+        <optgroup label="Independentes">
+          <option value="Hecata">Hecata</option>
+          <option value="Ravnos">Ravnos</option>
+          <option value="Thin-Blood">Thin-Blood</option>
+        </optgroup>
+        <optgroup label="Outros">
+          <option value="Humano">Humano</option>
+          <option value="Ghoul">Ghoul (Carniçal)</option>
+          <option value="Pillar">Pilar</option>
+          <option value="Desconhecido">Desconhecido</option>
+        </optgroup>
+      </select>
+    </div>
     <div class="field"><label>Status</label>
       <select id="npc-status">
         <option value="unknown">Desconhecido</option>
@@ -2163,6 +2217,29 @@ function saveSession(){
 function delSession(i){ if(!confirm('Remover esta sessão?'))return; S.chron.sessions.splice(i,1); fbSaveChronicle(S.chron); renderSessions(); renderHome(); toast('Sessão removida.'); }
 
 // ---- NPCS ----
+
+function getClanClass(clan) {
+  if(!clan) return 'clan-other';
+  const cl = clan.toLowerCase();
+  if(cl.includes('banu')) return 'clan-banu';
+  if(cl.includes('brujah')) return 'clan-brujah';
+  if(cl.includes('gangrel')) return 'clan-gangrel';
+  if(cl.includes('malkavian')) return 'clan-malkavian';
+  if(cl.includes('nosferatu')) return 'clan-nosferatu';
+  if(cl.includes('toreador')) return 'clan-toreador';
+  if(cl.includes('tremere')) return 'clan-tremere';
+  if(cl.includes('ventrue')) return 'clan-ventrue';
+  if(cl.includes('caitiff')) return 'clan-caitiff';
+  if(cl.includes('ministry')) return 'clan-ministry';
+  if(cl.includes('lasombra')) return 'clan-lasombra';
+  if(cl.includes('hecata')) return 'clan-hecata';
+  if(cl.includes('thin')) return 'clan-thinblood';
+  if(cl.includes('human')) return 'clan-human';
+  if(cl.includes('ghoul') || cl.includes('carni')) return 'clan-ghoul';
+  if(cl.includes('pilar') || cl.includes('pillar')) return 'clan-pillar';
+  return 'clan-other';
+}
+
 function renderNpcs(){
   const el=$id('panel-npcs'), c=S.chron;
   let html='<div class="toolbar">';
@@ -2178,7 +2255,7 @@ function renderNpcs(){
       ${n.photo?'<img src="'+n.photo+'" class="card-photo" onclick="openImgLightbox(this.src,this.alt)" alt="'+n.name+'" style="cursor:pointer;">':''}
       <span class="npc-status ${sCls[n.status]||'s-unknown'}">${sMap[n.status]||'DESCONHECIDO'}</span>
       <div class="npc-name">${n.name}</div>
-      <div class="npc-role">${n.role}${n.clan?" <span style='font-size:0.58rem;opacity:0.65;border:1px solid rgba(255,255,255,0.12);padding:1px 7px;border-radius:10px;margin-left:4px;'>"+n.clan+"</span>":""}</div>
+      <div class="npc-role">${n.role}${n.clan?'<span class="clan-badge '+getClanClass(n.clan)+'">'+ n.clan+'</span>':''}</div>
       <div class="npc-known">${n.known}</div>
       ${reactionsHTML(n,'npc',i)}`;
     if(isNarrator()&&n.secret){
