@@ -817,7 +817,7 @@ footer{text-align:center;padding:1.1rem;font-family:'Share Tech Mono',monospace;
   <div id="panel-map" class="panel" style="padding:0;position:fixed;top:57px;left:0;right:0;bottom:0;z-index:10;"></div>
 </div>
 
-<footer>ECOS DA HUMANIDADE &nbsp;·&nbsp; <span style="color:var(--gold);opacity:0.8;">V2.6</span> &nbsp;·&nbsp; ARQUIVO DAS CRÔNICAS</footer>
+<footer>ECOS DA HUMANIDADE &nbsp;·&nbsp; <span style="color:var(--gold);opacity:0.8;">V2.7</span> &nbsp;·&nbsp; ARQUIVO DAS CRÔNICAS</footer>
 </div><!-- .app -->
 
 <!-- ==================== OVERLAYS ==================== -->
@@ -943,6 +943,7 @@ footer{text-align:center;padding:1.1rem;font-family:'Share Tech Mono',monospace;
     <div class="modal-h" id="ov-npc-title">⊕ Novo NPC</div>
     <div class="field"><label>Nome</label><input id="npc-name" type="text" placeholder="Nome do NPC"></div>
     <div class="field"><label>Função / Ocupação</label><input id="npc-role" type="text" placeholder="Ex: Ripperdoc, Príncipe, Fixador"></div>
+    <div class="field"><label>Clã / Facção</label><input id="npc-clan" type="text" placeholder="Ex: Nosferatu, Ventrue, Camarilla..."></div>
     <div class="field"><label>Status</label>
       <select id="npc-status">
         <option value="unknown">Desconhecido</option>
@@ -1661,7 +1662,6 @@ function clearOracleLog() {
 }
 
 async function oracleAsk() {
-  console.log("oracleAsk called");
   const input = $id('oracle-input');
   const btn = $id('oracle-send');
   const msgs = $id('oracle-msgs');
@@ -1693,7 +1693,6 @@ async function oracleAsk() {
   }
 
   try {
-    console.log('Calling Groq...');
     const ctx = buildCampaignContext();
     const messages = [{role:'system', content: ctx}, ..._oracleHistory];
 
@@ -1701,7 +1700,7 @@ async function oracleAsk() {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': 'Bearer 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'
+        'Authorization': 'Bearer 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'
       },
       body: JSON.stringify({
         model: 'llama-3.3-70b-versatile',
@@ -1711,7 +1710,6 @@ async function oracleAsk() {
       })
     });
 
-    console.log('Groq response status:', res.status);
     if(!res.ok){ const err=await res.json(); console.error('Groq error:', err); throw new Error(err?.error?.message||'Erro '+res.status); }
     const data = await res.json();
     const answer = data?.choices?.[0]?.message?.content || 'O Oráculo não conseguiu responder.';
@@ -2177,10 +2175,10 @@ function renderNpcs(){
     const sMap={ally:'ALIADO',neutral:'NEUTRO',hostile:'HOSTIL',unknown:'DESCONHECIDO'};
     const sCls={ally:'s-ally',neutral:'s-neutral',hostile:'s-hostile',unknown:'s-unknown'};
     html+=`<div class="npc-card">
-      ${n.photo?`<img src="${n.photo}" class="card-photo" onclick="openImgLightbox('${n.photo}','${n.name}')" style="cursor:pointer;">`:'' }
+      n.photo?'<img src="'+n.photo+'" class="card-photo" onclick="openImgLightbox(this.src,this.alt)" alt="'+n.name+'" style="cursor:pointer;">':'' }
       <span class="npc-status ${sCls[n.status]||'s-unknown'}">${sMap[n.status]||'DESCONHECIDO'}</span>
       <div class="npc-name">${n.name}</div>
-      <div class="npc-role">${n.role}</div>
+      <div class="npc-role">${n.role}${n.clan?" <span style='font-size:0.58rem;opacity:0.65;border:1px solid rgba(255,255,255,0.12);padding:1px 7px;border-radius:10px;margin-left:4px;'>"+n.clan+"</span>":""}</div>
       <div class="npc-known">${n.known}</div>
       ${reactionsHTML(n,'npc',i)}`;
     if(isNarrator()&&n.secret){
@@ -2336,13 +2334,13 @@ function clearPhotoInput(fileId, previewId, imgId) {
   if($id(imgId)) $id(imgId).src = '';
 }
 
-function openAddNpc(){ S.editIdx=null; $id('ov-npc-title').textContent='⊕ Novo NPC'; ['npc-name','npc-role','npc-known','npc-secret'].forEach(id=>setVal(id,'')); $id('npc-status').value='unknown'; $id('npc-reveal-field').style.display='none'; clearPhotoInput('npc-photo-file','npc-photo-preview','npc-photo-img'); openOv('ov-npc'); }
-function openEditNpc(i){ S.editIdx=i; const n=S.chron.npcs[i]; $id('ov-npc-title').textContent='✎ Editar NPC'; setVal('npc-name',n.name); setVal('npc-role',n.role); setVal('npc-known',n.known); setVal('npc-secret',n.secret||''); $id('npc-status').value=n.status||'unknown'; $id('npc-reveal-field').style.display='block'; $id('npc-revealed').value=n.secretRevealed?'true':'false'; if(n.photo){$id('npc-photo-img').src=n.photo;$id('npc-photo-preview').style.display='block';}else{clearPhotoInput('npc-photo-file','npc-photo-preview','npc-photo-img');} openOv('ov-npc'); }
+function openAddNpc(){ S.editIdx=null; $id('ov-npc-title').textContent='⊕ Novo NPC'; ['npc-name','npc-role','npc-clan','npc-known','npc-secret'].forEach(id=>setVal(id,'')); $id('npc-status').value='unknown'; $id('npc-reveal-field').style.display='none'; clearPhotoInput('npc-photo-file','npc-photo-preview','npc-photo-img'); openOv('ov-npc'); }
+function openEditNpc(i){ S.editIdx=i; const n=S.chron.npcs[i]; $id('ov-npc-title').textContent='✎ Editar NPC'; setVal('npc-name',n.name); setVal('npc-role',n.role); setVal('npc-clan',n.clan||''); setVal('npc-known',n.known); setVal('npc-secret',n.secret||''); $id('npc-status').value=n.status||'unknown'; $id('npc-reveal-field').style.display='block'; $id('npc-revealed').value=n.secretRevealed?'true':'false'; if(n.photo){$id('npc-photo-img').src=n.photo;$id('npc-photo-preview').style.display='block';}else{clearPhotoInput('npc-photo-file','npc-photo-preview','npc-photo-img');} openOv('ov-npc'); }
 async function saveNpc(){
   const name=val('npc-name'); if(!name){ toast('Nome obrigatório.'); return; }
   const photo = await readPhoto('npc-photo-file');
   const existing = S.editIdx!==null ? S.chron.npcs[S.editIdx].photo : null;
-  const npc={name,role:val('npc-role'),status:$id('npc-status').value,known:val('npc-known'),secret:val('npc-secret'),secretRevealed:S.editIdx!==null?$id('npc-revealed').value==='true':false,photo:photo||existing||null};
+  const npc={name,role:val('npc-role'),clan:val('npc-clan')||'',status:$id('npc-status').value,known:val('npc-known'),secret:val('npc-secret'),secretRevealed:S.editIdx!==null?$id('npc-revealed').value==='true':false,photo:photo||existing||null};
   if(S.editIdx===null){ S.chron.npcs.push(npc); if(S.user) addNotif('👤',`Novo NPC em <strong>${S.chron.name}</strong>: ${npc.name}`,S.chron.id,'npcs'); }
   else S.chron.npcs[S.editIdx]=npc;
   fbSaveChronicle(S.chron); closeOv('ov-npc'); renderNpcs(); toast(S.editIdx===null?'NPC adicionado!':'NPC atualizado!');
