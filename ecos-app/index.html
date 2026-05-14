@@ -1808,12 +1808,12 @@ function renderKnowledge() {
   let html = '<div class="toolbar"><span class="toolbar-title">📚 Base de Conhecimento (' + kb.length + ')</span></div>';
   html += '<p style="font-size:0.82rem;color:#666;line-height:1.6;margin-bottom:1rem;">Adicione textos, regras, lore e PDFs que o Oráculo usará para responder com precisão. Quanto mais material, melhor as respostas.</p>';
 
-  // Upload area
-  html += '<div class="kb-upload-area" onclick="document.getElementById(\"kb-file-input\").click()">';
+  // Upload area - use label for reliable file picker
+  html += '<label for="kb-file-input" class="kb-upload-area" style="cursor:pointer;display:block;">';
   html += '<div class="kb-upload-icon">📄</div>';
   html += '<div class="kb-upload-label">CLIQUE PARA SUBIR UM ARQUIVO</div>';
   html += '<div style="font-size:0.7rem;color:#555;margin-top:0.3rem;">PDF, Word (.docx) ou Bloco de Notas (.txt)</div>';
-  html += '</div>';
+  html += '</label>';
   html += '<input type="file" id="kb-file-input" accept=".pdf,.txt,.docx,.doc" style="display:none" onchange="handleKbUpload(this)">';
   html += '<div id="kb-upload-progress" style="display:none;margin-top:0.5rem;"><div class="kb-progress"><div class="kb-progress-bar" id="kb-progress-bar" style="width:0%"></div></div><div id="kb-progress-label" style="font-family:Share Tech Mono,monospace;font-size:0.6rem;color:#666;margin-top:4px;text-align:center;"></div></div>';
 
@@ -3871,3 +3871,9 @@ if('serviceWorker' in navigator && !location.hostname.includes('claudeuserconten
 </script>
 </body>
 </html>
+  html += '<label for="kb-file-input" class="kb-upload-area">';
+  html += '<div class="kb-upload-icon">📄</div>';
+  html += '<div class="kb-upload-label">CLIQUE PARA SUBIR UM ARQUIVO</div>';
+  html += '<div style="font-size:0.7rem;color:#555;margin-top:0.3rem;">PDF, Word (.docx) ou Bloco de Notas (.txt)</div>';
+  html += '</label>';
+  html += '<input type="file" id="kb-file-input" accept=".pdf,.txt,.docx,.doc" style="display:none" onchange="handleKbUpload(this)">';
