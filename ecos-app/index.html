@@ -1806,23 +1806,16 @@ function renderKnowledge() {
   const kb = S.chron.knowledge;
 
   let html = '<div class="toolbar"><span class="toolbar-title">📚 Base de Conhecimento (' + kb.length + ')</span></div>';
-  html += '<p style="font-size:0.82rem;color:#666;line-height:1.6;margin-bottom:1rem;">Adicione textos, regras, lore e PDFs que o Oráculo usará para responder com precisão. Quanto mais material, melhor as respostas.</p>';
-
-  // Upload area - use label for reliable file picker
-  html += '<label for="kb-file-input" class="kb-upload-area" style="cursor:pointer;display:block;">';
-  html += '<div class="kb-upload-icon">📄</div>';
-  html += '<div class="kb-upload-label">CLIQUE PARA SUBIR UM ARQUIVO</div>';
-  html += '<div style="font-size:0.7rem;color:#555;margin-top:0.3rem;">PDF, Word (.docx) ou Bloco de Notas (.txt)</div>';
-  html += '</label>';
-  html += '<input type="file" id="kb-file-input" accept=".pdf,.txt,.docx,.doc" style="display:none" onchange="handleKbUpload(this)">';
+  html += '<p style="font-size:0.82rem;color:#666;line-height:1.6;margin-bottom:1rem;">Adicione textos, regras, lore e PDFs que o Oráculo usará para responder com precisão.</p>';
   html += '<div id="kb-upload-progress" style="display:none;margin-top:0.5rem;"><div class="kb-progress"><div class="kb-progress-bar" id="kb-progress-bar" style="width:0%"></div></div><div id="kb-progress-label" style="font-family:Share Tech Mono,monospace;font-size:0.6rem;color:#666;margin-top:4px;text-align:center;"></div></div>';
+  html += '<div style="display:flex;gap:0.5rem;margin-bottom:1rem;">';
+  html += '<button class="btn-add" onclick="document.getElementById(\'kb-file-input\').click()">📄 Subir Arquivo</button>';
+  html += '<button class="btn-add" onclick="openAddKnowledge()">+ Adicionar Texto</button>';
+  html += '</div>';
+  html += '<input type="file" id="kb-file-input" accept=".pdf,.txt,.docx,.doc" style="display:none" onchange="handleKbUpload(this)">';
 
-  // Text input
-  html += '<div style="margin-top:1rem;"><button class="btn-add" onclick="openAddKnowledge()">+ Adicionar Texto</button></div>';
-
-  // Entries list
   if(kb.length) {
-    html += '<div style="margin-top:1rem;" class="kb-wrap">';
+    html += '<div class="kb-wrap">';
     kb.forEach(function(k, i) {
       const preview = k.text ? k.text.substring(0, 120) + '...' : '';
       html += '<div class="kb-entry">';
@@ -1836,11 +1829,12 @@ function renderKnowledge() {
     });
     html += '</div>';
   } else {
-    html += '<div class="empty" style="margin-top:1rem;"><div class="empty-ico">📚</div>Nenhum material adicionado ainda.<br><small style="opacity:0.6;font-size:0.75rem;">Suba o PDF do Vampiro V5, notas da campanha, lore da cidade...</small></div>';
+    html += '<div class="empty"><div class="empty-ico">📚</div>Nenhum material adicionado ainda.<br><small style="opacity:0.6;font-size:0.75rem;">Suba o PDF do Vampiro V5, notas da campanha, lore da cidade...</small></div>';
   }
 
   el.innerHTML = html;
 }
+
 
 async function handleKbUpload(input) {
   const file = input.files[0];
@@ -3871,9 +3865,3 @@ if('serviceWorker' in navigator && !location.hostname.includes('claudeuserconten
 </script>
 </body>
 </html>
-  html += '<label for="kb-file-input" class="kb-upload-area">';
-  html += '<div class="kb-upload-icon">📄</div>';
-  html += '<div class="kb-upload-label">CLIQUE PARA SUBIR UM ARQUIVO</div>';
-  html += '<div style="font-size:0.7rem;color:#555;margin-top:0.3rem;">PDF, Word (.docx) ou Bloco de Notas (.txt)</div>';
-  html += '</label>';
-  html += '<input type="file" id="kb-file-input" accept=".pdf,.txt,.docx,.doc" style="display:none" onchange="handleKbUpload(this)">';
