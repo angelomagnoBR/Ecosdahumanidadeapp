@@ -1391,7 +1391,12 @@ function doLogin() {
   } else {
     localStorage.removeItem('ecos_user');
   }
-  S.user=m; setVal('li-name',''); setVal('li-pass','');
+  S.user=m;
+  // Request notification permission for badge API
+  if('Notification' in window && Notification.permission === 'default'){
+    Notification.requestPermission();
+  }
+  setVal('li-name',''); setVal('li-pass','');
   // Reset eye
   $id('li-pass').type='password'; $id('btn-eye').style.color='#666';
   closeOv('ov-login'); updateAuthUI();
