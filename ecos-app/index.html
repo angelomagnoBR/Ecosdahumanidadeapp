@@ -882,7 +882,7 @@ footer{text-align:center;padding:1.1rem;font-family:'Share Tech Mono',monospace;
   <div id="panel-map" class="panel" style="padding:0;position:fixed;top:57px;left:0;right:0;bottom:0;z-index:10;"></div>
 </div>
 
-<footer>ECOS DA HUMANIDADE &nbsp;·&nbsp; <span style="color:var(--gold);opacity:0.8;">V3.2</span> &nbsp;·&nbsp; ARQUIVO DAS CRÔNICAS</footer>
+<footer>ECOS DA HUMANIDADE &nbsp;·&nbsp; <span style="color:var(--gold);opacity:0.8;">V3.3</span> &nbsp;·&nbsp; ARQUIVO DAS CRÔNICAS</footer>
 </div><!-- .app -->
 
 <!-- ==================== OVERLAYS ==================== -->
@@ -1160,10 +1160,10 @@ footer{text-align:center;padding:1.1rem;font-family:'Share Tech Mono',monospace;
     <div class="modal-h">⊕ Nova Crônica</div>
     <div class="field"><label>Nome</label><input id="nc-name" type="text" placeholder="Nome da crônica"></div>
     <div class="field"><label>Sistema</label>
-      <select id="nc-system">
-        <option>Vampiro: A Máscara V5</option><option>CBR+PNK</option><option>Cyberpunk RED</option>
-        <option>D&D 5e</option><option>Call of Cthulhu</option><option>Pathfinder</option><option>Outro</option>
-      </select>
+      <div style="display:flex;gap:0.5rem;align-items:stretch;">
+        <select id="nc-system" style="flex:1;"></select>
+        <button type="button" onclick="addSystem()" title="Adicionar novo sistema" style="flex-shrink:0;background:var(--gold-dim);border:1px solid var(--gold-border);color:var(--gold);font-family:'Cinzel',serif;font-size:0.7rem;letter-spacing:0.08em;padding:0 12px;border-radius:2px;cursor:pointer;white-space:nowrap;transition:background 0.2s;" onmouseover="this.style.background='rgba(201,168,76,0.22)'" onmouseout="this.style.background='var(--gold-dim)'">+ Novo</button>
+      </div>
     </div>
     <div class="field"><label>Tema Visual — Paleta de Cores</label>
       <div class="pal-grid" id="nc-pal-grid"></div>
@@ -1319,6 +1319,10 @@ const S = {
   editIdx: null,
   notifications: [], // {id, text, icon, meta, chronId, read, ts}
 
+  // Sistemas de RPG disponíveis ao criar crônicas (o mestre pode adicionar novos).
+  // Persistido em app/systems no Firebase e sincronizado entre dispositivos.
+  systems: ['Vampiro: A Máscara V5','CBR+PNK','Cyberpunk RED','Candela Obscura','D&D 5e','Call of Cthulhu','Pathfinder','Outro'],
+
   members: [
     {id:1,name:'Narrador',login:'Narrador',role:'narrator',chronicles:['cyber','vampire'],password:'matrix123'},
     {id:2,name:'Barbara "Babi"',login:'Barbara',role:'player',chronicles:['cyber'],password:'babi123'},
@@ -1406,9 +1410,43 @@ for(let i=0;i<65;i++) pts.push(new Pt());
 // ================================================================
 // OVERLAYS
 // ================================================================
-function openOv(id){ $id(id).classList.add('open'); if(id==='ov-newchron') renderPalGrid(); }
+function openOv(id){ $id(id).classList.add('open'); if(id==='ov-newchron'){ renderPalGrid(); renderSystemSelect(); } }
 function closeOv(id){ $id(id).classList.remove('open'); }
 document.querySelectorAll('.ov').forEach(o=>o.addEventListener('click',e=>{ if(e.target===o)o.classList.remove('open'); }));
+
+// ================================================================
+// SISTEMAS DE RPG (o mestre pode adicionar novos)
+// ================================================================
+function renderSystemSelect(){
+  const sel=$id('nc-system'); if(!sel) return;
+  const prev=sel.value;
+  const list=(Array.isArray(S.systems)&&S.systems.length)?S.systems.slice():['Outro'];
+  // 'Outro' sempre fica por último
+  list.sort((a,b)=>(a==='Outro'?1:0)-(b==='Outro'?1:0));
+  sel.innerHTML='';
+  list.forEach(s=>{ const o=document.createElement('option'); o.textContent=s; sel.appendChild(o); });
+  if(prev && list.includes(prev)) sel.value=prev;
+}
+function addSystem(){
+  if(!isNarrator()){ toast('Apenas o narrador pode adicionar sistemas.'); return; }
+  const name=(prompt('Nome do novo sistema de RPG (ex.: Candela Obscura):')||'').trim();
+  if(!name) return;
+  if(!Array.isArray(S.systems)) S.systems=[];
+  const existing=S.systems.find(s=>s.toLowerCase()===name.toLowerCase());
+  if(existing){ renderSystemSelect(); $id('nc-system').value=existing; toast('Esse sistema já existe.'); return; }
+  // insere antes de 'Outro' (para 'Outro' continuar por último)
+  const idx=S.systems.indexOf('Outro');
+  if(idx>=0) S.systems.splice(idx,0,name); else S.systems.push(name);
+  fbSaveSystems();
+  renderSystemSelect();
+  $id('nc-system').value=name;
+  toast(`Sistema "${name}" adicionado!`);
+}
+async function fbSaveSystems(){
+  if(!window._db) return;
+  try { await window._fbSet(window._fbRef(window._db,'app/systems'), S.systems); }
+  catch(e){ console.error('Erro ao salvar sistemas:', e); toast('⚠️ Erro ao salvar sistema.'); }
+}
 
 // ================================================================
 // SISTEMA DE PALETAS DE COR (temas por crônica)
@@ -3844,6 +3882,14 @@ async function fbLoadAll() {
     const notifSnap = await window._fbGet(window._fbRef(window._db, 'app/notifications'));
     if(notifSnap.exists()) S.notifications = notifSnap.val() || [];
 
+    // Sistemas de RPG (lista editável pelo mestre)
+    const sysSnap = await window._fbGet(window._fbRef(window._db, 'app/systems'));
+    if(sysSnap.exists() && Array.isArray(sysSnap.val()) && sysSnap.val().length){
+      S.systems = sysSnap.val();
+    } else {
+      await fbSaveSystems(); // primeira vez: salva a lista padrão no Firebase
+    }
+
     showLoading(false);
     renderHome();
     if(S.user) renderBell();
@@ -3917,6 +3963,14 @@ function fbListen() {
   window._fbOnValue(window._fbRef(window._db, 'app/notifications'), snap => {
     S.notifications = snap.exists() ? (snap.val()||[]) : [];
     if(S.user) { renderBell(); renderNotifPanel(); }
+  });
+
+  window._fbOnValue(window._fbRef(window._db, 'app/systems'), snap => {
+    if(snap.exists() && Array.isArray(snap.val()) && snap.val().length){
+      S.systems = snap.val();
+      // se o modal de nova crônica estiver aberto, atualiza a lista na hora
+      if($id('ov-newchron') && $id('ov-newchron').classList.contains('open')) renderSystemSelect();
+    }
   });
 }
 
