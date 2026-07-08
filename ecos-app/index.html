@@ -725,6 +725,49 @@ footer{text-align:center;padding:1.1rem;font-family:'Share Tech Mono',monospace;
   /* NOTES */
   .notes-area{font-size:1rem;min-height:180px;}
 }
+
+/* ============================================================
+   TEMA CUSTOMIZÁVEL POR PALETA (dirigido por CSS variables)
+   Qualquer crônica com theme:'custom' usa estas regras.
+   As cores vêm de --acc / --acc2 / --acc-rgb / --acc-deep / --acc-light
+   aplicadas inline via JS (applyPalette).
+   ============================================================ */
+.cc-custom{background:var(--acc-deep,#0a0a0a);border:1px solid rgba(var(--acc-rgb,201,168,76),0.16);}
+.cc-custom:hover{border-color:rgba(var(--acc-rgb,201,168,76),0.42);box-shadow:0 18px 48px rgba(var(--acc-rgb,201,168,76),0.14);}
+.cc-custom .cc-bar{background:linear-gradient(90deg,var(--acc2,#8a6a12),var(--acc,#c9a84c),var(--acc2,#8a6a12));box-shadow:0 0 8px var(--acc,#c9a84c);}
+.cc-custom .cc-grid{background:radial-gradient(ellipse at 50% 0%,rgba(var(--acc-rgb,201,168,76),0.10) 0%,transparent 70%);}
+.cc-custom .cc-sys{background:rgba(var(--acc-rgb,201,168,76),0.09);color:var(--acc,#c9a84c);border:1px solid rgba(var(--acc-rgb,201,168,76),0.28);}
+.cc-custom .cc-title{color:var(--acc-light,#f0e6cc);text-shadow:0 0 14px rgba(var(--acc-rgb,201,168,76),0.4);}
+.cc-custom .cc-tag{color:rgba(var(--acc-rgb,201,168,76),0.62);}
+.cc-custom .cc-meta{border-color:rgba(var(--acc-rgb,201,168,76),0.12);}
+.cc-custom .cm-lbl{color:rgba(var(--acc-rgb,201,168,76),0.5);}
+.cc-custom .cm-val{color:var(--acc,#c9a84c);}
+.cc-custom .cc-btn{background:rgba(var(--acc-rgb,201,168,76),0.08);color:var(--acc,#c9a84c);border:1px solid rgba(var(--acc-rgb,201,168,76),0.28);}
+.cc-custom .cc-btn:hover{background:rgba(var(--acc-rgb,201,168,76),0.2);box-shadow:0 0 10px rgba(var(--acc-rgb,201,168,76),0.18);}
+
+.hdr-custom{background:var(--acc-deep,#0a0a0a);}
+.hdr-custom .chron-ttl{color:var(--acc-light,#f0e6cc);text-shadow:0 0 18px rgba(var(--acc-rgb,201,168,76),0.4);}
+.hdr-custom .chron-sys-lbl{color:var(--acc,#c9a84c);}
+.hdr-custom .overview-hero{background:linear-gradient(180deg,rgba(var(--acc-rgb,201,168,76),0.14),transparent);}
+.hdr-custom .overview-title{color:var(--acc-light,#f0e6cc);text-shadow:0 0 30px rgba(var(--acc-rgb,201,168,76),0.5);}
+.hdr-custom .overview-sys{color:var(--acc,#c9a84c);}
+.tag-custom{background:rgba(var(--acc-rgb,201,168,76),0.09);color:var(--acc,#c9a84c);border:1px solid rgba(var(--acc-rgb,201,168,76),0.22);}
+.btn-enter-custom{background:rgba(var(--acc-rgb,201,168,76),0.08);border:1px solid rgba(var(--acc-rgb,201,168,76),0.3);color:var(--acc,#c9a84c);}
+.btn-enter-custom:hover{background:rgba(var(--acc-rgb,201,168,76),0.18);box-shadow:0 0 20px rgba(var(--acc-rgb,201,168,76),0.14);}
+
+/* Grade de swatches no modal de nova crônica */
+.pal-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(88px,1fr));gap:0.5rem;margin-top:0.3rem;}
+.pal-swatch{cursor:pointer;border:1px solid var(--border);border-radius:4px;padding:0.5rem 0.4rem;display:flex;flex-direction:column;align-items:center;gap:0.4rem;background:rgba(255,255,255,0.02);transition:all 0.18s;}
+.pal-swatch:hover{border-color:rgba(201,168,76,0.4);}
+.pal-swatch.sel{border-color:var(--gold);background:rgba(201,168,76,0.08);box-shadow:0 0 0 1px var(--gold) inset;}
+.pal-dots{display:flex;gap:4px;}
+.pal-dot{width:16px;height:16px;border-radius:50%;box-shadow:0 0 6px rgba(0,0,0,0.5);}
+.pal-name{font-family:'Share Tech Mono',monospace;font-size:0.52rem;letter-spacing:0.06em;color:#999;text-align:center;text-transform:uppercase;}
+.pal-swatch.sel .pal-name{color:var(--gold);}
+.pal-custom-row{display:flex;gap:1rem;margin-top:0.7rem;align-items:center;flex-wrap:wrap;}
+.pal-color-field{display:flex;align-items:center;gap:0.5rem;}
+.pal-color-field label{font-family:'Share Tech Mono',monospace;font-size:0.58rem;letter-spacing:0.08em;color:var(--text-mid);text-transform:uppercase;}
+.pal-color-field input[type=color]{width:38px;height:30px;padding:0;border:1px solid var(--border);border-radius:4px;background:none;cursor:pointer;}
 </style>
 <script defer src="/_vercel/insights/script.js"></script>
 </head>
@@ -839,7 +882,7 @@ footer{text-align:center;padding:1.1rem;font-family:'Share Tech Mono',monospace;
   <div id="panel-map" class="panel" style="padding:0;position:fixed;top:57px;left:0;right:0;bottom:0;z-index:10;"></div>
 </div>
 
-<footer>ECOS DA HUMANIDADE &nbsp;·&nbsp; <span style="color:var(--gold);opacity:0.8;">V2.8</span> &nbsp;·&nbsp; ARQUIVO DAS CRÔNICAS</footer>
+<footer>ECOS DA HUMANIDADE &nbsp;·&nbsp; <span style="color:var(--gold);opacity:0.8;">V2.9</span> &nbsp;·&nbsp; ARQUIVO DAS CRÔNICAS</footer>
 </div><!-- .app -->
 
 <!-- ==================== OVERLAYS ==================== -->
@@ -1122,11 +1165,13 @@ footer{text-align:center;padding:1.1rem;font-family:'Share Tech Mono',monospace;
         <option>D&D 5e</option><option>Call of Cthulhu</option><option>Pathfinder</option><option>Outro</option>
       </select>
     </div>
-    <div class="field"><label>Tema Visual</label>
-      <select id="nc-theme">
-        <option value="vampire">Sombrio — Preto / Vermelho</option>
-        <option value="cyber">Neon — Azul / Roxo</option>
-      </select>
+    <div class="field"><label>Tema Visual — Paleta de Cores</label>
+      <div class="pal-grid" id="nc-pal-grid"></div>
+      <div class="pal-custom-row">
+        <div class="pal-color-field"><label>Cor 1</label><input type="color" id="nc-col1" value="#4bbf87" oninput="ncColorChanged()"></div>
+        <div class="pal-color-field"><label>Cor 2</label><input type="color" id="nc-col2" value="#c9a84c" oninput="ncColorChanged()"></div>
+        <span style="font-family:'Share Tech Mono',monospace;font-size:0.52rem;color:var(--text-dim);letter-spacing:0.06em;">← ajuste manual (opcional)</span>
+      </div>
     </div>
     <div class="field"><label>Tagline (opcional)</label><input id="nc-tagline" type="text" placeholder="Uma frase da campanha..."></div>
     <div class="modal-acts">
@@ -1361,9 +1406,87 @@ for(let i=0;i<65;i++) pts.push(new Pt());
 // ================================================================
 // OVERLAYS
 // ================================================================
-function openOv(id){ $id(id).classList.add('open'); }
+function openOv(id){ $id(id).classList.add('open'); if(id==='ov-newchron') renderPalGrid(); }
 function closeOv(id){ $id(id).classList.remove('open'); }
 document.querySelectorAll('.ov').forEach(o=>o.addEventListener('click',e=>{ if(e.target===o)o.classList.remove('open'); }));
+
+// ================================================================
+// SISTEMA DE PALETAS DE COR (temas por crônica)
+// ================================================================
+// Cada paleta tem 2 cores: acc (principal) e acc2 (secundária).
+// Para criar uma nova, é só adicionar aqui.
+const PALETTES = [
+  {id:'candela', name:'Candela Obscura', acc:'#4bbf87', acc2:'#c9a84c'}, // verde + dourado
+  {id:'cyber',   name:'Cyberpunk',       acc:'#00d4ff', acc2:'#9b30ff'}, // azul + roxo
+  {id:'vampire', name:'Vampiro',         acc:'#c41e3a', acc2:'#8b0000'}, // vermelho sangue
+  {id:'gold',    name:'Dourado Real',    acc:'#e6c34c', acc2:'#8a6a12'},
+  {id:'verdant', name:'Floresta',        acc:'#3fa66a', acc2:'#1e6b3a'},
+  {id:'arcane',  name:'Arcano',          acc:'#b06bff', acc2:'#6a2fb0'},
+  {id:'ember',   name:'Brasa',           acc:'#ff7a1a', acc2:'#b23a00'},
+  {id:'frost',   name:'Gélido',          acc:'#7ad6ff', acc2:'#3a8fc4'},
+  {id:'toxic',   name:'Tóxico',          acc:'#a3e635', acc2:'#4d7c0f'},
+  {id:'rose',    name:'Rubro-Rosa',      acc:'#ff5d8f', acc2:'#a01048'},
+];
+
+// Estado do seletor no modal
+let ncPalette = {acc:PALETTES[0].acc, acc2:PALETTES[0].acc2, id:PALETTES[0].id};
+
+function hexToRgb(hex){
+  hex=(hex||'').replace('#','');
+  if(hex.length===3) hex=hex.split('').map(c=>c+c).join('');
+  const n=parseInt(hex,16);
+  return {r:(n>>16)&255, g:(n>>8)&255, b:n&255};
+}
+function rgbTriplet(hex){ const c=hexToRgb(hex); return `${c.r},${c.g},${c.b}`; }
+function mixHex(hex, target, amt){ // amt 0..1 → quanto do target
+  const a=hexToRgb(hex), b=hexToRgb(target);
+  const m=v=>Math.round(v).toString(16).padStart(2,'0');
+  return '#'+m(a.r+(b.r-a.r)*amt)+m(a.g+(b.g-a.g)*amt)+m(a.b+(b.b-a.b)*amt);
+}
+// Gera todas as variáveis derivadas a partir de acc/acc2
+function paletteVars(pal){
+  return {
+    '--acc': pal.acc,
+    '--acc2': pal.acc2,
+    '--acc-rgb': rgbTriplet(pal.acc),
+    '--acc-deep': mixHex(pal.acc, '#000000', 0.93), // fundo bem escuro tingido
+    '--acc-light': mixHex(pal.acc, '#ffffff', 0.72), // tom claro p/ títulos
+  };
+}
+// Aplica a paleta a um elemento (card, header, página...)
+function applyPalette(el, pal){
+  if(!el||!pal) return;
+  const v=paletteVars(pal);
+  for(const k in v) el.style.setProperty(k, v[k]);
+}
+// Resolve a paleta de uma crônica (custom usa c.palette; legados usam preset pelo id do tema)
+function chronPalette(c){
+  if(c.palette && c.palette.acc) return c.palette;
+  const p=PALETTES.find(p=>p.id===c.theme);
+  return p ? {acc:p.acc, acc2:p.acc2} : {acc:'#c9a84c', acc2:'#8a6a12'};
+}
+
+// Renderiza a grade de swatches no modal
+function renderPalGrid(){
+  const g=$id('nc-pal-grid'); if(!g) return;
+  g.innerHTML='';
+  PALETTES.forEach(p=>{
+    const d=document.createElement('div');
+    d.className='pal-swatch'+(p.id===ncPalette.id?' sel':'');
+    d.innerHTML=`<div class="pal-dots"><span class="pal-dot" style="background:${p.acc}"></span><span class="pal-dot" style="background:${p.acc2}"></span></div><span class="pal-name">${p.name}</span>`;
+    d.onclick=()=>{
+      ncPalette={acc:p.acc, acc2:p.acc2, id:p.id};
+      $id('nc-col1').value=p.acc; $id('nc-col2').value=p.acc2;
+      renderPalGrid();
+    };
+    g.appendChild(d);
+  });
+}
+// Cores manuais: ao mexer, viram paleta "custom" (desmarca preset)
+function ncColorChanged(){
+  ncPalette={acc:$id('nc-col1').value, acc2:$id('nc-col2').value, id:null};
+  renderPalGrid();
+}
 
 // ================================================================
 // AUTH
@@ -2013,6 +2136,8 @@ function renderHome() {
     const players=S.members.filter(m=>m.chronicles.includes(c.id)&&m.role==='player');
     const el=document.createElement('div');
     el.className=`ccard cc-${c.theme}`;
+    if(c.theme==='custom') applyPalette(el, chronPalette(c));
+    const enterLabel = c.theme==='cyber' ? 'Acessar Arquivo' : (c.theme==='vampire' ? 'Entrar na Sombra' : 'Acessar Crônica');
     el.innerHTML=`
       <div class="cc-bar"></div><div class="cc-grid"></div>
       <div class="cc-body">
@@ -2025,7 +2150,7 @@ function renderHome() {
           <div class="cm-item"><span class="cm-lbl">Sessões</span><span class="cm-val">${c.sessions.length}</span></div>
           <div class="cm-item"><span class="cm-lbl">Jogadores</span><span class="cm-val">${players.length}</span></div>
         </div>
-        <button class="cc-btn" onclick="openChron('${c.id}')">${c.theme==='cyber'?'Acessar Arquivo':'Entrar na Sombra'}</button>
+        <button class="cc-btn" onclick="openChron('${c.id}')">${enterLabel}</button>
       </div>`;
     g.appendChild(el);
   });
@@ -2047,6 +2172,10 @@ function openChron(id, tab) {
   $id('pg-home').classList.remove('active');
   $id('pg-chron').classList.add('active');
   $id('chron-hdr').className=`chron-hdr hdr-${c.theme}`;
+  // aplica a paleta na página inteira (cabeçalho + overview herdam as variáveis)
+  const pg=$id('pg-chron');
+  if(c.theme==='custom'){ applyPalette(pg, chronPalette(c)); }
+  else { ['--acc','--acc2','--acc-rgb','--acc-deep','--acc-light'].forEach(k=>pg.style.removeProperty(k)); }
   $id('chron-ttl').textContent=c.name;
   $id('chron-sys').textContent=c.system.toUpperCase();
   $id('drop-map').style.display = c.id==='vampire'?'flex':'none';
@@ -2875,8 +3004,23 @@ function removeMember(id){
 function addChronicle(){
   const name=val('nc-name'); if(!name){ toast('Nome obrigatório.'); return; }
   const id='c_'+Date.now();
-  S.chronicles.push({id,name,system:$id('nc-system').value,theme:$id('nc-theme').value,tagline:val('nc-tagline'),status:'active',sessions:[],npcs:[],locations:[],timeline:[],characters:[],notes:''});
+  const c={
+    id, name,
+    system:$id('nc-system').value,
+    theme:'custom',
+    palette:{acc:ncPalette.acc, acc2:ncPalette.acc2},
+    tagline:val('nc-tagline'),
+    summary:'',
+    status:'active',
+    sessions:[], npcs:[], locations:[], timeline:[], characters:[],
+    gallery:[], rumors:[], theories:[], polls:[], connections:[],
+    notes:'', notesByUser:{}
+  };
+  S.chronicles.push(c);
+  fbSaveChronicle(c); // persiste no Firebase (antes a crônica nova se perdia ao recarregar)
   closeOv('ov-newchron'); setVal('nc-name',''); setVal('nc-tagline','');
+  // reseta seletor de paleta para o padrão
+  ncPalette={acc:PALETTES[0].acc, acc2:PALETTES[0].acc2, id:PALETTES[0].id};
   renderHome(); toast(`Crônica "${name}" criada!`);
 }
 
