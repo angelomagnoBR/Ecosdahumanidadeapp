@@ -882,7 +882,7 @@ footer{text-align:center;padding:1.1rem;font-family:'Share Tech Mono',monospace;
   <div id="panel-map" class="panel" style="padding:0;position:fixed;top:57px;left:0;right:0;bottom:0;z-index:10;"></div>
 </div>
 
-<footer>ECOS DA HUMANIDADE &nbsp;·&nbsp; <span style="color:var(--gold);opacity:0.8;">V3.0</span> &nbsp;·&nbsp; ARQUIVO DAS CRÔNICAS</footer>
+<footer>ECOS DA HUMANIDADE &nbsp;·&nbsp; <span style="color:var(--gold);opacity:0.8;">V3.2</span> &nbsp;·&nbsp; ARQUIVO DAS CRÔNICAS</footer>
 </div><!-- .app -->
 
 <!-- ==================== OVERLAYS ==================== -->
@@ -2133,7 +2133,7 @@ function delKnowledge(i) {
 function renderHome() {
   const g=$id('grid-chron'); g.innerHTML='';
   S.chronicles.forEach(c=>{
-    const players=S.members.filter(m=>m.chronicles.includes(c.id)&&m.role==='player');
+    const players=S.members.filter(m=>(m.chronicles||[]).includes(c.id)&&m.role==='player');
     const el=document.createElement('div');
     el.className=`ccard cc-${c.theme}`;
     if(c.theme==='custom') applyPalette(el, chronPalette(c));
@@ -2147,7 +2147,7 @@ function renderHome() {
         <div class="cc-meta">
           <div class="cm-item"><span class="cm-lbl">Status</span>
             <span class="cm-val"><span class="sdot ${c.status==='active'?'dot-live':'dot-done'}"></span>${c.status==='active'?'Em Curso':'Encerrada'}</span></div>
-          <div class="cm-item"><span class="cm-lbl">Sessões</span><span class="cm-val">${c.sessions.length}</span></div>
+          <div class="cm-item"><span class="cm-lbl">Sessões</span><span class="cm-val">${(c.sessions||[]).length}</span></div>
           <div class="cm-item"><span class="cm-lbl">Jogadores</span><span class="cm-val">${players.length}</span></div>
         </div>
         <button class="cc-btn" onclick="openChron('${c.id}')">${enterLabel}</button>
@@ -3757,6 +3757,17 @@ function mergeImages(chron, imgs) {
 // Cache local de imagens para não perder durante o fbListen
 const _imgCache = {};
 
+// Garante que uma crônica vinda do Firebase tenha todas as listas.
+// O Firebase Realtime DB NÃO guarda arrays/objetos vazios, então campos
+// como sessions/npcs/etc. voltam como undefined e quebram a renderização.
+function normalizeChronicle(c){
+  if(!c) return c;
+  ['sessions','npcs','locations','timeline','characters','gallery','rumors','theories','polls','connections','knowledge'].forEach(k=>{ if(!Array.isArray(c[k])) c[k]=[]; });
+  if(typeof c.notes!=='string') c.notes='';
+  if(!c.notesByUser || typeof c.notesByUser!=='object') c.notesByUser={};
+  return c;
+}
+
 async function fbSaveChronicle(c) {
   if(!window._db) return;
   try {
@@ -3813,7 +3824,7 @@ async function fbLoadAll() {
       S.chronicles = S.chronicles.map(localChron => {
         if(data[localChron.id]) {
           // Merge: Firebase tem prioridade, local serve só de fallback para campos novos
-          return { ...localChron, ...data[localChron.id] };
+          return normalizeChronicle({ ...localChron, ...data[localChron.id] });
         }
         // Crônica não existe no Firebase ainda — salva ela
         fbSaveChronicle(localChron);
@@ -3822,7 +3833,7 @@ async function fbLoadAll() {
       // Adiciona crônicas que existem no Firebase mas não no código local
       Object.keys(data).forEach(id => {
         if(!S.chronicles.find(c => c.id === id)) {
-          S.chronicles.push(data[id]);
+          S.chronicles.push(normalizeChronicle(data[id]));
         }
       });
     } else {
@@ -3889,12 +3900,12 @@ function fbListen() {
 
         // Tenta cache para refs restantes
         incoming = await loadImagesForChron(incoming);
-        S.chronicles[idx] = {...local, ...incoming};
+        S.chronicles[idx] = normalizeChronicle({...local, ...incoming});
         if(pos) S.chronicles[idx]._nodePos = pos;
         if(S.chron && S.chron.id === id) S.chron = S.chronicles[idx];
       } else {
         incoming = await loadImagesForChron(incoming);
-        S.chronicles.push(incoming);
+        S.chronicles.push(normalizeChronicle(incoming));
       }
     }
 
@@ -3965,8 +3976,11 @@ async function forceSyncFromFirebase() {
         const idx = S.chronicles.findIndex(c => c.id === id);
         if(idx >= 0) {
           const nodePos = S.chronicles[idx]._nodePos;
-          S.chronicles[idx] = { ...S.chronicles[idx], ...data[id] };
+          S.chronicles[idx] = normalizeChronicle({ ...S.chronicles[idx], ...data[id] });
           if(nodePos) S.chronicles[idx]._nodePos = nodePos;
+        } else {
+          // Crônica que existe no Firebase mas não localmente (ex.: criada em outro dispositivo)
+          S.chronicles.push(normalizeChronicle({...data[id]}));
         }
       });
       if(S.chron) {
