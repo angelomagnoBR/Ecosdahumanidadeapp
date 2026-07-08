@@ -882,7 +882,7 @@ footer{text-align:center;padding:1.1rem;font-family:'Share Tech Mono',monospace;
   <div id="panel-map" class="panel" style="padding:0;position:fixed;top:57px;left:0;right:0;bottom:0;z-index:10;"></div>
 </div>
 
-<footer>ECOS DA HUMANIDADE &nbsp;·&nbsp; <span style="color:var(--gold);opacity:0.8;">V2.9</span> &nbsp;·&nbsp; ARQUIVO DAS CRÔNICAS</footer>
+<footer>ECOS DA HUMANIDADE &nbsp;·&nbsp; <span style="color:var(--gold);opacity:0.8;">V3.0</span> &nbsp;·&nbsp; ARQUIVO DAS CRÔNICAS</footer>
 </div><!-- .app -->
 
 <!-- ==================== OVERLAYS ==================== -->
@@ -2209,6 +2209,7 @@ function renderOverview(c) {
         <div class="stat-box"><div class="stat-box-num">${(c.theories||[]).length}</div><div class="stat-box-lbl">Teorias</div></div>
       </div>
       ${isNarrator()?`<button onclick="editSummary()" style="background:none;border:1px solid var(--border);color:var(--text-dim);font-family:'Cinzel',serif;font-size:0.65rem;letter-spacing:0.1em;padding:6px 16px;border-radius:2px;cursor:pointer;width:100%;transition:all 0.2s;" onmouseover="this.style.borderColor='rgba(201,168,76,0.3)';this.style.color='#c9a84c'" onmouseout="this.style.borderColor='rgba(255,255,255,0.07)';this.style.color='#666'">✎ Editar Apresentação</button>`:''}
+      ${isNarrator()?`<button onclick="delChronicle('${c.id}')" style="background:none;border:1px solid rgba(139,0,0,0.25);color:#7a4a4a;font-family:'Cinzel',serif;font-size:0.65rem;letter-spacing:0.1em;padding:6px 16px;border-radius:2px;cursor:pointer;width:100%;transition:all 0.2s;margin-top:0.6rem;" onmouseover="this.style.borderColor='rgba(196,30,58,0.5)';this.style.color='#c87070'" onmouseout="this.style.borderColor='rgba(139,0,0,0.25)';this.style.color='#7a4a4a'">🗑 Excluir Crônica</button>`:''}
     </div>`;
 }
 
@@ -3024,8 +3025,33 @@ function addChronicle(){
   renderHome(); toast(`Crônica "${name}" criada!`);
 }
 
-// ================================================================
-// GALLERY
+// ---- DELETE CHRONICLE ----
+async function delChronicle(id){
+  const c = S.chronicles.find(x=>x.id===id); if(!c) return;
+  if(!isNarrator()){ toast('Apenas o narrador pode excluir crônicas.'); return; }
+  const typed = prompt(
+    `⚠️ Excluir a crônica "${c.name}" PERMANENTEMENTE?\n\n`+
+    `Isso apaga todas as sessões, NPCs, locais, imagens, rumores e anotações dela. Não dá pra desfazer.\n\n`+
+    `Para confirmar, digite o nome exato da crônica:`
+  );
+  if(typed===null) return; // cancelou
+  if(typed.trim()!==c.name.trim()){ toast('Nome não confere — exclusão cancelada.'); return; }
+  // Apaga no Firebase (set null remove o nó no Realtime Database)
+  try {
+    if(window._db){
+      await window._fbSet(window._fbRef(window._db, 'chronicles/'+id), null);
+      await window._fbSet(window._fbRef(window._db, 'images/'+id), null);
+    }
+  } catch(e){ console.error('Erro ao excluir crônica:', e); toast('⚠️ Erro ao excluir no servidor.'); return; }
+  // Remove localmente
+  S.chronicles = S.chronicles.filter(x=>x.id!==id);
+  if(_imgCache[id]) delete _imgCache[id];
+  // Limpa referências dessa crônica nos membros
+  S.members.forEach(m=>{ if(Array.isArray(m.chronicles)) m.chronicles = m.chronicles.filter(cid=>cid!==id); });
+  // Volta para a home
+  goHome();
+  toast(`Crônica "${c.name}" excluída.`);
+}
 // ================================================================
 function renderGallery(){
   const el=$id('panel-gallery'), c=S.chron;
