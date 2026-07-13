@@ -768,6 +768,14 @@ footer{text-align:center;padding:1.1rem;font-family:'Share Tech Mono',monospace;
 .pal-color-field{display:flex;align-items:center;gap:0.5rem;}
 .pal-color-field label{font-family:'Share Tech Mono',monospace;font-size:0.58rem;letter-spacing:0.08em;color:var(--text-mid);text-transform:uppercase;}
 .pal-color-field input[type=color]{width:38px;height:30px;padding:0;border:1px solid var(--border);border-radius:4px;background:none;cursor:pointer;}
+
+/* Grade de seleção de seções do menu */
+.tabpick-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:0.4rem;margin-top:0.3rem;}
+.tabpick{display:flex;align-items:center;gap:0.45rem;cursor:pointer;font-size:0.78rem;color:#aaa;padding:5px 8px;border:1px solid var(--border);border-radius:3px;background:rgba(255,255,255,0.02);transition:all 0.15s;}
+.tabpick:hover{border-color:rgba(201,168,76,0.35);}
+.tabpick input{accent-color:var(--gold);flex-shrink:0;}
+.tabpick.fixed{opacity:0.55;cursor:not-allowed;}
+.tabpick-note{font-family:'Share Tech Mono',monospace;font-size:0.48rem;color:#555;letter-spacing:0.06em;}
 </style>
 <script defer src="/_vercel/insights/script.js"></script>
 </head>
@@ -837,22 +845,22 @@ footer{text-align:center;padding:1.1rem;font-family:'Share Tech Mono',monospace;
           <span class="menu-chevron" id="menu-chevron">▾</span>
         </button>
         <div class="dropdown-list" id="dropdown-list">
-          <button class="drop-item" onclick="goTab('overview')">🏠 <span>Início</span></button>
-          <button class="drop-item" onclick="goTab('sessions')">📖 <span>Sessões</span></button>
-          <button class="drop-item" onclick="goTab('npcs')">👤 <span>NPCs</span></button>
-          <button class="drop-item" onclick="goTab('locations')">🗺️ <span>Locais</span></button>
-          <button class="drop-item" onclick="goTab('timeline')">⏳ <span>Linha do Tempo</span></button>
-          <button class="drop-item" onclick="goTab('characters')">⚔️ <span>Personagens</span></button>
-          <button class="drop-item" onclick="goTab('gallery')">🖼️ <span>Galeria</span></button>
-          <button class="drop-item" onclick="goTab('rumors')">💬 <span>Rumores & Fatos</span></button>
-          <button class="drop-item" onclick="goTab('theories')">🔍 <span>Teorias</span></button>
-          <button class="drop-item" onclick="goTab('polls')">📊 <span>Enquetes</span></button>
-          <button class="drop-item" onclick="goTab('notes')">📝 <span>Anotações</span></button>
-          <button class="drop-item" onclick="goTab('group')">👥 <span>Grupo</span></button>
-          <button class="drop-item" onclick="goTab('oracle')">🔮 <span>Oráculo</span></button>
-          <button class="drop-item" id="drop-knowledge" style="display:none" onclick="goTab('knowledge')">📚 <span>Conhecimento</span></button>
-          <button class="drop-item" onclick="goTab('connections')">🕸️ <span>Conexões</span></button>
-          <button class="drop-item" id="drop-map" style="display:none" onclick="goTab('map')">🗺 <span>Mapa</span></button>
+          <button class="drop-item" data-tab="overview" onclick="goTab('overview')">🏠 <span>Início</span></button>
+          <button class="drop-item" data-tab="sessions" onclick="goTab('sessions')">📖 <span>Sessões</span></button>
+          <button class="drop-item" data-tab="npcs" onclick="goTab('npcs')">👤 <span>NPCs</span></button>
+          <button class="drop-item" data-tab="locations" onclick="goTab('locations')">🗺️ <span>Locais</span></button>
+          <button class="drop-item" data-tab="timeline" onclick="goTab('timeline')">⏳ <span>Linha do Tempo</span></button>
+          <button class="drop-item" data-tab="characters" onclick="goTab('characters')">⚔️ <span>Personagens</span></button>
+          <button class="drop-item" data-tab="gallery" onclick="goTab('gallery')">🖼️ <span>Galeria</span></button>
+          <button class="drop-item" data-tab="rumors" onclick="goTab('rumors')">💬 <span>Rumores & Fatos</span></button>
+          <button class="drop-item" data-tab="theories" onclick="goTab('theories')">🔍 <span>Teorias</span></button>
+          <button class="drop-item" data-tab="polls" onclick="goTab('polls')">📊 <span>Enquetes</span></button>
+          <button class="drop-item" data-tab="notes" onclick="goTab('notes')">📝 <span>Anotações</span></button>
+          <button class="drop-item" data-tab="group" onclick="goTab('group')">👥 <span>Grupo</span></button>
+          <button class="drop-item" data-tab="oracle" onclick="goTab('oracle')">🔮 <span>Oráculo</span></button>
+          <button class="drop-item" data-tab="knowledge" id="drop-knowledge" style="display:none" onclick="goTab('knowledge')">📚 <span>Conhecimento</span></button>
+          <button class="drop-item" data-tab="connections" onclick="goTab('connections')">🕸️ <span>Conexões</span></button>
+          <button class="drop-item" data-tab="map" id="drop-map" style="display:none" onclick="goTab('map')">🗺 <span>Mapa</span></button>
         </div>
       </div>
       <div class="chron-hdr-center">
@@ -882,7 +890,7 @@ footer{text-align:center;padding:1.1rem;font-family:'Share Tech Mono',monospace;
   <div id="panel-map" class="panel" style="padding:0;position:fixed;top:57px;left:0;right:0;bottom:0;z-index:10;"></div>
 </div>
 
-<footer>ECOS DA HUMANIDADE &nbsp;·&nbsp; <span style="color:var(--gold);opacity:0.8;">V3.4</span> &nbsp;·&nbsp; ARQUIVO DAS CRÔNICAS</footer>
+<footer>ECOS DA HUMANIDADE &nbsp;·&nbsp; <span style="color:var(--gold);opacity:0.8;">V3.6</span> &nbsp;·&nbsp; ARQUIVO DAS CRÔNICAS</footer>
 </div><!-- .app -->
 
 <!-- ==================== OVERLAYS ==================== -->
@@ -1136,6 +1144,18 @@ footer{text-align:center;padding:1.1rem;font-family:'Share Tech Mono',monospace;
 </div>
 
 <!-- MANAGE MEMBERS -->
+<div class="ov" id="ov-tabs">
+  <div class="modal wide">
+    <div class="modal-h">⚙ Configurar Menu da Crônica</div>
+    <div style="font-family:'Share Tech Mono',monospace;font-size:0.55rem;letter-spacing:0.1em;color:#555;margin-bottom:0.8rem;">Marque as seções que esta crônica deve mostrar. Desmarcar não apaga os dados — só some do menu.</div>
+    <div id="ct-tab-checks" class="tabpick-grid"></div>
+    <div class="modal-acts">
+      <button class="btn-cancel" onclick="closeOv('ov-tabs')">Cancelar</button>
+      <button class="btn-ok" onclick="saveChronTabs()">Salvar</button>
+    </div>
+  </div>
+</div>
+
 <div class="ov" id="ov-members">
   <div class="modal wide">
     <div class="modal-h">⊕ Gerenciar Membros</div>
@@ -1174,6 +1194,10 @@ footer{text-align:center;padding:1.1rem;font-family:'Share Tech Mono',monospace;
       </div>
     </div>
     <div class="field"><label>Tagline (opcional)</label><input id="nc-tagline" type="text" placeholder="Uma frase da campanha..."></div>
+    <div class="field"><label>Seções do Menu — o que esta crônica vai usar</label>
+      <div id="nc-tab-checks" class="tabpick-grid"></div>
+      <div style="font-family:'Share Tech Mono',monospace;font-size:0.52rem;color:var(--text-dim);letter-spacing:0.06em;margin-top:0.5rem;">Você pode mudar isso depois em ⚙ Configurar Menu, dentro da crônica.</div>
+    </div>
     <div class="modal-acts">
       <button class="btn-cancel" onclick="closeOv('ov-newchron')">Cancelar</button>
       <button class="btn-ok" onclick="addChronicle()">Criar</button>
@@ -1410,7 +1434,7 @@ for(let i=0;i<65;i++) pts.push(new Pt());
 // ================================================================
 // OVERLAYS
 // ================================================================
-function openOv(id){ $id(id).classList.add('open'); if(id==='ov-newchron'){ renderPalGrid(); renderSystemSelect(); } }
+function openOv(id){ $id(id).classList.add('open'); if(id==='ov-newchron'){ renderPalGrid(); renderSystemSelect(); renderTabChecks('nc-tab-checks', DEFAULT_TABS); } }
 function closeOv(id){ $id(id).classList.remove('open'); }
 document.querySelectorAll('.ov').forEach(o=>o.addEventListener('click',e=>{ if(e.target===o)o.classList.remove('open'); }));
 
@@ -1446,6 +1470,99 @@ async function fbSaveSystems(){
   if(!window._db) return;
   try { await window._fbSet(window._fbRef(window._db,'app/systems'), S.systems); }
   catch(e){ console.error('Erro ao salvar sistemas:', e); toast('⚠️ Erro ao salvar sistema.'); }
+}
+
+// ================================================================
+// SEÇÕES DO MENU POR CRÔNICA
+// Cada crônica guarda em c.tabs a lista de seções que usa.
+// Crônicas antigas (sem c.tabs) mostram tudo, como antes.
+// ================================================================
+const TAB_DEFS = [
+  {id:'overview',    icon:'🏠', label:'Início',          fixed:true},  // sempre presente
+  {id:'sessions',    icon:'📖', label:'Sessões'},
+  {id:'npcs',        icon:'👤', label:'NPCs'},
+  {id:'locations',   icon:'🗺️', label:'Locais'},
+  {id:'timeline',    icon:'⏳', label:'Linha do Tempo'},
+  {id:'characters',  icon:'⚔️', label:'Personagens'},
+  {id:'gallery',     icon:'🖼️', label:'Galeria'},
+  {id:'rumors',      icon:'💬', label:'Rumores & Fatos'},
+  {id:'theories',    icon:'🔍', label:'Teorias'},
+  {id:'polls',       icon:'📊', label:'Enquetes'},
+  {id:'notes',       icon:'📝', label:'Anotações'},
+  {id:'group',       icon:'👥', label:'Grupo'},
+  {id:'oracle',      icon:'🔮', label:'Oráculo',         note:'treinado p/ Vampiro'},
+  {id:'connections', icon:'🕸️', label:'Conexões'},
+  {id:'map',         icon:'🗺', label:'Mapa'},
+];
+// Padrão ao criar uma crônica nova: tudo menos o Mapa (que é específico)
+const DEFAULT_TABS = TAB_DEFS.filter(t=>t.id!=='map').map(t=>t.id);
+
+// Quais seções esta crônica usa (crônica antiga sem c.tabs → todas, como era antes)
+function chronTabs(c){
+  if(!c) return [];
+  if(!Array.isArray(c.tabs) || !c.tabs.length){
+    // Legado: mantém o comportamento original (Mapa só existia na crônica de Vampiro)
+    return TAB_DEFS.map(t=>t.id).filter(t=> t!=='map' || c.id==='vampire');
+  }
+  const set = c.tabs.slice();
+  if(!set.includes('overview')) set.push('overview'); // Início é obrigatório
+  return set;
+}
+function tabEnabled(c, tabId){
+  if(tabId==='knowledge') return chronTabs(c).includes('oracle'); // base do Oráculo
+  return chronTabs(c).includes(tabId);
+}
+
+// Mostra/esconde os itens do menu conforme a crônica
+function applyChronTabs(c){
+  const enabled = chronTabs(c);
+  document.querySelectorAll('#dropdown-list .drop-item').forEach(btn=>{
+    const t = btn.getAttribute('data-tab');
+    if(!t) return;
+    let show;
+    if(t==='knowledge')      show = enabled.includes('oracle') && isNarrator(); // só narrador
+    else if(t==='map')       show = enabled.includes('map');
+    else                     show = enabled.includes(t);
+    btn.style.display = show ? 'flex' : 'none';
+  });
+}
+
+// Monta a grade de checkboxes (usada nos dois modais)
+function renderTabChecks(containerId, selected){
+  const el=$id(containerId); if(!el) return;
+  el.innerHTML = TAB_DEFS.map(t=>{
+    const on = t.fixed || selected.includes(t.id);
+    return `<label class="tabpick${t.fixed?' fixed':''}">
+      <input type="checkbox" value="${t.id}" ${on?'checked':''} ${t.fixed?'disabled checked':''}>
+      <span>${t.icon} ${t.label}</span>
+      ${t.note?`<span class="tabpick-note">${t.note}</span>`:''}
+    </label>`;
+  }).join('');
+}
+function readTabChecks(containerId){
+  const picked = Array.from(document.querySelectorAll(`#${containerId} input:checked`)).map(i=>i.value);
+  if(!picked.includes('overview')) picked.push('overview');
+  return picked;
+}
+
+// Modal de edição (dentro da crônica)
+function openChronTabs(){
+  if(!isNarrator()){ toast('Apenas o narrador pode configurar o menu.'); return; }
+  renderTabChecks('ct-tab-checks', chronTabs(S.chron));
+  openOv('ov-tabs');
+}
+function saveChronTabs(){
+  if(!isNarrator()){ toast('Apenas o narrador pode configurar o menu.'); return; }
+  if(!S.chron) return;
+  S.chron.tabs = readTabChecks('ct-tab-checks');
+  fbSaveChronicle(S.chron);
+  applyChronTabs(S.chron);
+  closeOv('ov-tabs');
+  // se a aba aberta foi desativada, volta para o Início
+  const t = activeTab();
+  if(t && !tabEnabled(S.chron, t)) goTab('overview');
+  renderOverview(S.chron);
+  toast('Menu da crônica atualizado!');
 }
 
 // ================================================================
@@ -2216,10 +2333,10 @@ function openChron(id, tab) {
   else { ['--acc','--acc2','--acc-rgb','--acc-deep','--acc-light'].forEach(k=>pg.style.removeProperty(k)); }
   $id('chron-ttl').textContent=c.name;
   $id('chron-sys').textContent=c.system.toUpperCase();
-  $id('drop-map').style.display = c.id==='vampire'?'flex':'none';
-  const kbBtn = $id('drop-knowledge');
-  if(kbBtn) kbBtn.style.display = isNarrator()?'flex':'none';
-  goTab(tab||'overview');
+  // Mostra apenas as seções que esta crônica usa
+  applyChronTabs(c);
+  const startTab = tab || 'overview';
+  goTab(tabEnabled(c, startTab) ? startTab : 'overview');
 }
 
 function renderOverview(c) {
@@ -2247,6 +2364,7 @@ function renderOverview(c) {
         <div class="stat-box"><div class="stat-box-num">${(c.theories||[]).length}</div><div class="stat-box-lbl">Teorias</div></div>
       </div>
       ${isNarrator()?`<button onclick="editSummary()" style="background:none;border:1px solid var(--border);color:var(--text-dim);font-family:'Cinzel',serif;font-size:0.65rem;letter-spacing:0.1em;padding:6px 16px;border-radius:2px;cursor:pointer;width:100%;transition:all 0.2s;" onmouseover="this.style.borderColor='rgba(201,168,76,0.3)';this.style.color='#c9a84c'" onmouseout="this.style.borderColor='rgba(255,255,255,0.07)';this.style.color='#666'">✎ Editar Apresentação</button>`:''}
+      ${isNarrator()?`<button onclick="openChronTabs()" style="background:none;border:1px solid var(--border);color:var(--text-dim);font-family:'Cinzel',serif;font-size:0.65rem;letter-spacing:0.1em;padding:6px 16px;border-radius:2px;cursor:pointer;width:100%;transition:all 0.2s;margin-top:0.6rem;" onmouseover="this.style.borderColor='rgba(201,168,76,0.3)';this.style.color='#c9a84c'" onmouseout="this.style.borderColor='rgba(255,255,255,0.07)';this.style.color='#666'">⚙ Configurar Menu</button>`:''}
       ${isNarrator()?`<button onclick="delChronicle('${c.id}')" style="background:none;border:1px solid rgba(139,0,0,0.25);color:#7a4a4a;font-family:'Cinzel',serif;font-size:0.65rem;letter-spacing:0.1em;padding:6px 16px;border-radius:2px;cursor:pointer;width:100%;transition:all 0.2s;margin-top:0.6rem;" onmouseover="this.style.borderColor='rgba(196,30,58,0.5)';this.style.color='#c87070'" onmouseout="this.style.borderColor='rgba(139,0,0,0.25)';this.style.color='#7a4a4a'">🗑 Excluir Crônica</button>`:''}
     </div>`;
 }
@@ -2271,6 +2389,8 @@ const TAB_META = {
 };
 
 function goTab(tab) {
+  // Se a seção estiver desativada nesta crônica, volta para o Início
+  if(S.chron && tab && !tabEnabled(S.chron, tab)) tab='overview';
   document.querySelectorAll('.drop-item').forEach(b => {
     const oc = b.getAttribute('onclick')||'';
     b.classList.toggle('on', oc.includes(`'${tab}'`));
@@ -3003,6 +3123,7 @@ function renderGroup(){
 
 // ---- MEMBERS MANAGEMENT ----
 function openMembers(){
+  if(!isNarrator()){ toast('Apenas o narrador pode gerenciar membros.'); return; }
   renderMemEditList(); renderMemChronChecks(); openOv('ov-members');
 }
 function renderMemEditList(){
@@ -3054,6 +3175,7 @@ function renderMemChronChecks(){
     </label>`).join('');
 }
 function addMember(){
+  if(!isNarrator()){ toast('Apenas o narrador pode adicionar membros.'); return; }
   const name=val('nm-name'),role=$id('nm-role').value,pass=$id('nm-pass').value;
   const checks=document.querySelectorAll('#nm-chron-checks input:checked');
   const chronicles=Array.from(checks).map(c=>c.value);
@@ -3066,6 +3188,7 @@ function addMember(){
   renderMemEditList(); renderGroup(); renderHome(); toast(`${name} adicionado!`);
 }
 function removeMember(id){
+  if(!isNarrator()){ toast('Apenas o narrador pode remover membros.'); return; }
   if(S.user&&S.user.id===id){ toast('Não pode remover a si mesmo.'); return; }
   const m=S.members.find(x=>x.id===id);
   if(!confirm(`Remover ${m?m.name:'este membro'} do grupo?`)) return;
@@ -3089,6 +3212,7 @@ function normalizeMembers(list){
 
 // ---- NEW CHRONICLE ----
 function addChronicle(){
+  if(!isNarrator()){ toast('Apenas o narrador pode criar crônicas.'); return; }
   const name=val('nc-name'); if(!name){ toast('Nome obrigatório.'); return; }
   const id='c_'+Date.now();
   const c={
@@ -3099,6 +3223,7 @@ function addChronicle(){
     tagline:val('nc-tagline'),
     summary:'',
     status:'active',
+    tabs: readTabChecks('nc-tab-checks'),
     sessions:[], npcs:[], locations:[], timeline:[], characters:[],
     gallery:[], rumors:[], theories:[], polls:[], connections:[],
     notes:'', notesByUser:{}
