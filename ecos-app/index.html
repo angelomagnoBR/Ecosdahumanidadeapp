@@ -882,7 +882,7 @@ footer{text-align:center;padding:1.1rem;font-family:'Share Tech Mono',monospace;
   <div id="panel-map" class="panel" style="padding:0;position:fixed;top:57px;left:0;right:0;bottom:0;z-index:10;"></div>
 </div>
 
-<footer>ECOS DA HUMANIDADE &nbsp;·&nbsp; <span style="color:var(--gold);opacity:0.8;">V3.3</span> &nbsp;·&nbsp; ARQUIVO DAS CRÔNICAS</footer>
+<footer>ECOS DA HUMANIDADE &nbsp;·&nbsp; <span style="color:var(--gold);opacity:0.8;">V3.4</span> &nbsp;·&nbsp; ARQUIVO DAS CRÔNICAS</footer>
 </div><!-- .app -->
 
 <!-- ==================== OVERLAYS ==================== -->
@@ -2225,7 +2225,7 @@ function openChron(id, tab) {
 function renderOverview(c) {
   if(!c) return;
   const el = $id('panel-overview');
-  const players = S.members.filter(m=>m.role==='player'&&m.chronicles.includes(c.id));
+  const players = S.members.filter(m=>m.role==='player'&&(m.chronicles||[]).includes(c.id));
   const theme = c.theme;
   el.innerHTML = `
     <div class="overview-hero hdr-${theme}">
@@ -2848,7 +2848,7 @@ function renderCharacters(){
 
 function populateCharPlayerSel(){
   const sel=$id('char-player-sel'); sel.innerHTML='';
-  const members=S.members.filter(m=>m.role==='player'&&m.chronicles.includes(S.chron.id));
+  const members=S.members.filter(m=>m.role==='player'&&(m.chronicles||[]).includes(S.chron.id));
   members.forEach(m=>{ const o=document.createElement('option'); o.value=m.name; o.textContent=m.name; sel.appendChild(o); });
 }
 
@@ -2978,7 +2978,7 @@ function saveNotes(){ toast('Use o botão + Nova Anotação.'); }
 function renderGroup(){
   const el=$id('panel-group'), c=S.chron;
   const narrator=S.members.find(m=>m.role==='narrator');
-  const players=S.members.filter(m=>m.role==='player'&&m.chronicles.includes(c.id));
+  const players=S.members.filter(m=>m.role==='player'&&(m.chronicles||[]).includes(c.id));
   let html='<div class="toolbar">';
   html+=`<span class="toolbar-title">Membros desta crônica</span>`;
   if(isNarrator()) html+=`<button class="btn-add" onclick="openMembers()">Gerenciar Membros</button>`;
@@ -2990,7 +2990,7 @@ function renderGroup(){
   }
   html+=`<div class="group-section"><div class="sec-lbl">Jogadores (${players.length})</div><div class="mem-grid">`;
   players.forEach(m=>{
-    const tags=m.chronicles.map(cid=>{
+    const tags=(m.chronicles||[]).map(cid=>{
       const cr=S.chronicles.find(x=>x.id===cid); if(!cr)return'';
       const cls=cid==='cyber'?'tag-cyber':cid==='vampire'?'tag-vampire':'tag-other';
       return `<span class="chron-tag ${cls}">${cr.name.split(' ')[0].toUpperCase()}</span>`;
@@ -3006,15 +3006,46 @@ function openMembers(){
   renderMemEditList(); renderMemChronChecks(); openOv('ov-members');
 }
 function renderMemEditList(){
-  $id('mem-edit-list').innerHTML=S.members.map(m=>`
-    <div class="mem-edit-row">
-      <div style="display:flex;align-items:center;gap:0.5rem;">
-        <div class="m-av ${m.role==='narrator'?'m-nar':'m-player'}" style="width:24px;height:24px;font-size:0.55rem;">${initials(m.name)}</div>
-        <div><div style="font-size:0.82rem;color:#ccc;">${m.name}</div>
-        <div style="font-family:'Share Tech Mono',monospace;font-size:0.52rem;color:#444;">${m.role==='narrator'?'NARRADOR':'JOGADOR'} · ${m.chronicles.join(', ')}</div></div>
+  $id('mem-edit-list').innerHTML=S.members.map(m=>{
+    const mine = m.chronicles||[];
+    // Chips clicáveis: uma para cada crônica existente. Clicar inclui/remove o membro dela.
+    const chips = S.chronicles.map(c=>{
+      const on = mine.includes(c.id);
+      return `<span onclick="toggleMemberChron(${m.id},'${c.id}')" title="${on?'Remover de':'Incluir em'} ${c.name}"
+        style="cursor:pointer;user-select:none;font-family:'Share Tech Mono',monospace;font-size:0.5rem;letter-spacing:0.08em;padding:2px 7px;border-radius:2px;transition:all 0.15s;
+        background:${on?'rgba(201,168,76,0.14)':'rgba(255,255,255,0.03)'};
+        color:${on?'#c9a84c':'#555'};
+        border:1px solid ${on?'rgba(201,168,76,0.4)':'rgba(255,255,255,0.07)'};">
+        ${on?'✓':'+'} ${c.name.toUpperCase()}</span>`;
+    }).join(' ');
+    return `
+    <div class="mem-edit-row" style="align-items:flex-start;">
+      <div style="display:flex;align-items:flex-start;gap:0.5rem;flex:1;min-width:0;">
+        <div class="m-av ${m.role==='narrator'?'m-nar':'m-player'}" style="width:24px;height:24px;font-size:0.55rem;flex-shrink:0;">${initials(m.name)}</div>
+        <div style="min-width:0;flex:1;">
+          <div style="font-size:0.82rem;color:#ccc;">${m.name}</div>
+          <div style="font-family:'Share Tech Mono',monospace;font-size:0.52rem;color:#444;margin-bottom:4px;">${m.role==='narrator'?'NARRADOR':'JOGADOR'}</div>
+          <div style="display:flex;flex-wrap:wrap;gap:4px;">${chips||'<span style="font-size:0.6rem;color:#444;">Nenhuma crônica criada</span>'}</div>
+        </div>
       </div>
-      ${m.role!=='narrator'?`<button onclick="removeMember(${m.id})" style="background:none;border:none;color:#443;cursor:pointer;font-size:0.75rem;" onmouseover="this.style.color='#c44'" onmouseout="this.style.color='#443'">✕</button>`:''}
-    </div>`).join('');
+      ${m.role!=='narrator'?`<button onclick="removeMember(${m.id})" title="Remover membro" style="background:none;border:none;color:#443;cursor:pointer;font-size:0.75rem;flex-shrink:0;" onmouseover="this.style.color='#c44'" onmouseout="this.style.color='#443'">✕</button>`:''}
+    </div>`;
+  }).join('');
+}
+
+// Inclui/remove um membro já cadastrado de uma crônica (clique nas chips)
+function toggleMemberChron(memberId, chronId){
+  if(!isNarrator()){ toast('Apenas o narrador pode alterar membros.'); return; }
+  const m = S.members.find(x=>x.id===memberId); if(!m) return;
+  if(!Array.isArray(m.chronicles)) m.chronicles=[];
+  const c = S.chronicles.find(x=>x.id===chronId);
+  const idx = m.chronicles.indexOf(chronId);
+  if(idx>=0){ m.chronicles.splice(idx,1); toast(`${m.name} removido de ${c?c.name:'crônica'}.`); }
+  else { m.chronicles.push(chronId); toast(`${m.name} incluído em ${c?c.name:'crônica'}!`); }
+  fbSaveMembers();
+  renderMemEditList();
+  renderHome();
+  if(S.chron) renderGroup();
 }
 function renderMemChronChecks(){
   $id('nm-chron-checks').innerHTML=S.chronicles.map(c=>`
@@ -3029,14 +3060,31 @@ function addMember(){
   if(!name||!pass){ toast('Preencha nome e senha.'); return; }
   const login=name.split(' ')[0]; // primeiro nome para login
   S.members.push({id:Date.now(),name,login,role,chronicles,password:pass});
+  fbSaveMembers();
   setVal('nm-name',''); setVal('nm-pass','');
   document.querySelectorAll('#nm-chron-checks input').forEach(c=>c.checked=false);
   renderMemEditList(); renderGroup(); renderHome(); toast(`${name} adicionado!`);
 }
 function removeMember(id){
   if(S.user&&S.user.id===id){ toast('Não pode remover a si mesmo.'); return; }
+  const m=S.members.find(x=>x.id===id);
+  if(!confirm(`Remover ${m?m.name:'este membro'} do grupo?`)) return;
   S.members=S.members.filter(m=>m.id!==id);
-  renderMemEditList(); renderGroup(); toast('Membro removido.');
+  fbSaveMembers();
+  renderMemEditList(); renderGroup(); renderHome(); toast('Membro removido.');
+}
+
+// Persiste a lista de membros no Firebase (antes ela só existia na memória
+// e qualquer jogador adicionado sumia ao recarregar a página)
+async function fbSaveMembers(){
+  if(!window._db) return;
+  try { await window._fbSet(window._fbRef(window._db,'app/members'), S.members); }
+  catch(e){ console.error('Erro ao salvar membros:', e); toast('⚠️ Erro ao salvar membros.'); }
+}
+// Garante que todo membro tenha a lista de crônicas (Firebase remove arrays vazios)
+function normalizeMembers(list){
+  if(!Array.isArray(list)) return null;
+  return list.filter(Boolean).map(m=>({...m, chronicles: Array.isArray(m.chronicles)?m.chronicles:[]}));
 }
 
 // ---- NEW CHRONICLE ----
@@ -3086,6 +3134,7 @@ async function delChronicle(id){
   if(_imgCache[id]) delete _imgCache[id];
   // Limpa referências dessa crônica nos membros
   S.members.forEach(m=>{ if(Array.isArray(m.chronicles)) m.chronicles = m.chronicles.filter(cid=>cid!==id); });
+  fbSaveMembers();
   // Volta para a home
   goHome();
   toast(`Crônica "${c.name}" excluída.`);
@@ -3890,6 +3939,15 @@ async function fbLoadAll() {
       await fbSaveSystems(); // primeira vez: salva a lista padrão no Firebase
     }
 
+    // Membros do grupo (jogadores e narrador)
+    const memSnap = await window._fbGet(window._fbRef(window._db, 'app/members'));
+    const mem = memSnap.exists() ? normalizeMembers(memSnap.val()) : null;
+    if(mem && mem.length){
+      S.members = mem;
+    } else {
+      await fbSaveMembers(); // primeira vez: sobe a lista padrão do código
+    }
+
     showLoading(false);
     renderHome();
     if(S.user) renderBell();
@@ -3971,6 +4029,20 @@ function fbListen() {
       // se o modal de nova crônica estiver aberto, atualiza a lista na hora
       if($id('ov-newchron') && $id('ov-newchron').classList.contains('open')) renderSystemSelect();
     }
+  });
+
+  window._fbOnValue(window._fbRef(window._db, 'app/members'), snap => {
+    const mem = snap.exists() ? normalizeMembers(snap.val()) : null;
+    if(!mem || !mem.length) return;
+    S.members = mem;
+    // mantém o usuário logado apontando para o registro atualizado
+    if(S.user){
+      const me = S.members.find(m=>m.id===S.user.id);
+      if(me) S.user = me;
+    }
+    if($id('ov-members') && $id('ov-members').classList.contains('open')) renderMemEditList();
+    renderHome();
+    if(S.chron && activeTab()==='group') renderGroup();
   });
 }
 
