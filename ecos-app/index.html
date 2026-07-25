@@ -98,6 +98,7 @@ nav{display:flex;align-items:center;justify-content:space-between;padding:0.9rem
 .sdot{display:inline-block;width:5px;height:5px;border-radius:50%;margin-right:4px;}
 .dot-done{background:#2a2a2a;}
 .dot-live{background:var(--vampire-crimson);box-shadow:0 0 5px var(--vampire-crimson);animation:blink 2s infinite;}
+.dot-soon{background:var(--gold);box-shadow:0 0 5px var(--gold);}
 @keyframes blink{0%,100%{opacity:1;}50%{opacity:0.3;}}
 .cc-btn{margin-top:0.9rem;padding:0.5rem 1rem;border:none;border-radius:2px;font-family:'Cinzel',serif;font-size:0.68rem;letter-spacing:0.16em;text-transform:uppercase;cursor:pointer;transition:all 0.2s;width:100%;}
 .cc-cyber .cc-btn{background:rgba(0,212,255,0.06);color:var(--cyber-blue);border:1px solid rgba(0,212,255,0.22);}
@@ -368,6 +369,7 @@ nav{display:flex;align-items:center;justify-content:space-between;padding:0.9rem
 .overview-status{display:inline-block;font-family:'Share Tech Mono',monospace;font-size:0.62rem;letter-spacing:0.15em;padding:4px 14px;border-radius:2px;}
 .status-active-badge{background:rgba(139,0,0,0.15);color:var(--vampire-crimson);border:1px solid rgba(139,0,0,0.3);}
 .status-done-badge{background:rgba(255,255,255,0.05);color:#555;border:1px solid rgba(255,255,255,0.1);}
+.status-soon-badge{background:rgba(201,168,76,0.12);color:var(--gold);border:1px solid rgba(201,168,76,0.35);}
 .overview-body{padding:1.5rem;max-width:700px;margin:0 auto;width:100%;}
 .overview-summary{font-size:1rem;color:#999;line-height:1.8;margin-bottom:2rem;}
 .overview-stats{display:grid;grid-template-columns:repeat(auto-fill,minmax(100px,1fr));gap:0.8rem;margin-bottom:2rem;}
@@ -890,7 +892,7 @@ footer{text-align:center;padding:1.1rem;font-family:'Share Tech Mono',monospace;
   <div id="panel-map" class="panel" style="padding:0;position:fixed;top:57px;left:0;right:0;bottom:0;z-index:10;"></div>
 </div>
 
-<footer>ECOS DA HUMANIDADE &nbsp;·&nbsp; <span style="color:var(--gold);opacity:0.8;">V3.6</span> &nbsp;·&nbsp; ARQUIVO DAS CRÔNICAS</footer>
+<footer>ECOS DA HUMANIDADE &nbsp;·&nbsp; <span style="color:var(--gold);opacity:0.8;">V3.7</span> &nbsp;·&nbsp; ARQUIVO DAS CRÔNICAS</footer>
 </div><!-- .app -->
 
 <!-- ==================== OVERLAYS ==================== -->
@@ -1194,6 +1196,13 @@ footer{text-align:center;padding:1.1rem;font-family:'Share Tech Mono',monospace;
       </div>
     </div>
     <div class="field"><label>Tagline (opcional)</label><input id="nc-tagline" type="text" placeholder="Uma frase da campanha..."></div>
+    <div class="field"><label>Status</label>
+      <select id="nc-status">
+        <option value="active">Em Curso</option>
+        <option value="soon">Em Breve</option>
+        <option value="done">Encerrada</option>
+      </select>
+    </div>
     <div class="field"><label>Seções do Menu — o que esta crônica vai usar</label>
       <div id="nc-tab-checks" class="tabpick-grid"></div>
       <div style="font-family:'Share Tech Mono',monospace;font-size:0.52rem;color:var(--text-dim);letter-spacing:0.06em;margin-top:0.5rem;">Você pode mudar isso depois em ⚙ Configurar Menu, dentro da crônica.</div>
@@ -1470,6 +1479,27 @@ async function fbSaveSystems(){
   if(!window._db) return;
   try { await window._fbSet(window._fbRef(window._db,'app/systems'), S.systems); }
   catch(e){ console.error('Erro ao salvar sistemas:', e); toast('⚠️ Erro ao salvar sistema.'); }
+}
+
+// ================================================================
+// STATUS DA CRÔNICA (Em Curso / Em Breve / Encerrada)
+// ================================================================
+const CHRON_STATUS = {
+  active: {label:'Em Curso',  badge:'status-active-badge', dot:'dot-live', oracle:'Em andamento'},
+  soon:   {label:'Em Breve',  badge:'status-soon-badge',   dot:'dot-soon', oracle:'Ainda vai começar'},
+  done:   {label:'Encerrada', badge:'status-done-badge',   dot:'dot-done', oracle:'Encerrada'},
+};
+function statusInfo(s){ return CHRON_STATUS[s] || CHRON_STATUS.active; }
+
+// Muda o status da crônica atual (só narrador)
+function setChronStatus(s){
+  if(!isNarrator()){ toast('Apenas o narrador pode mudar o status.'); return; }
+  if(!S.chron || !CHRON_STATUS[s]) return;
+  S.chron.status = s;
+  fbSaveChronicle(S.chron);
+  renderOverview(S.chron);
+  renderHome();
+  toast(`Status: ${statusInfo(s).label}.`);
 }
 
 // ================================================================
@@ -1835,7 +1865,7 @@ function buildCampaignContext() {
   ctx += NL;
   ctx += '=== REGISTROS DA CAMPANHA: ' + c.name + ' ===' + NL;
   ctx += 'Sistema: ' + c.system + NL;
-  ctx += 'Status: ' + (c.status==='active'?'Em andamento':'Encerrada') + NL + NL;
+  ctx += 'Status: ' + statusInfo(c.status).oracle + NL + NL;
 
   if(c.sessions && c.sessions.length) {
     ctx += '--- SESSÕES REGISTRADAS ---' + NL;
@@ -2301,7 +2331,7 @@ function renderHome() {
         <p class="cc-tag">${c.tagline||''}</p>
         <div class="cc-meta">
           <div class="cm-item"><span class="cm-lbl">Status</span>
-            <span class="cm-val"><span class="sdot ${c.status==='active'?'dot-live':'dot-done'}"></span>${c.status==='active'?'Em Curso':'Encerrada'}</span></div>
+            <span class="cm-val"><span class="sdot ${statusInfo(c.status).dot}"></span>${statusInfo(c.status).label}</span></div>
           <div class="cm-item"><span class="cm-lbl">Sessões</span><span class="cm-val">${(c.sessions||[]).length}</span></div>
           <div class="cm-item"><span class="cm-lbl">Jogadores</span><span class="cm-val">${players.length}</span></div>
         </div>
@@ -2349,8 +2379,8 @@ function renderOverview(c) {
       <div class="overview-sys">${c.system.toUpperCase()}</div>
       <h1 class="overview-title hdr-${theme}">${c.name}</h1>
       <p class="overview-tagline">${c.tagline||''}</p>
-      <span class="overview-status ${c.status==='active'?'status-active-badge':'status-done-badge'}">
-        ${c.status==='active'?'● Em Curso':'● Encerrada'}
+      <span class="overview-status ${statusInfo(c.status).badge}">
+        ● ${statusInfo(c.status).label}
       </span>
     </div>
     <div class="overview-body">
@@ -2364,6 +2394,14 @@ function renderOverview(c) {
         <div class="stat-box"><div class="stat-box-num">${(c.theories||[]).length}</div><div class="stat-box-lbl">Teorias</div></div>
       </div>
       ${isNarrator()?`<button onclick="editSummary()" style="background:none;border:1px solid var(--border);color:var(--text-dim);font-family:'Cinzel',serif;font-size:0.65rem;letter-spacing:0.1em;padding:6px 16px;border-radius:2px;cursor:pointer;width:100%;transition:all 0.2s;" onmouseover="this.style.borderColor='rgba(201,168,76,0.3)';this.style.color='#c9a84c'" onmouseout="this.style.borderColor='rgba(255,255,255,0.07)';this.style.color='#666'">✎ Editar Apresentação</button>`:''}
+      ${isNarrator()?`<div style="display:flex;align-items:center;gap:0.5rem;margin-top:0.6rem;">
+        <span style="font-family:'Share Tech Mono',monospace;font-size:0.55rem;letter-spacing:0.1em;color:#666;text-transform:uppercase;">Status:</span>
+        <select onchange="setChronStatus(this.value)" style="flex:1;background:rgba(255,255,255,0.03);border:1px solid var(--border);color:#bbb;font-family:'Cinzel',serif;font-size:0.7rem;padding:5px 8px;border-radius:2px;cursor:pointer;">
+          <option value="active" ${c.status==='active'?'selected':''}>Em Curso</option>
+          <option value="soon" ${c.status==='soon'?'selected':''}>Em Breve</option>
+          <option value="done" ${c.status==='done'?'selected':''}>Encerrada</option>
+        </select>
+      </div>`:''}
       ${isNarrator()?`<button onclick="openChronTabs()" style="background:none;border:1px solid var(--border);color:var(--text-dim);font-family:'Cinzel',serif;font-size:0.65rem;letter-spacing:0.1em;padding:6px 16px;border-radius:2px;cursor:pointer;width:100%;transition:all 0.2s;margin-top:0.6rem;" onmouseover="this.style.borderColor='rgba(201,168,76,0.3)';this.style.color='#c9a84c'" onmouseout="this.style.borderColor='rgba(255,255,255,0.07)';this.style.color='#666'">⚙ Configurar Menu</button>`:''}
       ${isNarrator()?`<button onclick="delChronicle('${c.id}')" style="background:none;border:1px solid rgba(139,0,0,0.25);color:#7a4a4a;font-family:'Cinzel',serif;font-size:0.65rem;letter-spacing:0.1em;padding:6px 16px;border-radius:2px;cursor:pointer;width:100%;transition:all 0.2s;margin-top:0.6rem;" onmouseover="this.style.borderColor='rgba(196,30,58,0.5)';this.style.color='#c87070'" onmouseout="this.style.borderColor='rgba(139,0,0,0.25)';this.style.color='#7a4a4a'">🗑 Excluir Crônica</button>`:''}
     </div>`;
@@ -3222,7 +3260,7 @@ function addChronicle(){
     palette:{acc:ncPalette.acc, acc2:ncPalette.acc2},
     tagline:val('nc-tagline'),
     summary:'',
-    status:'active',
+    status: $id('nc-status') ? $id('nc-status').value : 'active',
     tabs: readTabChecks('nc-tab-checks'),
     sessions:[], npcs:[], locations:[], timeline:[], characters:[],
     gallery:[], rumors:[], theories:[], polls:[], connections:[],
@@ -3230,7 +3268,7 @@ function addChronicle(){
   };
   S.chronicles.push(c);
   fbSaveChronicle(c); // persiste no Firebase (antes a crônica nova se perdia ao recarregar)
-  closeOv('ov-newchron'); setVal('nc-name',''); setVal('nc-tagline','');
+  closeOv('ov-newchron'); setVal('nc-name',''); setVal('nc-tagline',''); if($id('nc-status')) $id('nc-status').value='active';
   // reseta seletor de paleta para o padrão
   ncPalette={acc:PALETTES[0].acc, acc2:PALETTES[0].acc2, id:PALETTES[0].id};
   renderHome(); toast(`Crônica "${name}" criada!`);
