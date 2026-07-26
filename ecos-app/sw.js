@@ -1,4 +1,4 @@
-const CACHE_NAME = 'ecos-v35';
+const CACHE_NAME = 'ecos-v36';
 
 self.addEventListener('install', e => {
   self.skipWaiting();
