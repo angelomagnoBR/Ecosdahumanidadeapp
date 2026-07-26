@@ -778,6 +778,19 @@ footer{text-align:center;padding:1.1rem;font-family:'Share Tech Mono',monospace;
 .tabpick input{accent-color:var(--gold);flex-shrink:0;}
 .tabpick.fixed{opacity:0.55;cursor:not-allowed;}
 .tabpick-note{font-family:'Share Tech Mono',monospace;font-size:0.48rem;color:#555;letter-spacing:0.06em;}
+
+/* LINKS */
+.link-card{display:flex;align-items:center;gap:0.8rem;padding:0.85rem 1rem;border:1px solid var(--border);border-radius:4px;background:rgba(255,255,255,0.02);margin-bottom:0.6rem;transition:all 0.15s;text-decoration:none;}
+.link-card:hover{border-color:rgba(201,168,76,0.35);background:rgba(201,168,76,0.04);}
+.link-ico{font-size:1.3rem;flex-shrink:0;line-height:1;}
+.link-body{flex:1;min-width:0;}
+.link-title{font-family:'Cinzel',serif;font-size:0.92rem;color:#ddd;margin-bottom:2px;}
+.link-url{font-family:'Share Tech Mono',monospace;font-size:0.6rem;color:var(--text-dim);letter-spacing:0.03em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.link-desc{font-size:0.72rem;color:#888;margin-top:3px;line-height:1.4;}
+.link-go{flex-shrink:0;color:var(--gold);font-size:1rem;opacity:0.6;}
+.link-card:hover .link-go{opacity:1;}
+.link-del{flex-shrink:0;background:none;border:none;color:#443;cursor:pointer;font-size:0.85rem;padding:4px;}
+.link-del:hover{color:#c44;}
 </style>
 <script defer src="/_vercel/insights/script.js"></script>
 </head>
@@ -858,6 +871,7 @@ footer{text-align:center;padding:1.1rem;font-family:'Share Tech Mono',monospace;
           <button class="drop-item" data-tab="theories" onclick="goTab('theories')">🔍 <span>Teorias</span></button>
           <button class="drop-item" data-tab="polls" onclick="goTab('polls')">📊 <span>Enquetes</span></button>
           <button class="drop-item" data-tab="notes" onclick="goTab('notes')">📝 <span>Anotações</span></button>
+          <button class="drop-item" data-tab="links" onclick="goTab('links')">🔗 <span>Links</span></button>
           <button class="drop-item" data-tab="group" onclick="goTab('group')">👥 <span>Grupo</span></button>
           <button class="drop-item" data-tab="oracle" onclick="goTab('oracle')">🔮 <span>Oráculo</span></button>
           <button class="drop-item" data-tab="knowledge" id="drop-knowledge" style="display:none" onclick="goTab('knowledge')">📚 <span>Conhecimento</span></button>
@@ -885,6 +899,7 @@ footer{text-align:center;padding:1.1rem;font-family:'Share Tech Mono',monospace;
   <div id="panel-theories" class="panel"></div>
   <div id="panel-polls"    class="panel"></div>
   <div id="panel-notes"    class="panel"></div>
+  <div id="panel-links"    class="panel"></div>
   <div id="panel-group"    class="panel"></div>
   <div id="panel-oracle"   class="panel"></div>
   <div id="panel-knowledge" class="panel"></div>
@@ -892,7 +907,7 @@ footer{text-align:center;padding:1.1rem;font-family:'Share Tech Mono',monospace;
   <div id="panel-map" class="panel" style="padding:0;position:fixed;top:57px;left:0;right:0;bottom:0;z-index:10;"></div>
 </div>
 
-<footer>ECOS DA HUMANIDADE &nbsp;·&nbsp; <span style="color:var(--gold);opacity:0.8;">V3.7</span> &nbsp;·&nbsp; ARQUIVO DAS CRÔNICAS</footer>
+<footer>ECOS DA HUMANIDADE &nbsp;·&nbsp; <span style="color:var(--gold);opacity:0.8;">V3.8</span> &nbsp;·&nbsp; ARQUIVO DAS CRÔNICAS</footer>
 </div><!-- .app -->
 
 <!-- ==================== OVERLAYS ==================== -->
@@ -1146,6 +1161,20 @@ footer{text-align:center;padding:1.1rem;font-family:'Share Tech Mono',monospace;
 </div>
 
 <!-- MANAGE MEMBERS -->
+<div class="ov" id="ov-link">
+  <div class="modal">
+    <div class="modal-h" id="ov-link-title">🔗 Novo Link</div>
+    <div class="field"><label>Título</label><input id="lk-title" type="text" placeholder="Ex.: Site da ExoCorp"></div>
+    <div class="field"><label>URL</label><input id="lk-url" type="text" placeholder="https://..."></div>
+    <div class="field"><label>Descrição (opcional)</label><input id="lk-desc" type="text" placeholder="Uma linha sobre o link"></div>
+    <div class="field"><label>Ícone (opcional)</label><input id="lk-icon" type="text" placeholder="🔗" maxlength="2" style="width:80px;"></div>
+    <div class="modal-acts">
+      <button class="btn-cancel" onclick="closeOv('ov-link')">Cancelar</button>
+      <button class="btn-ok" onclick="saveLink()">Salvar</button>
+    </div>
+  </div>
+</div>
+
 <div class="ov" id="ov-tabs">
   <div class="modal wide">
     <div class="modal-h">⚙ Configurar Menu da Crônica</div>
@@ -1519,6 +1548,7 @@ const TAB_DEFS = [
   {id:'theories',    icon:'🔍', label:'Teorias'},
   {id:'polls',       icon:'📊', label:'Enquetes'},
   {id:'notes',       icon:'📝', label:'Anotações'},
+  {id:'links',       icon:'🔗', label:'Links'},
   {id:'group',       icon:'👥', label:'Grupo'},
   {id:'oracle',      icon:'🔮', label:'Oráculo',         note:'treinado p/ Vampiro'},
   {id:'connections', icon:'🕸️', label:'Conexões'},
@@ -2464,7 +2494,7 @@ document.addEventListener('click', e => {
 
 function activeTab(){
   // Check which panel is currently visible
-  const panels = ['overview','sessions','npcs','locations','timeline','characters','connections','gallery','rumors','theories','polls','notes','group','map'];
+  const panels = ['overview','sessions','npcs','locations','timeline','characters','connections','gallery','rumors','theories','polls','notes','links','group','map'];
   for(const tab of panels){
     const el = $id('panel-'+tab);
     if(el && el.classList.contains('on')) return tab;
@@ -2495,6 +2525,7 @@ const renders = {
   theories(){ renderTheories(); },
   polls(){ renderPolls(); },
   notes(){ renderNotes(); },
+  links(){ renderLinks(); },
   group(){ renderGroup(); },
   oracle(){ renderOracle(); },
   knowledge(){ renderKnowledge(); },
@@ -3133,6 +3164,66 @@ function delNote(i){
 function saveNotes(){ toast('Use o botão + Nova Anotação.'); }
 
 // ---- GROUP ----
+// ================================================================
+// LINKS (endereços externos por crônica)
+// ================================================================
+function renderLinks(){
+  const el=$id('panel-links'), c=S.chron;
+  const links = c.links||[];
+  let html='<div class="toolbar"><span class="toolbar-title">Links</span>';
+  if(isNarrator()) html+=`<button class="btn-add" onclick="openAddLink()">+ Novo Link</button>`;
+  html+='</div>';
+  if(!links.length){
+    html+=`<div class="empty"><div class="empty-ico">🔗</div>Nenhum link ainda.${isNarrator()?'<br><small style="font-size:0.8rem;opacity:0.6;">Adicione sites, ferramentas ou materiais externos desta crônica.</small>':''}</div>`;
+    el.innerHTML=html; return;
+  }
+  links.forEach((lk,idx)=>{
+    const safeUrl = (lk.url||'').replace(/"/g,'&quot;');
+    html+=`<div style="display:flex;align-items:center;gap:0.6rem;">
+      <a class="link-card" href="${safeUrl}" target="_blank" rel="noopener noreferrer" style="flex:1;">
+        <span class="link-ico">${lk.icon||'🔗'}</span>
+        <span class="link-body">
+          <span class="link-title">${lk.title||lk.url}</span>
+          <span class="link-url">${lk.url||''}</span>
+          ${lk.desc?`<span class="link-desc">${lk.desc}</span>`:''}
+        </span>
+        <span class="link-go">↗</span>
+      </a>
+      ${isNarrator()?`<button class="link-del" title="Remover" onclick="delLink(${idx})">🗑</button>`:''}
+    </div>`;
+  });
+  el.innerHTML=html;
+}
+function openAddLink(){
+  if(!isNarrator()){ toast('Apenas o narrador pode adicionar links.'); return; }
+  ['lk-title','lk-url','lk-desc','lk-icon'].forEach(id=>setVal(id,''));
+  openOv('ov-link');
+}
+function saveLink(){
+  if(!isNarrator()){ toast('Apenas o narrador pode adicionar links.'); return; }
+  if(!S.chron) return;
+  let url=val('lk-url').trim();
+  const title=val('lk-title').trim();
+  if(!url){ toast('Informe a URL do link.'); return; }
+  if(!/^https?:\/\//i.test(url)) url='https://'+url; // completa esquema se faltar
+  if(!Array.isArray(S.chron.links)) S.chron.links=[];
+  S.chron.links.push({ title: title||url, url, desc: val('lk-desc').trim(), icon: val('lk-icon').trim()||'🔗' });
+  fbSaveChronicle(S.chron);
+  closeOv('ov-link');
+  renderLinks();
+  toast('Link adicionado!');
+}
+function delLink(idx){
+  if(!isNarrator()){ toast('Apenas o narrador pode remover links.'); return; }
+  if(!S.chron || !Array.isArray(S.chron.links)) return;
+  const lk=S.chron.links[idx];
+  if(!confirm(`Remover o link "${lk?lk.title:''}"?`)) return;
+  S.chron.links.splice(idx,1);
+  fbSaveChronicle(S.chron);
+  renderLinks();
+  toast('Link removido.');
+}
+
 function renderGroup(){
   const el=$id('panel-group'), c=S.chron;
   const narrator=S.members.find(m=>m.role==='narrator');
@@ -3263,7 +3354,7 @@ function addChronicle(){
     status: $id('nc-status') ? $id('nc-status').value : 'active',
     tabs: readTabChecks('nc-tab-checks'),
     sessions:[], npcs:[], locations:[], timeline:[], characters:[],
-    gallery:[], rumors:[], theories:[], polls:[], connections:[],
+    gallery:[], rumors:[], theories:[], polls:[], connections:[], links:[],
     notes:'', notesByUser:{}
   };
   S.chronicles.push(c);
@@ -4012,7 +4103,7 @@ const _imgCache = {};
 // como sessions/npcs/etc. voltam como undefined e quebram a renderização.
 function normalizeChronicle(c){
   if(!c) return c;
-  ['sessions','npcs','locations','timeline','characters','gallery','rumors','theories','polls','connections','knowledge'].forEach(k=>{ if(!Array.isArray(c[k])) c[k]=[]; });
+  ['sessions','npcs','locations','timeline','characters','gallery','rumors','theories','polls','connections','knowledge','links'].forEach(k=>{ if(!Array.isArray(c[k])) c[k]=[]; });
   if(typeof c.notes!=='string') c.notes='';
   if(!c.notesByUser || typeof c.notesByUser!=='object') c.notesByUser={};
   return c;
