@@ -328,6 +328,7 @@ nav{display:flex;align-items:center;justify-content:space-between;padding:0.9rem
 .note-card-top{display:flex;align-items:flex-start;justify-content:space-between;gap:0.5rem;margin-bottom:0.4rem;}
 .note-title{font-family:'Cinzel',serif;font-size:0.95rem;color:#d5d5d5;}
 .note-author{font-family:'Share Tech Mono',monospace;font-size:0.55rem;letter-spacing:0.08em;color:var(--text-dim);}
+.note-others{border-left:2px solid rgba(201,168,76,0.35);}
 .note-date{font-family:'Share Tech Mono',monospace;font-size:0.55rem;color:var(--text-dim);flex-shrink:0;}
 .note-preview{font-size:0.88rem;color:#777;line-height:1.6;margin-top:0.3rem;overflow:hidden;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;}
 .note-full{font-size:0.9rem;color:#aaa;line-height:1.75;margin-top:0.5rem;white-space:pre-wrap;}
@@ -907,7 +908,7 @@ footer{text-align:center;padding:1.1rem;font-family:'Share Tech Mono',monospace;
   <div id="panel-map" class="panel" style="padding:0;position:fixed;top:57px;left:0;right:0;bottom:0;z-index:10;"></div>
 </div>
 
-<footer>ECOS DA HUMANIDADE &nbsp;·&nbsp; <span style="color:var(--gold);opacity:0.8;">V3.8</span> &nbsp;·&nbsp; ARQUIVO DAS CRÔNICAS</footer>
+<footer>ECOS DA HUMANIDADE &nbsp;·&nbsp; <span style="color:var(--gold);opacity:0.8;">V3.9</span> &nbsp;·&nbsp; ARQUIVO DAS CRÔNICAS</footer>
 </div><!-- .app -->
 
 <!-- ==================== OVERLAYS ==================== -->
@@ -3067,34 +3068,45 @@ function renderNotes(){
     return;
   }
   if(!S.chron.notesByUser) S.chron.notesByUser={};
-  const key = userKey(S.user.name);
-  const myNotes = (S.chron.notesByUser[key]||[]).slice().sort((a,b)=>b.ts-a.ts);
+  const myKey = userKey(S.user.name);
+
+  // Junta as anotações de TODOS os usuários numa lista só (cada uma sabe seu dono)
+  let all=[];
+  Object.keys(S.chron.notesByUser).forEach(ownerKey=>{
+    (S.chron.notesByUser[ownerKey]||[]).forEach(n=>{
+      all.push({...n, _owner:ownerKey, _author:n.author||n.by||null});
+    });
+  });
+  all.sort((a,b)=>(b.ts||0)-(a.ts||0));
 
   let html=`<div class="toolbar">
-    <span class="toolbar-title">Minhas Anotações (${myNotes.length})</span>
+    <span class="toolbar-title">Anotações do Grupo (${all.length})</span>
     <button class="btn-add" onclick="openAddNote()">+ Nova Anotação</button>
   </div>`;
 
-  if(!myNotes.length){
-    html+=`<div class="empty"><div class="empty-ico">📝</div>Nenhuma anotação ainda.<br><small style="font-size:0.8rem;opacity:0.6;">Use este espaço para anotar teorias, observações e pensamentos entre as sessões.</small></div>`;
+  if(!all.length){
+    html+=`<div class="empty"><div class="empty-ico">📝</div>Nenhuma anotação ainda.<br><small style="font-size:0.8rem;opacity:0.6;">Anotações são visíveis para todo o grupo. Cada um edita apenas as suas.</small></div>`;
   } else {
     html+='<div class="notes-journal">';
-    myNotes.forEach((n)=>{
-      const realIdx = (S.chron.notesByUser[key]||[]).findIndex(x=>x.id===n.id);
-      html+=`<div class="note-card" id="note-card-${n.id}" onclick="toggleNote('${n.id}')">
+    all.forEach((n)=>{
+      const mine = n._owner===myKey;                 // é do usuário logado?
+      const canManage = mine || isNarrator();         // autor edita; narrador modera
+      const authorName = n._author || n._owner;       // nome de exibição
+      const realIdx = (S.chron.notesByUser[n._owner]||[]).findIndex(x=>x.id===n.id);
+      html+=`<div class="note-card${mine?'':' note-others'}" id="note-card-${n.id}" onclick="toggleNote('${n.id}')">
         <div class="note-card-top">
           <div>
             <div class="note-title">${n.title||'Sem título'}</div>
-            <div class="note-author">por ${S.user.name}</div>
+            <div class="note-author">por ${authorName}${mine?' (você)':''}</div>
           </div>
           <div class="note-date">${n.date||''}</div>
         </div>
         <div class="note-preview" id="note-prev-${n.id}">${(n.body||'').replace(/</g,'&lt;')}</div>
         <div class="note-full" id="note-full-${n.id}" style="display:none">${(n.body||'').replace(/</g,'&lt;')}</div>
-        <div class="card-actions" style="margin-top:0.6rem;">
-          <button class="btn-sm btn-edit" onclick="event.stopPropagation();openEditNote(${realIdx})">Editar</button>
-          <button class="btn-sm btn-del" onclick="event.stopPropagation();delNote(${realIdx})">Remover</button>
-        </div>
+        ${canManage?`<div class="card-actions" style="margin-top:0.6rem;">
+          ${mine?`<button class="btn-sm btn-edit" onclick="event.stopPropagation();openEditNote('${n._owner}',${realIdx})">Editar</button>`:''}
+          <button class="btn-sm btn-del" onclick="event.stopPropagation();delNote('${n._owner}',${realIdx})">Remover</button>
+        </div>`:''}
       </div>`;
     });
     html+='</div>';
@@ -3112,16 +3124,17 @@ function toggleNote(id){
 }
 
 function openAddNote(){
-  S.editIdx=null;
+  S.editIdx=null; S.editOwner=null;
   $id('ov-note-title').textContent='⊕ Nova Anotação';
   setVal('note-title-inp',''); setVal('note-body-inp','');
   openOv('ov-note');
 }
 
-function openEditNote(i){
-  S.editIdx=i;
-  const key = userKey(S.user.name);
-  const notes = S.chron.notesByUser[key]||[];
+function openEditNote(ownerKey, i){
+  // Só o autor edita a própria nota
+  if(ownerKey!==userKey(S.user.name)){ toast('Você só pode editar suas próprias anotações.'); return; }
+  S.editIdx=i; S.editOwner=ownerKey;
+  const notes = S.chron.notesByUser[ownerKey]||[];
   const n=notes[i];
   $id('ov-note-title').textContent='✎ Editar Anotação';
   setVal('note-title-inp',n.title||'');
@@ -3138,23 +3151,29 @@ function saveNote(){
   const now=new Date();
   const date=now.toLocaleString('pt-BR',{day:'2-digit',month:'2-digit',year:'2-digit',hour:'2-digit',minute:'2-digit'});
   if(S.editIdx===null){
-    S.chron.notesByUser[key].push({id:Date.now(),title:title||'Sem título',body,date,ts:Date.now()});
+    S.chron.notesByUser[key].push({id:Date.now(),title:title||'Sem título',body,date,ts:Date.now(),author:S.user.name});
     toast('Anotação salva!');
   } else {
-    const notes=S.chron.notesByUser[key];
-    notes[S.editIdx].title=title||notes[S.editIdx].title;
-    notes[S.editIdx].body=body;
+    // edita sempre no diário do próprio autor
+    const notes=S.chron.notesByUser[S.editOwner||key];
+    if(notes && notes[S.editIdx]){
+      notes[S.editIdx].title=title||notes[S.editIdx].title;
+      notes[S.editIdx].body=body;
+      if(!notes[S.editIdx].author) notes[S.editIdx].author=S.user.name;
+    }
     toast('Anotação atualizada!');
   }
+  S.editOwner=null;
   fbSaveChronicle(S.chron);
   closeOv('ov-note');
   renderNotes();
 }
 
-function delNote(i){
+function delNote(ownerKey, i){
+  const mine = ownerKey===userKey(S.user.name);
+  if(!mine && !isNarrator()){ toast('Você só pode remover suas próprias anotações.'); return; }
   if(!confirm('Remover esta anotação?'))return;
-  const key = userKey(S.user.name);
-  S.chron.notesByUser[key].splice(i,1);
+  if(S.chron.notesByUser[ownerKey]) S.chron.notesByUser[ownerKey].splice(i,1);
   fbSaveChronicle(S.chron);
   renderNotes();
   toast('Anotação removida.');
